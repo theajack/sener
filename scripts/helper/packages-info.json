@@ -1,0 +1,14 @@
+[
+    {
+        "name": "sener",
+        "version": "0.0.1",
+        "dependencies": [
+            "@lerna-demo/utils"
+        ]
+    },
+    {
+        "name": "@lerna-demo/utils",
+        "version": "0.0.1",
+        "dependencies": []
+    }
+]
