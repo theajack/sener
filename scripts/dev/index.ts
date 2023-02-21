@@ -5,7 +5,7 @@
  */
 
 import { Sener, Router, IMiddleWare, MiddleWare, IMiddleWareResponseData, IPromiseMayBe } from '../../packages/sener';
-import { Json, JsonPlugin } from 'packages/json';
+import { Json } from 'packages/json';
 
 const testMiddleware: IMiddleWare = {
     async response (response) {
