@@ -7,10 +7,10 @@ import http from 'http';
 import { MiddleWareManager } from '../middleware/middleware-manager';
 import { parseParam, praseUrl } from '../utils';
 import {
-    IJson, IServerOptions,
+    IJson,
     IServerSendData, IResponse, IServeMethod, IHttpInfo, IMiddleWareDataBase
-} from '../type';
-import { ISenerHelper } from 'sener-types';
+} from 'sener-types';
+import { ISenerHelper, IServerOptions } from 'sener-types-extend';
 
 export class Server {
     server: http.Server;

@@ -3,10 +3,26 @@
  * @Date: 2023-02-20 17:23:29
  * @Description: Coding something
  */
-import { IJson, IRouterHandler, IMiddleWareRequestData } from '../type';
-import { MiddleWare } from '../middleware/middleware';
 import { parseUrlSearch } from '../utils';
 import { IncomingMessage } from 'http';
+import {
+    IMiddleWareResponseReturn, MiddleWare,
+    IPromiseMayBe, ICommonReturn, IJson,
+    IMiddleWareRequestData, IMiddleWareResponseData
+} from 'sener-types';
+
+
+export type IRouter = IJson<IRouterHandler>;
+
+export type IRouterHandler = (
+    data: IMiddleWareRequestData,
+) => IPromiseMayBe<IMiddleWareResponseReturn|ICommonReturn>;
+
+declare module 'sener-types-extend' {
+    interface IServerOptions {
+        router?: Router;
+    }
+}
 
 export class Router extends MiddleWare {
     routers: IJson<IRouterHandler>;
@@ -26,7 +42,7 @@ export class Router extends MiddleWare {
         return handler(res);
     }
 
-    private getRouterHandler ({ method, url }: IMiddleWareRequestData) {
+    private getRouterHandler ({ method, url }: IMiddleWareResponseData) {
         const name = `${method.toLocaleLowerCase()}:${url}`;
         let handler = this.routers[name];
         if (!handler && method === 'GET') {

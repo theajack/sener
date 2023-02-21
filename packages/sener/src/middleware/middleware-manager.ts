@@ -3,8 +3,11 @@
  * @Date: 2023-02-20 16:23:58
  * @Description: Coding something
  */
-import { IMiddleWareEnterData, IMiddleWareRequestData, IMiddleWareResponseData, IMiddleWareResponseReturn } from '../type';
-import { IMiddleWare } from './middleware';
+import {
+    IMiddleWareEnterData, IMiddleWareRequestData,
+    IMiddleWareResponseData, IMiddleWareResponseReturn,
+    IMiddleWare
+} from 'sener-types';
 
 export class MiddleWareManager {
     middlewares: IMiddleWare[] = [];

@@ -4,6 +4,5 @@
  * @Description: Coding something
  */
 export * from './sener';
-export * from './type.d';
-export * from './middleware/middleware';
+export * from 'sener-types';
 export * from './server/router';

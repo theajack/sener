@@ -3,7 +3,7 @@
  * @Date: 2023-02-18 16:26:52
  * @Description: Coding something
  */
-import { IJson } from './type';
+import { IJson } from 'sener-types';
 
 export function now () {
     return Date.now();
