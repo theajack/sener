@@ -27,7 +27,7 @@ console.log(packageInfo.dependencies);
 
 const extensions = [ '.ts', '.d.ts', '.js' ];
 
-const isMainPackage = dirName === 'term';
+const isMainPackage = dirName === 'sener';
 
 const inputFile = resolvePacakgePath(`${dirName}/src/index.ts`);
 console.log(inputFile);
@@ -41,7 +41,7 @@ const createBaseConfig = ({
 }) => {
 
     if (!bundleName) {
-        bundleName = `${packageName}.${format === 'esm' ? 'esm' : 'min'}.js`;
+        bundleName = `${packageName}.${format === 'esm' ? 'esm' : 'cjs'}.js`;
     }
 
     return {
@@ -49,7 +49,7 @@ const createBaseConfig = ({
         output: {
             file: resolvePacakgePath(`${dirName}/dist/${bundleName}`),
             format,
-            name: `Demo${isMainPackage ? '' : upcaseFirstLetter(dirName)}`,
+            name: `Sener${isMainPackage ? '' : upcaseFirstLetter(dirName)}`,
             // sourcemap: true,
         },
         plugins: [

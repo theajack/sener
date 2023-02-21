@@ -65,10 +65,9 @@ function initSinglePackageInfo (dir, isDev = false) {
         package.main = 'src/index.ts';
         package.typings = 'src/index.ts';
     } else {
-        package.main = `dist/${packageName}.esm.js`;
+        package.main = `dist/${packageName}.cjs.js`;
+        package.module = `dist/${packageName}.esm.js`;
         package.typings = `dist/${packageName}.d.ts`;
-        package.unpkg = `dist/${packageName}.min.js`;
-        package.jsdelivr = `dist/${packageName}.min.js`;
     }
     [ 'description', 'author', 'repository', 'license' ].forEach(name => {
         package[name] = rootPkg[name];
