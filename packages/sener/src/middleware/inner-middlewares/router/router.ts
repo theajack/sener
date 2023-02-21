@@ -3,14 +3,13 @@
  * @Date: 2023-02-20 17:23:29
  * @Description: Coding something
  */
-import { parseUrlSearch } from '../utils';
 import { IncomingMessage } from 'http';
 import {
     IMiddleWareResponseReturn, MiddleWare,
     IPromiseMayBe, ICommonReturn, IJson,
-    IMiddleWareRequestData, IMiddleWareResponseData
+    IMiddleWareRequestData, IMiddleWareResponseData,
+    parseUrlSearch
 } from 'sener-types';
-
 
 export type IRouter = IJson<IRouterHandler>;
 

@@ -5,6 +5,7 @@
  */
 import './extend.d';
 export * from './utils.d';
+export * from './utils';
 export * from './sener.d';
 export * from './middleware';
 

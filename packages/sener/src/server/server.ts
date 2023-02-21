@@ -5,7 +5,7 @@
  */
 import http from 'http';
 import { MiddleWareManager } from '../middleware/middleware-manager';
-import { parseParam, praseUrl } from '../utils';
+import { parseParam, praseUrl } from 'sener-types';
 import {
     IJson,
     IServerSendData, IResponse, IServeMethod, IHttpInfo, IMiddleWareDataBase
