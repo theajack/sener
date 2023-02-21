@@ -3,7 +3,7 @@
  * @Date: 2023-02-20 16:23:58
  * @Description: Coding something
  */
-import { IMiddleWareEnterData, IMiddleWareRequestData, IMiddleWareResponseData } from '../type';
+import { IMiddleWareEnterData, IMiddleWareRequestData, IMiddleWareResponseData, IMiddleWareResponseReturn } from '../type';
 import { IMiddleWare } from './middleware';
 
 export class MiddleWareManager {
@@ -49,18 +49,25 @@ export class MiddleWareManager {
         return req;
     }
 
-    async applyResponse (res: IMiddleWareResponseData, req: IMiddleWareRequestData) {
+    async applyResponse (
+        res: IMiddleWareResponseData
+    ): Promise<IMiddleWareResponseReturn|null> {
+        let returnValue: IMiddleWareResponseReturn = {
+            data: res.data,
+            statusCode: res.statusCode,
+            headers: res.headers,
+        };
         for (const middleware of this.middlewares) {
             if (middleware.response) {
-                const result = await middleware.response(res, req);
+                const result = await middleware.response(res);
                 if (typeof result === 'object') {
                     if (!result) return null;
-                    res = result;
+                    returnValue = result;
                 } else if (result === false) {
                     return res;
                 }
             }
         }
-        return res;
+        return returnValue;
     }
 }

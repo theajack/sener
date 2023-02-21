@@ -12,6 +12,7 @@
     "license": "",
     "type": "module",
     "dependencies": {
+        "sener-types": "^0.0.1"
     },
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"

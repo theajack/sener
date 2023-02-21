@@ -8,13 +8,16 @@ import { MiddleWareManager } from '../middleware/middleware-manager';
 import { parseParam, praseUrl } from '../utils';
 import {
     IJson, IServerOptions,
-    IServerSendData, IResponse, IServeMethod, IHttpInfo
+    IServerSendData, IResponse, IServeMethod, IHttpInfo, IMiddleWareDataBase
 } from '../type';
+import { ISenerHelper } from 'sener-types';
 
 export class Server {
     server: http.Server;
 
     middleware: MiddleWareManager;
+
+    helper: ISenerHelper = {};
 
     static DEFAULT_PORT = 9000;
 
@@ -49,7 +52,7 @@ export class Server {
                     body = parseParam(bodyStr);
                 }
                 resolve({
-                    headers,
+                    requestHeaders: headers,
                     method: method as IServeMethod,
                     url,
                     query,
@@ -63,15 +66,22 @@ export class Server {
         console.log('initServer', `http://localhost:${port}`);
         this.server = http.createServer(async (request, response) => {
 
-            if (!await this.middleware.applyEnter(request)) {
+            const middlewareBase: IMiddleWareDataBase = {
+                request,
+                response,
+                ...this.helper,
+            };
+
+            if (!await this.middleware.applyEnter(middlewareBase)) {
                 console.log('enter fail');
                 return this.send404(response);
             }
 
+            const httpInfo = await this.parseHttpInfo(request);
+
             const requestData = await this.middleware.applyRequest({
-                ...(await this.parseHttpInfo(request)),
-                request,
-                response,
+                ...httpInfo,
+                ...middlewareBase,
             });
 
             if (!requestData) {
@@ -81,9 +91,12 @@ export class Server {
             };
 
             const responseData = await this.middleware.applyResponse({
-                data: requestData,
+                data: {},
                 statusCode: 200,
-            }, requestData);
+                // todo headers
+                ...middlewareBase,
+                ...httpInfo,
+            });
 
             if (!responseData) {
                 // todo 待详细

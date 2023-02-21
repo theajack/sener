@@ -3,10 +3,11 @@
  * @Date: 2023-02-18 15:28:21
  * @Description: Coding something
  */
-
+import { ISenerPlugins } from 'sener-types';
 import { IMiddleWare } from './middleware/middleware';
 import { Server } from './server/server';
 import { ISenerOptions } from './type';
+
 
 // const framework = new Sener({
 //     'get:/aa/bb': (data, tables) => {
@@ -23,8 +24,9 @@ import { ISenerOptions } from './type';
 
 export class Sener {
 
-
     server: Server;
+
+    plugins: ISenerPlugins;
 
     constructor ({
         port,

@@ -6,7 +6,6 @@
 
 import { Sener, Router, IMiddleWare, MiddleWare, IMiddleWareResponseData, IPromiseMayBe } from '../../packages/sener';
 import { JsonManager } from '../../packages/json';
-import '../../packages/json/src/extend.d';
 
 const testMiddleware: IMiddleWare = {
     async response (response) {
@@ -75,8 +74,6 @@ const router = new Router({
         return { data: body.data };
     },
 });
-
-sener.aa;
 
 sener.use(router);
 

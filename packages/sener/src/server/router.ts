@@ -16,14 +16,14 @@ export class Router extends MiddleWare {
         this.routers = routers;
     }
 
-    enter (req: Parameters<MiddleWare['enter']>[0]): ReturnType<MiddleWare['enter']> {
-        if (!this.isUrlExist(req)) return null;
+    enter ({ request }: Parameters<MiddleWare['enter']>[0]): ReturnType<MiddleWare['enter']> {
+        if (!this.isUrlExist(request)) return null;
     }
 
-    response (res: any, req: IMiddleWareRequestData): ReturnType<MiddleWare['response']> {
-        const handler = this.getRouterHandler(req);
+    response (res: Parameters<MiddleWare['response']>[0]): ReturnType<MiddleWare['response']> {
+        const handler = this.getRouterHandler(res);
         if (!handler) return null;
-        return handler(req);
+        return handler(res);
     }
 
     private getRouterHandler ({ method, url }: IMiddleWareRequestData) {

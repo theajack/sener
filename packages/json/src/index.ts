@@ -12,6 +12,7 @@ import { File } from './file';
 import { JsonManager } from './json-manage';
 import { SyncFile } from './sync-file';
 import { makedir } from './utils';
+import './type.d';
 
 export default {
     JsonManager,
