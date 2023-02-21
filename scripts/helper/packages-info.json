@@ -3,11 +3,18 @@
         "name": "sener",
         "version": "0.0.1",
         "dependencies": [
-            "@lerna-demo/utils"
+            "sener-types"
         ]
     },
     {
-        "name": "@lerna-demo/utils",
+        "name": "sener-json",
+        "version": "0.0.1",
+        "dependencies": [
+            "sener-types"
+        ]
+    },
+    {
+        "name": "sener-types",
         "version": "0.0.1",
         "dependencies": []
     }

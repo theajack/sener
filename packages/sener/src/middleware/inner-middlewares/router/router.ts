@@ -17,12 +17,6 @@ export type IRouterHandler = (
     data: IMiddleWareRequestData,
 ) => IPromiseMayBe<IMiddleWareResponseReturn|ICommonReturn>;
 
-declare module 'sener-types-extend' {
-    interface IServerOptions {
-        router?: Router;
-    }
-}
-
 export class Router extends MiddleWare {
     routers: IJson<IRouterHandler>;
 

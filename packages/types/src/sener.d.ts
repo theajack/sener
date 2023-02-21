@@ -4,9 +4,8 @@
  * @Description: Coding something
  */
 import { IncomingHttpHeaders } from 'http';
-import { IServerOptions } from 'sener-types-extend';
 import { IMiddleWare } from './middleware';
-import { IServeMethod, IJson } from './utils';
+import { IServeMethod, IJson } from './common';
 
 export interface IHttpInfo {
   requestHeaders: IncomingHttpHeaders;
@@ -16,6 +15,10 @@ export interface IHttpInfo {
   body: IJson<any>;
 }
 
-interface ISenerOptions extends IServerOptions {
+export interface ISenerOptions extends IServerOptions {
     middlewares?: IMiddleWare[];
+}
+
+export interface IServerOptions {
+  port?: number;
 }

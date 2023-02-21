@@ -6,7 +6,7 @@
 
 import {
     IPromiseMayBe, IJson
-} from './utils.d';
+} from './common';
 import { IHttpInfo } from './sener.d';
 import http from 'http';
 import { ISenerHelper } from 'sener-types-extend';
@@ -52,6 +52,7 @@ export interface IMiddleWare {
   enter?: IMiddleWareEnter;
   request?: IMiddleWareRequest;
   response?: IMiddleWareResponse;
+  helper?(): any;
 }
 
 export abstract class MiddleWare implements IMiddleWare {
@@ -62,6 +63,7 @@ export abstract class MiddleWare implements IMiddleWare {
     request (req: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn|IMiddleWareRequestData> {};
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     response (res: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn|IMiddleWareResponseReturn> {};
+    helper () {}
 }
 
 export interface IServerSendData extends IMiddleWareResponseReturn {

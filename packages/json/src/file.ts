@@ -103,7 +103,6 @@ export class File extends SyncFile {
 
         this.opratingCount ++;
         const template = this.read();
-
         return {
             data: template.data,
             save: (data?: any[]) => {

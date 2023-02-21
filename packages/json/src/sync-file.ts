@@ -52,7 +52,7 @@ export class SyncFile {
         try {
             const content = fs.readFileSync(this.path, 'utf8');
             const result = JSON.parse(content);
-            console.log('read content', content.length, Object.keys(result).length);
+            // console.log('read content', result.middle, Object.keys(result).length);
             return result;
         } catch (e) {
             return this.generateDefaultData();

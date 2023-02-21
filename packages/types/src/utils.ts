@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { IJson } from './utils.d';
+import { IJson } from './common';
 
 export function parseUrlSearch (url = '') {
     url = decodeURIComponent(url);

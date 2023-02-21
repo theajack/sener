@@ -55,22 +55,17 @@ export class MiddleWareManager {
     async applyResponse (
         res: IMiddleWareResponseData
     ): Promise<IMiddleWareResponseReturn|null> {
-        let returnValue: IMiddleWareResponseReturn = {
-            data: res.data,
-            statusCode: res.statusCode,
-            headers: res.headers,
-        };
         for (const middleware of this.middlewares) {
             if (middleware.response) {
                 const result = await middleware.response(res);
                 if (typeof result === 'object') {
                     if (!result) return null;
-                    returnValue = result;
+                    Object.assign(res, result);
                 } else if (result === false) {
                     return res;
                 }
             }
         }
-        return returnValue;
+        return res;
     }
 }

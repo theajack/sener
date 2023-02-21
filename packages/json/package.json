@@ -1,10 +1,10 @@
 {
     "name": "sener-json",
     "version": "0.0.1",
-    "description": "lerna demo",
+    "description": "Easy-to-use And Powerful nodejs http server",
     "main": "src/index.ts",
     "typings": "src/index.ts",
-    "repository": "git@github.com:theajack/ebuild-template-lerna.git",
+    "repository": "git@github.com:theajack/sener.git",
     "author": "tackchen <theajack@qq.com>",
     "scripts": {
         "build": "node ../../scripts/build/build.js json"
@@ -17,6 +17,6 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "unpkg": "dist/sener.min.js",
-    "jsdelivr": "dist/sener.min.js"
+    "unpkg": "dist/sener-json.min.js",
+    "jsdelivr": "dist/sener-json.min.js"
 }

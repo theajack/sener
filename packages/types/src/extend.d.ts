@@ -7,10 +7,4 @@
 declare module 'sener-types-extend' {
   interface ISenerHelper {
   }
-  interface ISenerPlugins {
-
-  }
-  interface IServerOptions {
-    port?: number;
-  }
 }

@@ -18,7 +18,7 @@ https://segmentfault.com/a/1190000040988970 -->
 
 ```
 
-lerna add @lerna-demo/utils --scope=sener
+lerna add @sener/utils --scope=sener
 
 lerna version 0.0.1 --yes
 lerna publish from-git --yes

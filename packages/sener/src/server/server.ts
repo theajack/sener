@@ -5,12 +5,12 @@
  */
 import http from 'http';
 import { MiddleWareManager } from '../middleware/middleware-manager';
-import { parseParam, praseUrl } from 'sener-types';
+import { IMiddleWare, parseParam, praseUrl } from 'sener-types';
 import {
-    IJson,
+    IJson, IServerOptions,
     IServerSendData, IResponse, IServeMethod, IHttpInfo, IMiddleWareDataBase
 } from 'sener-types';
-import { ISenerHelper, IServerOptions } from 'sener-types-extend';
+import { ISenerHelper } from 'sener-types-extend';
 
 export class Server {
     server: http.Server;
@@ -23,14 +23,14 @@ export class Server {
 
     constructor ({
         port,
-        router,
     }: IServerOptions) {
         this.middleware = new MiddleWareManager();
         this.initServer(port);
+    }
 
-        if (router) {
-            this.middleware.use(router);
-        }
+    injectMiddleWare (middleware: IMiddleWare) {
+        if (middleware.helper)
+            this.helper = Object.assign(this.helper, middleware.helper());
     }
 
     private parseHttpInfo (request: http.IncomingMessage) {
@@ -73,7 +73,7 @@ export class Server {
             };
 
             if (!await this.middleware.applyEnter(middlewareBase)) {
-                console.log('enter fail');
+                // console.log('enter fail');
                 return this.send404(response);
             }
 

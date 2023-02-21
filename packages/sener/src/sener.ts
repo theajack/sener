@@ -3,7 +3,6 @@
  * @Date: 2023-02-18 15:28:21
  * @Description: Coding something
  */
-import { ISenerPlugins } from 'sener-types-extend';
 import { IMiddleWare, ISenerOptions } from 'sener-types';
 import { Server } from './server/server';
 
@@ -25,30 +24,21 @@ export class Sener {
 
     server: Server;
 
-    plugins: ISenerPlugins;
-
     constructor ({
         port,
-        router,
         middlewares = [],
     }: ISenerOptions = {}) {
         this.server = new Server({
             port,
-            router,
         });
-        for (const middleware of middlewares) {
-            this.use(middleware);
-        }
-    }
-
-    install () {
-
+        this.use(...middlewares);
     }
 
     use (...middlewares: IMiddleWare[]) {
-        middlewares.forEach(middleware => {
+        for (const middleware of middlewares) {
             this.server.middleware.use(middleware);
-        });
+            this.server.injectMiddleWare(middleware);
+        };
     }
 
     remove (middleware: IMiddleWare) {

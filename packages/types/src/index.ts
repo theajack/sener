@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import './extend.d';
-export * from './utils.d';
+export * from './common.d';
 export * from './utils';
 export * from './sener.d';
 export * from './middleware';

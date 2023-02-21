@@ -27,7 +27,7 @@ export class JsonManager {
             return this.file(key).oprateCustom();
         };
         this.file = (key: string) => {
-            console.log(!!this.files[key]);
+            // console.log(!!this.files[key]);
             if (!this.files[key]) {
                 this.files[key] = new File(key);
             }

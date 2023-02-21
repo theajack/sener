@@ -1,21 +1,10 @@
-## quickstart
+<!--
+ * @Author: chenzhongsheng
+ * @Date: 2023-02-13 17:02:26
+ * @Description: Coding something
+-->
+## Sener
 
-```
-npm i -g pnpm lerna
-```
+Easy-to-use And Powerful nodejs http server
 
-```
-pnpm i
-
-pnpm run dev
-
-pnpm run publish -- x.x.x
-```
-
-[lerna](https://www.lernajs.cn/) 命令
-
-```
-lerna run build
-lerna changed
-lerna diff
-```
+comming soon
