@@ -7,14 +7,12 @@ import http from 'http';
 import { MiddleWareManager } from '../middleware/middleware-manager';
 import { parseParam, praseUrl } from '../utils';
 import {
-    IJson, IServerHelper, IServerOptions,
+    IJson, IServerOptions,
     IServerSendData, IResponse, IServeMethod, IHttpInfo
 } from '../type';
 
 export class Server {
     server: http.Server;
-
-    helper: IServerHelper;
 
     middleware: MiddleWareManager;
 
@@ -23,9 +21,7 @@ export class Server {
     constructor ({
         port,
         router,
-        helper,
     }: IServerOptions) {
-        this.helper = helper;
         this.middleware = new MiddleWareManager();
         this.initServer(port);
 
@@ -74,7 +70,6 @@ export class Server {
 
             const requestData = await this.middleware.applyRequest({
                 ...(await this.parseHttpInfo(request)),
-                ...this.helper,
                 request,
                 response,
             });

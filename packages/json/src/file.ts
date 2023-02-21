@@ -4,7 +4,14 @@
  * @Description: Coding something
  */
 import { SyncFile, IFileTemplate } from './sync-file';
-import { IOprateReturn } from '../type';
+
+
+export interface IOprateReturn {
+    data: any[]
+    save: () => void,
+    error: () => void,
+    id: () => number,
+}
 
 export class File extends SyncFile {
 

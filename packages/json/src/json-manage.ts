@@ -4,12 +4,15 @@
  * @Description: Coding something
  */
 import fs from 'fs';
-import { BASE_DIR, makedir } from '../utils';
+import { BASE_DIR, makedir } from './utils';
 import { extractKey } from './sync-file';
-import { File } from './file';
+import { File, IOprateReturn } from './file';
 
-export class FileManager {
+export class JsonManager {
     private files: Record<string, File> = {};
+
+    json: (key: string) => IOprateReturn;
+    file: (key: string) => File;
 
     constructor () {
 
@@ -19,14 +22,17 @@ export class FileManager {
             const key = extractKey(path);
             this.files[key] = new File(key);
         });
-    }
 
-    file (key: string) {
-        console.log(!!this.files[key]);
-        if (!this.files[key]) {
-            this.files[key] = new File(key);
-        }
-        return this.files[key];
+        this.json = (key: string) => {
+            return this.file(key).oprateCustom();
+        };
+        this.file = (key: string) => {
+            console.log(!!this.files[key]);
+            if (!this.files[key]) {
+                this.files[key] = new File(key);
+            }
+            return this.files[key];
+        };
     }
 }
 

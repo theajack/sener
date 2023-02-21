@@ -4,17 +4,11 @@
  * @Description: Coding something
  */
 import http from 'http';
-import { File } from './file/file';
 import { MiddleWare } from './middleware/middleware';
 import { Router } from './server/router';
 
 export interface IJson<T=any> {
     [prop: string]: T;
-}
-
-export interface IServerHelper {
-    file: (name: string) => File;
-    oprate: (name: string) => IOprateReturn;
 }
 
 export type IRouterHandler = (
@@ -40,13 +34,13 @@ export type IServeMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 export type IRouter = IJson<IRouterHandler>;
 
-export interface ISenerOptions {
+export interface IServerOptions {
     port?: number;
     router?: Router;
-    middlewares?: MiddleWare[];
 }
-export interface IServerOptions extends ISenerOptions {
-    helper: IServerHelper;
+
+export interface ISenerOptions extends IServerOptions {
+    middlewares?: MiddleWare[];
 }
 
 // @ts-ignore
@@ -54,7 +48,7 @@ export type IResponse = http.ServerResponse<http.IncomingMessage> & {
     req: http.IncomingMessage;
 }
 
-export interface IMiddleWareRequestData extends IServerHelper {
+export interface IMiddleWareRequestData {
     headers: http.IncomingHttpHeaders;
     url: string;
     method: IServeMethod;
@@ -62,16 +56,9 @@ export interface IMiddleWareRequestData extends IServerHelper {
     body: IJson<any>;
     request: http.IncomingMessage;
     response: IResponse;
+    [prop: string]: any;
 }
 
 export type IHttpInfo = Pick<IMiddleWareRequestData, 'headers'|'method'|'query'|'body'|'url'>
-
-
-export interface IOprateReturn {
-    data: any[]
-    save: () => void,
-    error: () => void,
-    id: () => number,
-}
 
 export type IPromiseMayBe<T> = T|Promise<T>;

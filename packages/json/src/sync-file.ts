@@ -3,7 +3,7 @@
  * @Date: 2023-02-18 15:58:26
  * @Description: Coding something
  */
-import { BASE_DIR, now, makedir } from '../utils';
+import { BASE_DIR, now, makedir } from './utils';
 import fs from 'fs';
 import path from 'path';
 

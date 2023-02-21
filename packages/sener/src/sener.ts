@@ -4,7 +4,6 @@
  * @Description: Coding something
  */
 
-import { FileManager } from './file/file-manage';
 import { IMiddleWare } from './middleware/middleware';
 import { Server } from './server/server';
 import { ISenerOptions } from './type';
@@ -24,7 +23,6 @@ import { ISenerOptions } from './type';
 
 export class Sener {
 
-    files: FileManager;
 
     server: Server;
 
@@ -33,20 +31,17 @@ export class Sener {
         router,
         middlewares = [],
     }: ISenerOptions = {}) {
-        this.files = new FileManager();
         this.server = new Server({
             port,
             router,
-            helper: {
-                file: (name: string) => this.files.file(name),
-                oprate: (name: string) => {
-                    return this.files.file(name).oprateCustom();
-                }
-            }
         });
         for (const middleware of middlewares) {
             this.use(middleware);
         }
+    }
+
+    install () {
+
     }
 
     use (...middlewares: IMiddleWare[]) {
