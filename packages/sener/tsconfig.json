@@ -20,7 +20,9 @@
             "esnext",
             "dom"
         ],
-        "types": ["node"],
+        "types": [
+            "node"
+        ],
         "rootDir": "../..",
         "noEmit": false,
         "paths": {}

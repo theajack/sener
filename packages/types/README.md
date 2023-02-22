@@ -68,6 +68,17 @@ new Sener({
 });
 ```
 
+### Use Static middleware
+
+```js
+import {Sener} from 'sener';
+import {Static} from 'sener-static';
+new Sener({
+  middlewares: [new Static()], 
+  // new Static({dir}); dir default value is ./public
+});
+```
+
 ## Custom Middleware
 
 Documentation will continue to be improved

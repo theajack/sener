@@ -5,9 +5,9 @@
  */
 const { build } = require('esbuild');
 const { resolve } = require('path');
-const { yamlPlugin } = require('esbuild-plugin-yaml');
+// const { yamlPlugin } = require('esbuild-plugin-yaml');
 const { dtsPlugin } = require('esbuild-plugin-d.ts');
-const vuePlugin = require('esbuild-plugin-vue3');
+// const vuePlugin = require('esbuild-plugin-vue3');
 const { name } = require('./build.config');
 
 const outfile = resolve(__dirname, './dev/bundle.js');
@@ -44,9 +44,9 @@ build({
     //   __FEATURE_PROD_DEVTOOLS__: 'false',
     // },
     plugins: [
-        yamlPlugin(),
+        // yamlPlugin(),
         dtsPlugin(),
-        vuePlugin(),
+        // vuePlugin(),
     ],
     watch: {
         onRebuild (error) {

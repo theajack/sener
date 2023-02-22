@@ -5,7 +5,7 @@
  */
 import http from 'http';
 import { MiddleWareManager } from '../middleware/middleware-manager';
-import { IMiddleWare, parseParam, praseUrl } from 'sener-types';
+import { IHelperFunc, IMiddleWare, parseParam, praseUrl } from 'sener-types';
 import {
     IJson, IServerOptions,
     IServerSendData, IResponse, IServeMethod, IHttpInfo, IMiddleWareDataBase
@@ -65,15 +65,26 @@ export class Server {
     private initServer (port = Server.DEFAULT_PORT) {
         console.log(`Sener Runing Succeed On: http://localhost:${port}`);
         this.server = http.createServer(async (request, response) => {
+
+            const sendHelper: IHelperFunc = {
+                send404: (mes) => {this.send404(response, mes);},
+                sendJson: (data, statusCode) => {this.sendData({ response, data, statusCode });},
+                sendResponse: (data) => {this.sendData({ response, ...data });},
+                sendText: (mes, code) => {this.sendText(response, mes, code);},
+                sendHtml: (html) => {this.sendHtml(response, html);},
+            };
+
             const middlewareBase: IMiddleWareDataBase = {
                 request,
                 response,
                 ...this.helper,
+                ...sendHelper,
             };
+
 
             if (!await this.middleware.applyEnter(middlewareBase)) {
                 // console.log('enter fail');
-                return this.send404(response);
+                return;
             }
 
             const httpInfo = await this.parseHttpInfo(request);
@@ -85,8 +96,8 @@ export class Server {
 
             if (!requestData) {
                 // todo 待详细
-                console.log('request fail');
-                return this.send404(response);
+                // console.log('request fail');
+                return;
             };
 
             const responseData = await this.middleware.applyResponse({
@@ -99,8 +110,8 @@ export class Server {
 
             if (!responseData) {
                 // todo 待详细
-                console.log('response fail');
-                return this.send404(response);
+                // console.log('response fail');
+                return;
             }
 
             this.sendData({
@@ -109,45 +120,18 @@ export class Server {
             });
         }).listen(port);
     }
-    // private initServer (port = 3000) {
-    //     console.log('initServer', `http://localhost:${port}`);
-    //     this.server = http.createServer((request, response) => {
-    //         const handler = this.getRouterHandler(request); ;
-    //         if (!handler) {
-    //             this.send404(response);
-    //             return;
-    //         }
 
-    //         // 不使用 async语法可以减少 7kb 的bundle体积
+    private sendHtml (response: IResponse, html: string) {
+        this.sendData({
+            response,
+            data: html,
+            statusCode: 200,
+            headers: { 'Content-Type': 'text/html; charset=utf-8' }
+        });
+    }
 
-    //         this.parseHttpInfo(request).then(info => {
-    //             const httpInfo: IMiddleWareRequestData = {
-    //                 ...info,
-    //                 ...this.helper,
-    //                 request,
-    //                 response,
-    //             };
-    //             const data = handler(httpInfo);
-    //             if (data instanceof Promise) {
-    //                 data.then(data => {
-    //                     this.sendData({
-    //                         response,
-    //                         ...data,
-    //                     });
-    //                 });
-    //             } else {
-    //                 this.sendData({
-    //                     response,
-    //                     ...data,
-    //                 });
-    //             }
-    //         });
-
-    //     }).listen(port);
-    // }
-
-    private send404 (response: IResponse) {
-        this.sendText(response, 'Page not found', 404);
+    private send404 (response: IResponse, message = 'Page not found') {
+        this.sendText(response, message, 404);
     }
 
     private sendText (response: IResponse, str: string, statusCode = 200) {

@@ -29,24 +29,29 @@ export class MiddleWareManager {
 
     async applyEnter (req: IMiddleWareEnterData) {
         for (const middleware of this.middlewares) {
-            if (middleware.enter) {
-                const result = await middleware.enter(req);
-                if (result && result !== MiddleWareReturn.Continue) {
-                    return result;
-                }
+            if (!middleware.enter) continue;
+            const result = await middleware.enter(req);
+            if (!result || result === MiddleWareReturn.Continue) continue;
+            if (result === MiddleWareReturn.Return) {
+                return false;
+            } else {
+                break;
             }
         }
+        return true;
     }
 
     async applyRequest (req: IMiddleWareRequestData) {
         for (const middleware of this.middlewares) {
-            if (middleware.request) {
-                const result = await middleware.request(req);
-                if (typeof result === 'object') {
-                    req = result;
-                } else if (result && result !== MiddleWareReturn.Continue) {
-                    return result;
-                }
+            if (!middleware.request) continue;
+            const result = await middleware.request(req);
+            if (!result || result === MiddleWareReturn.Continue) continue;
+            if (typeof result === 'object') {
+                Object.assign(req, result);
+            } else if (result === MiddleWareReturn.Return) {
+                return null;
+            } else {
+                break;
             }
         }
         return req;
@@ -56,14 +61,15 @@ export class MiddleWareManager {
         res: IMiddleWareResponseData
     ): Promise<IMiddleWareResponseReturn|null> {
         for (const middleware of this.middlewares) {
-            if (middleware.response) {
-                const result = await middleware.response(res);
-                if (typeof result === 'object') {
-                    if (!result) return null;
-                    Object.assign(res, result);
-                } else if (result === false) {
-                    return res;
-                }
+            if (!middleware.response) continue;
+            const result = await middleware.response(res);
+            if (!result || result === MiddleWareReturn.Continue) continue;
+            if (typeof result === 'object') {
+                Object.assign(res, result);
+            } else if (result === MiddleWareReturn.Return) {
+                return null;
+            } else {
+                break;
             }
         }
         return res;

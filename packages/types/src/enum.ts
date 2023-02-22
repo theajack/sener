@@ -5,7 +5,6 @@
  */
 
 export enum MiddleWareReturn {
-  E404 = 'E404',
   Continue = 'Continue',
   Break = 'Break',
   Return = 'Return',

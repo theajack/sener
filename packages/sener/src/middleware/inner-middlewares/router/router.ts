@@ -3,12 +3,11 @@
  * @Date: 2023-02-20 17:23:29
  * @Description: Coding something
  */
-import { IncomingMessage } from 'http';
 import {
     IMiddleWareResponseReturn, MiddleWare,
     IPromiseMayBe, ICommonReturn, IJson,
     IMiddleWareRequestData, IMiddleWareResponseData,
-    parseUrlSearch
+    MiddleWareReturn
 } from 'sener-types';
 
 export type IRouter = IJson<IRouterHandler>;
@@ -25,13 +24,31 @@ export class Router extends MiddleWare {
         this.routers = routers;
     }
 
-    // enter ({ request }: Parameters<MiddleWare['enter']>[0]): ReturnType<MiddleWare['enter']> {
-    //     if (!this.isUrlExist(request)) return null;
+    // enter ({ request, send404 }: Parameters<MiddleWare['enter']>[0]): ReturnType<MiddleWare['enter']> {
+    //     if (!this.isUrlExist(request)) {
+    //         send404(`Page not found: ${request.url}`);
+    //         return MiddleWareReturn.Return;
+    //     }
     // }
+
+    request ({ url, method, send404 }: IMiddleWareRequestData): IPromiseMayBe<IMiddleWareRequestData | ICommonReturn> {
+        const lowMethod = (method || 'get').toLocaleLowerCase();
+        const name = `${lowMethod}:${url}`;
+        if (!!this.routers[name] || (method === 'GET' && !!this.routers[url])) {
+            return MiddleWareReturn.Continue;
+        }
+        // sendHtml(`<h1>Page not found: ${url}<jh1>`);
+        send404(`Page not found: ${url}`);
+        return MiddleWareReturn.Return;
+    }
 
     response (res: Parameters<MiddleWare['response']>[0]): ReturnType<MiddleWare['response']> {
         const handler = this.getRouterHandler(res);
-        if (!handler) return null;
+        if (!handler) {
+            res.send404(`Page not found: ${res.url}`);
+            // res.sendHtml(`<h1>Page not found: ${res.url}<jh1>`);
+            return MiddleWareReturn.Return;
+        }
 
         return handler(res);
     }

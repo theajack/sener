@@ -16,7 +16,15 @@ export type IResponse = ServerResponse & {
   req: IncomingMessage;
 }
 
-export interface IMiddleWareDataBase extends ISenerHelper {
+export interface IHelperFunc {
+  sendResponse: (data: IMiddleWareResponseReturn) => void;
+  sendJson: (data: IJson, statusCode?: number) => void;
+  send404: (errorMessage?: string) => void;
+  sendText: (text: string, statusCode?: number) => void;
+  sendHtml: (html: string) => void;
+}
+
+export interface IMiddleWareDataBase extends ISenerHelper, IHelperFunc {
   request: IncomingMessage;
   response: IResponse;
 }

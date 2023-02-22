@@ -377,8 +377,7 @@ export class StaticServer {
         }
     }
     respond (pathname: string, status: number, _headers: Headers, files: string[], stat: fs.Stats, req: http.IncomingMessage, res: http.ServerResponse, finish: Finish) {
-        // @ts-ignore
-        const contentType = _headers['Content-Type'] || mime.lookup(files[0]) || 'application/octet-stream';
+        const contentType = _headers['Content-Type'] || mime.getType(files[0]) || 'application/octet-stream';
 
         if (this.options.gzip) {
             this.respondGzip(pathname, status, contentType, _headers, files, stat, req, res, finish);
