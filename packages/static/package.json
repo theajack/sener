@@ -6,10 +6,10 @@
     "dependencies": {
         "@types/mime": "^3.0.1",
         "mime": "^3.0.0",
-        "sener-types": "^0.0.4"
+        "sener-types": "^0.0.5"
     },
-    "main": "src/index.ts",
-    "typings": "src/index.ts",
+    "main": "dist/sener-static.cjs.js",
+    "typings": "dist/sener-static.d.ts",
     "description": "Easy-to-use And Powerful nodejs http server",
     "author": "tackchen <theajack@qq.com>",
     "version": "0.0.4",
