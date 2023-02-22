@@ -7,7 +7,7 @@
  * @Description: Coding something
  */
 
-const { exec } = require('./build/utils');
+const { exec } = require('./helper/utils');
 
 async function delTag (tagName) {
     await exec(`git tag -d ${tagName}`);

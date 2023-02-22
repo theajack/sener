@@ -25,13 +25,14 @@ export class Router extends MiddleWare {
         this.routers = routers;
     }
 
-    enter ({ request }: Parameters<MiddleWare['enter']>[0]): ReturnType<MiddleWare['enter']> {
-        if (!this.isUrlExist(request)) return null;
-    }
+    // enter ({ request }: Parameters<MiddleWare['enter']>[0]): ReturnType<MiddleWare['enter']> {
+    //     if (!this.isUrlExist(request)) return null;
+    // }
 
     response (res: Parameters<MiddleWare['response']>[0]): ReturnType<MiddleWare['response']> {
         const handler = this.getRouterHandler(res);
         if (!handler) return null;
+
         return handler(res);
     }
 
@@ -41,18 +42,19 @@ export class Router extends MiddleWare {
         if (!handler && method === 'GET') {
             handler = this.routers[url];
         }
+        if (!handler) return;
         return handler || null;
     }
 
-    private isUrlExist (request: IncomingMessage) {
-        const { url } = parseUrlSearch(request.url);
-        const method = (request.method || 'get').toLocaleLowerCase();
+    // private isUrlExist (request: IncomingMessage) {
+    //     const { url } = parseUrlSearch(request.url);
+    //     const method = (request.method || 'get').toLocaleLowerCase();
 
-        const name = `${method}:${url}`;
+    //     const name = `${method}:${url}`;
 
-        return (
-            !!this.routers[name] ||
-            (method === 'get' && !!this.routers[url])
-        );
-    }
+    //     return (
+    //         !!this.routers[name] ||
+    //         (method === 'get' && !!this.routers[url])
+    //     );
+    // }
 }

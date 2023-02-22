@@ -3,9 +3,8 @@
  * @Date: 2023-02-18 15:58:26
  * @Description: Coding something
  */
-import { BASE_DIR, now, makedir } from './utils';
+import { now, makedir } from './utils';
 import fs from 'fs';
-import path from 'path';
 
 export interface IFileTemplate {
     key: string,
@@ -14,14 +13,6 @@ export interface IFileTemplate {
     count: number, // 数据大小
     lastUpdateTime: number, // 上次更新时间
     createTime: number
-}
-
-export function extractKey (path: string) {
-    return path.substring(BASE_DIR.length, path.length - 5);
-}
-
-export function keyToPath (key: string): string {
-    return path.resolve(BASE_DIR, `./${key}.json`);
 }
 
 // 同步模块
@@ -36,11 +27,9 @@ export class SyncFile {
     isDirExist: boolean;
     isFileExist: boolean;
 
-    constructor (key: string) {
+    constructor (key: string, path: string) {
         this.key = key;
-        this.path = keyToPath(key);
-        // this.path = path;
-        // this.key = extractKey(path);
+        this.path = path;
         this.dir = this.path.substring(0, this.path.lastIndexOf('/') + 1);
         this.isDirExist = fs.existsSync(this.dir);
         this.isFileExist = this.isDirExist && fs.existsSync(this.path);

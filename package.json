@@ -11,9 +11,11 @@
         "_serve": "npx nodemon scripts/dev/bundle.js --ignore ./SenerData",
         "dev": "run-p _dev _serve",
         "build": "npm run init:dev && lerna run build && node scripts/build/mod-package.js",
-        "publish": "node ./scripts/push-release.js",
+        "release": "node ./scripts/push-release.js",
         "info": "node ./scripts/info.js",
         "boot": "lerna bootstrap",
+        "create": "node scripts/create-rep.js",
+        "install": "node scripts/install-dep.js",
         "build:docs": "node scripts/docs/build-docs.js",
         "init:package": "node ./scripts/init-packages-info.js",
         "init:dev": "node ./scripts/init-packages-info.js dev",
@@ -32,6 +34,7 @@
         "@rollup/plugin-replace": "^4.0.0",
         "@rollup/plugin-yaml": "^3.1.0",
         "@types/node": "^18.0.3",
+        "@types/node-static": "^0.7.7",
         "@typescript-eslint/eslint-plugin": "^5.29.0",
         "@typescript-eslint/parser": "^5.29.0",
         "@vue/compiler-sfc": "^3.2.37",
@@ -43,6 +46,7 @@
         "eslint-plugin-vue": "^9.1.1",
         "execa": "4.0.2",
         "lerna": "^5.1.5",
+        "node-static": "^0.7.11",
         "nodemon": "^2.0.20",
         "npm-run-all": "^4.1.5",
         "rollup": "^2.75.7",
@@ -55,5 +59,8 @@
         "typescript": "^4.7.4",
         "vue-eslint-parser": "^9.0.3"
     },
-    "private": true
+    "private": true,
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/"
+    }
 }

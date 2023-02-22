@@ -65,7 +65,6 @@ export class Server {
     private initServer (port = Server.DEFAULT_PORT) {
         console.log(`Sener Runing Succeed On: http://localhost:${port}`);
         this.server = http.createServer(async (request, response) => {
-
             const middlewareBase: IMiddleWareDataBase = {
                 request,
                 response,

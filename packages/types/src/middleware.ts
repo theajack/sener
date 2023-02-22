@@ -8,19 +8,19 @@ import {
     IPromiseMayBe, IJson
 } from './common';
 import { IHttpInfo } from './sener.d';
-import http from 'http';
+import { ServerResponse, IncomingMessage } from 'http';
 import { ISenerHelper } from 'sener-types-extend';
+import { MiddleWareReturn } from './enum';
 
-// @ts-ignore
-export type IResponse = http.ServerResponse<http.IncomingMessage> & {
-  req: http.IncomingMessage;
+export type IResponse = ServerResponse & {
+  req: IncomingMessage;
 }
 
 export interface IMiddleWareDataBase extends ISenerHelper {
-  request: http.IncomingMessage;
+  request: IncomingMessage;
   response: IResponse;
 }
-export type ICommonReturn = null|boolean|void;
+export type ICommonReturn = MiddleWareReturn|void;
 
 export interface IMiddleWareEnterData extends IMiddleWareDataBase {}
 
@@ -55,14 +55,15 @@ export interface IMiddleWare {
   helper?(): any;
 }
 
-export abstract class MiddleWare implements IMiddleWare {
-    name = '';
+export class MiddleWare implements IMiddleWare {
+    name: string = '';
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     enter (req: IMiddleWareEnterData): IPromiseMayBe<ICommonReturn> {}
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     request (req: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn|IMiddleWareRequestData> {};
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     response (res: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn|IMiddleWareResponseReturn> {};
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     helper () {}
 }
 

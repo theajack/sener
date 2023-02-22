@@ -6,7 +6,8 @@
 import {
     IMiddleWareEnterData, IMiddleWareRequestData,
     IMiddleWareResponseData, IMiddleWareResponseReturn,
-    IMiddleWare
+    IMiddleWare,
+    MiddleWareReturn
 } from 'sener-types';
 
 export class MiddleWareManager {
@@ -30,11 +31,11 @@ export class MiddleWareManager {
         for (const middleware of this.middlewares) {
             if (middleware.enter) {
                 const result = await middleware.enter(req);
-                if (result === null) return null;
-                else if (result === false) return true;
+                if (result && result !== MiddleWareReturn.Continue) {
+                    return result;
+                }
             }
         }
-        return true;
     }
 
     async applyRequest (req: IMiddleWareRequestData) {
@@ -42,10 +43,9 @@ export class MiddleWareManager {
             if (middleware.request) {
                 const result = await middleware.request(req);
                 if (typeof result === 'object') {
-                    if (!result) return null;
                     req = result;
-                } else if (result === false) {
-                    return req;
+                } else if (result && result !== MiddleWareReturn.Continue) {
+                    return result;
                 }
             }
         }

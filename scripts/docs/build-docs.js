@@ -6,7 +6,7 @@
  * @LastEditTime: 2023-02-21 23:16:31
  */
 const fs = require('fs');
-const { resolveRootPath } = require('../build/utils');
+const { resolveRootPath } = require('../helper/utils');
 
 if (!fs.existsSync(resolveRootPath('docs')))
     fs.mkdirSync(resolveRootPath('docs'));

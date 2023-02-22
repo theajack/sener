@@ -5,7 +5,7 @@
  */
 
 const execa = require('execa');
-const { resolveRootPath, writeStringIntoFile } = require('./build/utils');
+const { resolveRootPath, writeStringIntoFile } = require('./helper/utils');
 // const { exec } = require('./helper/tool');
 
 const map = require(resolveRootPath('scripts/helper/dependent-graph.json'));

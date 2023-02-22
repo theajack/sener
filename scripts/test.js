@@ -1,4 +1,3 @@
-const {extractPackagesInfo} = require('./build/utils');
+const { extractPackagesInfo } = require('./helper/utils');
 
 console.log(extractPackagesInfo());
- 

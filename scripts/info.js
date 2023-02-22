@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-const { extractPackagesInfo, writeJsonIntoFile } = require('./build/utils');
+const { extractPackagesInfo, writeJsonIntoFile } = require('./helper/utils');
 
 const info = extractPackagesInfo();
 

@@ -7,7 +7,8 @@
  */
 
 
-const { initPackageInfo, resolveRootPath, writeJsonIntoFile } = require('./build/utils');
+const { resolveRootPath, writeJsonIntoFile } = require('./helper/utils');
+const { initPackageInfo } = require('./build/package-utils');
 
 const isDev = process.argv[2] === 'dev';
 

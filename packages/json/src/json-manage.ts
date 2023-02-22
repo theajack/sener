@@ -5,8 +5,8 @@
  */
 import fs from 'fs';
 import { BASE_DIR, makedir } from './utils';
-import { extractKey } from './sync-file';
 import { File, IOprateReturn } from './file';
+import path from 'path';
 
 export class JsonManager {
     private files: Record<string, File> = {};
@@ -14,13 +14,20 @@ export class JsonManager {
     json: (key: string) => IOprateReturn;
     file: (key: string) => File;
 
-    constructor () {
+    baseDir = BASE_DIR;
 
-        makedir(BASE_DIR);
+    constructor (dir = '') {
+        if (dir) {
+            this.baseDir = path.resolve(BASE_DIR, dir);
+            if (fs.existsSync(this.baseDir)) {
+                throw new Error(`Dir is Exist: ${this.baseDir}`);
+            }
+        }
+        makedir(this.baseDir);
 
-        traverse(BASE_DIR, path => {
-            const key = extractKey(path);
-            this.files[key] = new File(key);
+        traverse(this.baseDir, path => {
+            const key = this.extractKey(path);
+            this.files[key] = new File(key, path);
         });
 
         this.json = (key: string) => {
@@ -29,10 +36,18 @@ export class JsonManager {
         this.file = (key: string) => {
             // console.log(!!this.files[key]);
             if (!this.files[key]) {
-                this.files[key] = new File(key);
+                this.files[key] = new File(key, this.keyToPath(key));
             }
             return this.files[key];
         };
+    }
+
+    extractKey (path: string) {
+        return path.substring(this.baseDir.length, path.length - 5);
+    }
+
+    keyToPath (key: string): string {
+        return path.resolve(this.baseDir, `./${key}.json`);
     }
 }
 

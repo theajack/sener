@@ -21,7 +21,7 @@
             "dom"
         ],
         "types": [
-            "@types/node"
+            "node"
         ],
         "rootDir": "../..",
         "noEmit": false,

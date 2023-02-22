@@ -1,21 +1,26 @@
 [
     {
-        "name": "sener",
-        "version": "0.0.1",
+        "name": "sener-json",
+        "version": "0.0.4",
         "dependencies": [
             "sener-types"
         ]
     },
     {
-        "name": "sener-json",
-        "version": "0.0.1",
+        "name": "sener",
+        "version": "0.0.4",
         "dependencies": [
             "sener-types"
         ]
+    },
+    {
+        "name": "sener-static",
+        "version": "0.0.4",
+        "dependencies": []
     },
     {
         "name": "sener-types",
-        "version": "0.0.1",
+        "version": "0.0.4",
         "dependencies": []
     }
 ]

@@ -16,7 +16,7 @@ export const IS_DEV = process.env.NODE_ENV === 'development';
 
 export const BASE_DIR = path.resolve(
     `${IS_DEV ? process.cwd() : os.homedir()}`,
-    `./SenerJsonData`
+    `./sener-json-db`
 );
 
 export function makedir (dirPath: string) {
