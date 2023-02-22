@@ -5,7 +5,8 @@
  */
 
 const execa = require('execa');
-const { resolveRootPath } = require('./utils');
+const fs = require('fs');
+const { resolveRootPath, resolvePacakgePath } = require('./utils');
 
 const dirName = process.argv[2];
 
@@ -32,6 +33,12 @@ async function main () {
     await build();
     // ! 下面的逻辑放在 scripts 后面的步骤里做 否则会build失败
     // initSinglePackageInfo(dirName, false);
+    if (dirName === 'types') {
+        fs.copyFileSync(
+            resolvePacakgePath('types/src/extend.d.ts'),
+            resolvePacakgePath('types/dist/extend.d.ts')
+        );
+    }
 }
 
 main();
