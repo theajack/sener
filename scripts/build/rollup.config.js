@@ -49,7 +49,7 @@ const createBaseConfig = ({
         output: {
             file: resolvePacakgePath(`${dirName}/dist/${bundleName}`),
             format,
-            name: `Sener${isMainPackage ? '' : upcaseFirstLetter(dirName)}`,
+            // name: `Sener${isMainPackage ? '' : upcaseFirstLetter(dirName)}`,
             // sourcemap: true,
         },
         plugins: [
@@ -78,7 +78,7 @@ const config = [
     },
     {
         ...createBaseConfig({
-            format: 'iife',
+            format: 'cjs',
             bundleName: '',
         }),
     },

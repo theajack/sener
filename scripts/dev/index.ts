@@ -4,8 +4,13 @@
  * @Description: Coding something
  */
 
-import { Sener, Router, IMiddleWare, MiddleWare, IMiddleWareResponseData, IPromiseMayBe } from '../../packages/sener';
+import {
+    Router, IMiddleWare, MiddleWare, Sener,
+    IMiddleWareResponseData, IPromiseMayBe
+} from '../../packages/sener';
 import { Json } from 'packages/json';
+
+// console.log('--------', Router);
 
 const testMiddleware: IMiddleWare = {
     async response (response) {
@@ -22,7 +27,7 @@ class Test2Middle extends MiddleWare {
         res.data.middle2 = 'Test2Middle';
     }
 }
-
+// @ts-ignore
 const router = new Router({
     'get:/aa': ({ file }) => {
         const data = file('aa').read();

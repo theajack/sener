@@ -12,6 +12,7 @@ const dirName = process.argv[2];
 console.log(`dirName=${dirName}`);
 
 async function build () {
+    // if (dirName !== 'test') return;
     await execa(
         resolveRootPath('node_modules/rollup/dist/bin/rollup'),
         [

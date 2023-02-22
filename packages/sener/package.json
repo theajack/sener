@@ -9,14 +9,12 @@
     "scripts": {
         "build": "node ../../scripts/build/build.js sener"
     },
-    "license": "",
-    "type": "module",
+    "license": "MIT",
     "dependencies": {
         "sener-types": "^0.0.1"
     },
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "unpkg": "dist/sener.min.js",
-    "jsdelivr": "dist/sener.min.js"
+    "module": "dist/sener.esm.js"
 }
