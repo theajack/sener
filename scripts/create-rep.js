@@ -7,6 +7,7 @@ const fs = require('fs');
 const { name } = require('./build.config');
 const { initSinglePackageInfo } = require('./build/package-utils');
 const { resolvePackagePath, writeStringIntoFile, writeJsonIntoFile } = require('./helper/utils');
+const { version } = require('../package.json');
 
 const dir = process.argv[2];
 
@@ -26,6 +27,7 @@ writeStringIntoFile(`export default 'Hello ${dir}';`, `#${dir}/src/index.ts`, );
 
 writeJsonIntoFile({
     name: `${name}-${dir}`,
+    version,
     scripts: { build: `node ../../scripts/build/build.js ${dir}` },
     dependencies: {},
 }, `#${dir}/package.json`, );

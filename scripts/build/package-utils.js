@@ -29,7 +29,7 @@ function initSinglePackageInfo (dir, isDev = false) {
                 if (handlerBuildPackage) handlerBuildPackage(package, packageName);
             }
             [
-                'description', 'author', 'version', 'repository',
+                'description', 'author', 'repository',
                 'license', 'publishConfig'
             ].forEach(name => {
                 package[name] = rootPkg[name];
