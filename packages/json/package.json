@@ -2,8 +2,8 @@
     "name": "sener-json",
     "version": "0.0.4",
     "description": "Easy-to-use And Powerful nodejs http server",
-    "main": "dist/sener-json.cjs.js",
-    "typings": "dist/sener-json.d.ts",
+    "main": "src/index.ts",
+    "typings": "src/index.ts",
     "repository": "git@github.com:theajack/sener.git",
     "author": "tackchen <theajack@qq.com>",
     "scripts": {
