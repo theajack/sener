@@ -1,16 +1,15 @@
 {
     "name": "sener-types",
-    "version": "0.0.1",
+    "version": "0.0.4",
     "description": "Easy-to-use And Powerful nodejs http server",
-    "main": "src/index.ts",
-    "typings": "src/index.ts",
+    "main": "dist/sener-types.cjs.js",
+    "typings": "dist/sener-types.d.ts",
     "repository": "git@github.com:theajack/sener.git",
     "author": "tackchen <theajack@qq.com>",
     "scripts": {
         "build": "node ../../scripts/build/build.js types"
     },
     "license": "MIT",
-    "dependencies": {},
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
