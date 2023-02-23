@@ -59,9 +59,9 @@ function traverse (
 
     for (const name of list) {
         if (name.endsWith('.json')) {
-            onSingleFile(`${dir}${name}`);
+            onSingleFile(path.resolve(dir, name));
         } else {
-            traverse(`${dir}${name}/`, onSingleFile);
+            traverse(path.resolve(dir, name), onSingleFile);
         }
     }
 }
