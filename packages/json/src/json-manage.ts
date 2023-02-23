@@ -19,9 +19,9 @@ export class JsonManager {
     constructor (dir = '') {
         if (dir) {
             this.baseDir = path.resolve(BASE_DIR, dir);
-            if (fs.existsSync(this.baseDir)) {
-                throw new Error(`Dir is Exist: ${this.baseDir}`);
-            }
+            // if (fs.existsSync(this.baseDir)) {
+            //     throw new Error(`Dir is Exist: ${this.baseDir}`);
+            // }
         }
         makedir(this.baseDir);
 
