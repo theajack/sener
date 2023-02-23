@@ -21,6 +21,7 @@ export class File extends SyncFile {
 
     isReading = false;
 
+    // todo 逻辑可以再思考优化一下
     read (): IFileTemplate {
         if (this.template) return this.template;
         this.isReading = true;
@@ -63,41 +64,7 @@ export class File extends SyncFile {
             return false;
         }
     }
-    // oprate (
-    //     handleData: (data: any[], geneId: () => number) => Promise<any[]>|any[],
-    // ): Promise<boolean> {
-    //     return new Promise(resolve => {
 
-    //         try {
-    //             this.opratingCount ++;
-    //             const template = this.read();
-    //             // console.log(`【debug 】 asyncRead ${!!template}`);
-    //             const data = handleData(template.data, () => this.generateId(template));
-    //             if (data instanceof Promise) {
-    //                 data.then((data) => {
-
-    //                     if (data instanceof Array) template.data = data;
-    //                     this.opratingCount --;
-    //                     // console.log(`【debug 】 opratingCount-- ${this.opratingCount}`);
-
-    //                     if (this.opratingCount > 0) return true;
-    //                     resolve(this.write());
-    //                 });
-    //             } else {
-    //                 if (data instanceof Array) template.data = data;
-    //                 this.opratingCount --;
-    //                 // console.log(`【debug 】 opratingCount-- ${this.opratingCount}`);
-
-    //                 if (this.opratingCount > 0) return true;
-    //                 resolve(this.write());
-    //             }
-
-    //         } catch (e) {
-    //             this.opratingCount --;
-    //             return false;
-    //         }
-    //     });
-    // }
 
     oprateCustom (): IOprateReturn {
 

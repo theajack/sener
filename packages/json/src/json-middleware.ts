@@ -9,9 +9,9 @@ import { JsonManager } from './json-manage';
 
 export class Json extends MiddleWare {
     json: JsonManager;
-    constructor () {
+    constructor (dir?: string) {
         super();
-        this.json = new JsonManager();
+        this.json = new JsonManager(dir);
     }
     helper () {
         return {
