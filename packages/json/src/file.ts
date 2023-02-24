@@ -9,7 +9,7 @@ import { SyncFile, IFileTemplate } from './sync-file';
 export interface IOprateReturn {
     data: any[]
     save: () => void,
-    error: () => void,
+    clear: () => void,
     id: () => number,
 }
 
@@ -65,6 +65,9 @@ export class File extends SyncFile {
         }
     }
 
+    private reduceCount () {
+
+    }
 
     oprateCustom (): IOprateReturn {
 
@@ -79,7 +82,7 @@ export class File extends SyncFile {
                 if (this.opratingCount > 0) return true;
                 return this.write();
             },
-            error: () => {this.opratingCount --;},
+            clear: () => {this.opratingCount --;},
             id: () => this.generateId(template),
         };
     }

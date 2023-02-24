@@ -5,14 +5,11 @@
  */
 import fs from 'fs';
 import { BASE_DIR, makedir } from './utils';
-import { File, IOprateReturn } from './file';
+import { File } from './file';
 import path from 'path';
 
 export class JsonManager {
     private files: Record<string, File> = {};
-
-    json: (key: string) => IOprateReturn;
-    file: (key: string) => File;
 
     baseDir = BASE_DIR;
 
@@ -30,16 +27,19 @@ export class JsonManager {
             this.files[key] = new File(key, path);
         });
 
-        this.json = (key: string) => {
-            return this.file(key).oprateCustom();
-        };
-        this.file = (key: string) => {
-            // console.log(!!this.files[key]);
-            if (!this.files[key]) {
-                this.files[key] = new File(key, this.keyToPath(key));
-            }
-            return this.files[key];
-        };
+    }
+    write (key: string) {
+        return this.file(key).oprateCustom();
+    }
+    file (key: string) {
+        // console.log(!!this.files[key]);
+        if (!this.files[key]) {
+            this.files[key] = new File(key, this.keyToPath(key));
+        }
+        return this.files[key];
+    }
+    read (key: string) {
+        return this.file(key).read();
     }
 
     extractKey (path: string) {

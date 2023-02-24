@@ -31,12 +31,13 @@ class Test2Middle extends MiddleWare {
 }
 // @ts-ignore
 const router = new Router({
-    'get:/aa': ({ file }) => {
-        const data = file('aa').read();
+    'get:/aa': ({ read }) => {
+
+        const data = read('aa');
         // console.log('router data', data);
         return { data: data };
     },
-    'get:/setaa': async ({ query, json }) => {
+    'get:/setaa': async ({ query, write }) => {
         // const success = await file('aa').oprate((data) => {
         //     data.push(query.text);
         //     return data;
@@ -46,7 +47,7 @@ const router = new Router({
         // }
         // return { data: 'error' };
 
-        const { data, save, id } = json('aa');
+        const { data, save, id } = write('aa');
         // console.log('body.data', query.text);
         data.push({
             ...query,
@@ -56,7 +57,7 @@ const router = new Router({
         return { data: data };
 
     },
-    'post:/setaa': ({ body, json }) => {
+    'post:/setaa': ({ body, write }) => {
         // const success = await file('aa').oprate((data, geneId) => {
         //     body.data.id = geneId();
         //     data.push(body.data);
@@ -64,7 +65,7 @@ const router = new Router({
         // });
         // return {success, data: body.data};
 
-        const { data, save, id } = json('aa');
+        const { data, save, id } = write('aa');
 
         console.log('body.data', body);
         body.data.id = id();

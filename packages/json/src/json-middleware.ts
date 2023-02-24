@@ -16,7 +16,8 @@ export class Json extends MiddleWare {
     helper () {
         return {
             file: (key: string) => this.json.file(key),
-            json: (key: string) => this.json.json(key),
+            write: (key: string) => this.json.write(key),
+            read: (key: string) => this.json.read(key),
         };
     }
 }
