@@ -4,6 +4,10 @@
  * @Description: Coding something
 -->
 
+# 0.0.6-0.0.8
+
+bugfix 
+
 ## 0.0.5
 
 优化中间件逻辑
