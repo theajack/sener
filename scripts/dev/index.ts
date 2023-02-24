@@ -68,10 +68,10 @@ const router = new Router({
         const { data, save, id } = write('aa');
 
         console.log('body.data', body);
-        body.data.id = id();
-        data.push(body.data);
+        body.id = id();
+        data.push(body);
         save();
-        return { data: body.data };
+        return { data: body };
     },
 });
 

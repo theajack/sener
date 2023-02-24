@@ -64,7 +64,7 @@ const router = new Router({
     },
 });
 new Sener({
-  middlewares: [router, new Json('you_app_name')], // you_app_name is optional, default to sener dir root as ~/sener-json-data/
+  middlewares: [router, new Json('you_app_name')], // you_app_name is optional, default to sener dir root as ~/sener-json-db/
 });
 ```
 

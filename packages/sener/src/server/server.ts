@@ -44,6 +44,7 @@ export class Server {
                 chunks.push(chunk);
             }).on('end', () => {
                 const bodyStr = Buffer.concat(chunks).toString();
+                // console.log(bodyStr, headers);
                 let body: IJson<string>;
                 // todo 根据 header 判断
                 try {

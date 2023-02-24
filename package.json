@@ -8,7 +8,7 @@
     "scripts": {
         "lint": "eslint packages --ext ts",
         "_dev": "node scripts/dev.js",
-        "_serve": "npx nodemon scripts/dev/bundle.js --ignore ./SenerData",
+        "_serve": "npx nodemon scripts/dev/bundle.js --ignore ./sener-json-db",
         "dev": "run-p _dev _serve",
         "build": "npm run init:dev && lerna run build && node scripts/build/mod-package.js",
         "release": "node ./scripts/push-release.js",
