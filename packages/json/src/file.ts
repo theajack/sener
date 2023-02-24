@@ -65,10 +65,6 @@ export class File extends SyncFile {
         }
     }
 
-    private reduceCount () {
-
-    }
-
     oprateCustom (): IOprateReturn {
 
         this.opratingCount ++;

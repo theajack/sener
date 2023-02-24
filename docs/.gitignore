@@ -5,5 +5,5 @@ lerna-debug.log
 .pnpm-debug.log
 bundle.js
 bundle.js.map
-SenerJsonData
 .DS_Store
+sener-json-data
