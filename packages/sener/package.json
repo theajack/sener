@@ -1,6 +1,6 @@
 {
     "name": "sener",
-    "version": "0.0.5",
+    "version": "0.0.7",
     "description": "Easy-to-use And Powerful nodejs http server",
     "main": "src/index.ts",
     "typings": "src/index.ts",
