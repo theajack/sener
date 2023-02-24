@@ -39,7 +39,7 @@ export class JsonManager {
         return this.files[key];
     }
     read (key: string) {
-        return this.file(key).read();
+        return this.file(key).read().data;
     }
 
     extractKey (path: string) {
