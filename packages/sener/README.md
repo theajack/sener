@@ -68,6 +68,16 @@ new Sener({
 });
 ```
 
+### Use Cors middleware
+
+```js
+import {Sener, Cors} from 'sener';
+new Sener({
+  middlewares: [new Cors()], 
+  // new Cors(header); Or Set your custom headers
+});
+```
+
 ### Use Static middleware
 
 ```js
