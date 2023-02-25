@@ -6,8 +6,8 @@
 import {
     IMiddleWareResponseReturn, MiddleWare,
     IPromiseMayBe, ICommonReturn, IJson,
-    IMiddleWareRequestData, IMiddleWareResponseData,
-    MiddleWareReturn
+    IMiddleWareRequestData,
+    MiddleWareReturn,
 } from 'sener-types';
 
 export type IRouter = IJson<IRouterHandler>;
@@ -17,11 +17,19 @@ export type IRouterHandler = (
 ) => IPromiseMayBe<IMiddleWareResponseReturn|ICommonReturn>;
 
 export class Router extends MiddleWare {
-    routers: IJson<IRouterHandler>;
+    routers: IJson<IRouterHandler> = {};
 
     constructor (routers: IJson<IRouterHandler>) {
         super();
-        this.routers = routers;
+        const REG = /^(post|get|put|delete):/;
+        for (let k in routers) {
+            const origin = k;
+            k = k.trim();
+            if (!REG.test(k)) k = `get:${k}`;
+            if (!k.endsWith('/')) k = `${k}/`;
+            this.routers[k] = routers[origin];
+        }
+        // console.log(this.routers);
     }
 
     // enter ({ request, send404 }: Parameters<MiddleWare['enter']>[0]): ReturnType<MiddleWare['enter']> {
@@ -31,19 +39,25 @@ export class Router extends MiddleWare {
     //     }
     // }
 
+    private buildRouteKey (url: string, method: string) {
+        if (!url.endsWith('/')) url = `${url}/`;
+        return `${(method || 'get').toLocaleLowerCase()}:${url}`;
+    }
+
     request ({ url, method, send404 }: IMiddleWareRequestData): IPromiseMayBe<IMiddleWareRequestData | ICommonReturn> {
-        const lowMethod = (method || 'get').toLocaleLowerCase();
-        const name = `${lowMethod}:${url}`;
-        if (!!this.routers[name] || (method === 'GET' && !!this.routers[url])) {
+        const key = this.buildRouteKey(url, method);
+        // console.log('on request', key);
+        if (!!this.routers[key]) {
             return MiddleWareReturn.Continue;
         }
-        // sendHtml(`<h1>Page not found: ${url}<jh1>`);
         send404(`Page not found: ${url}`);
         return MiddleWareReturn.Return;
     }
 
     response (res: Parameters<MiddleWare['response']>[0]): ReturnType<MiddleWare['response']> {
-        const handler = this.getRouterHandler(res);
+        const key = this.buildRouteKey(res.url, res.method);
+        // console.log('on response', key);
+        const handler = this.routers[key];
         if (!handler) {
             res.send404(`Page not found: ${res.url}`);
             // res.sendHtml(`<h1>Page not found: ${res.url}<jh1>`);
@@ -52,26 +66,4 @@ export class Router extends MiddleWare {
 
         return handler(res);
     }
-
-    private getRouterHandler ({ method, url }: IMiddleWareResponseData) {
-        const name = `${method.toLocaleLowerCase()}:${url}`;
-        let handler = this.routers[name];
-        if (!handler && method === 'GET') {
-            handler = this.routers[url];
-        }
-        if (!handler) return;
-        return handler || null;
-    }
-
-    // private isUrlExist (request: IncomingMessage) {
-    //     const { url } = parseUrlSearch(request.url);
-    //     const method = (request.method || 'get').toLocaleLowerCase();
-
-    //     const name = `${method}:${url}`;
-
-    //     return (
-    //         !!this.routers[name] ||
-    //         (method === 'get' && !!this.routers[url])
-    //     );
-    // }
 }

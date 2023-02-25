@@ -5,4 +5,4 @@
  */
 export * from './sener';
 export * from 'sener-types';
-export * from './middleware/inner-middlewares/router/router';
+export * from './middleware/entry';

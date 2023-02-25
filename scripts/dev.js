@@ -12,8 +12,24 @@ const { name } = require('./build.config');
 
 const outfile = resolve(__dirname, './dev/bundle.js');
 
+const EntryMap = {
+    [name]: './dev/index.ts',
+};
+
+console.log(process.argv);
+
+let projectName = process.argv[2];
+
+if (!projectName) {
+    console.warn(`Dev 项目名称未指定，将使用默认项目 ${name}`);
+    projectName = name;
+}
+
+const entry = EntryMap[projectName] || `./samples/${projectName}/index.ts`;
+
 build({
-    entryPoints: [ resolve(__dirname, './dev/index.ts') ],
+    // entryPoints: [ resolve(__dirname, './dev/index.ts') ],
+    entryPoints: [ resolve(__dirname, entry) ],
     outfile,
     bundle: true,
     sourcemap: true,

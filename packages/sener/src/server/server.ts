@@ -17,6 +17,7 @@ export class Server {
 
     middleware: MiddleWareManager;
 
+    // @ts-ignore
     helper: ISenerHelper = {};
 
     static DEFAULT_PORT = 9000;
@@ -44,7 +45,7 @@ export class Server {
                 chunks.push(chunk);
             }).on('end', () => {
                 const bodyStr = Buffer.concat(chunks).toString();
-                // console.log(bodyStr, headers);
+                // console.log(bodyStr);
                 let body: IJson<string>;
                 // todo 根据 header 判断
                 try {
@@ -66,7 +67,6 @@ export class Server {
     private initServer (port = Server.DEFAULT_PORT) {
         console.log(`Sener Runing Succeed On: http://localhost:${port}`);
         this.server = http.createServer(async (request, response) => {
-
             const sendHelper: IHelperFunc = {
                 send404: (mes) => {this.send404(response, mes);},
                 sendJson: (data, statusCode) => {this.sendData({ response, data, statusCode });},
@@ -82,38 +82,30 @@ export class Server {
                 ...sendHelper,
             };
 
+            if (!await this.middleware.applyEnter(middlewareBase)) return;
 
-            if (!await this.middleware.applyEnter(middlewareBase)) {
-                // console.log('enter fail');
-                return;
-            }
+            // ! options请求返回200 当使用nginx配置跨域时此处需要有返回
+            // ! 使用 cors 中间件时不会执行到这里
+            if (request.method === 'OPTIONS') return sendHelper.sendResponse({ statusCode: 200 });
 
             const httpInfo = await this.parseHttpInfo(request);
-
+            // console.log('parseHttpInfo', httpInfo);
             const requestData = await this.middleware.applyRequest({
                 ...httpInfo,
                 ...middlewareBase,
             });
+            // console.log('requestData', requestData);
 
-            if (!requestData) {
-                // todo 待详细
-                // console.log('request fail');
-                return;
-            };
+            if (!requestData) return;
 
             const responseData = await this.middleware.applyResponse({
                 data: {},
                 statusCode: 200,
-                // todo headers
                 ...middlewareBase,
                 ...httpInfo,
             });
 
-            if (!responseData) {
-                // todo 待详细
-                // console.log('response fail');
-                return;
-            }
+            if (!responseData) return;
 
             this.sendData({
                 response,
@@ -148,12 +140,11 @@ export class Server {
     }
     private sendData ({
         response,
-        data,
+        data = '',
         statusCode = 200,
         headers = { 'Content-Type': 'application/json;charset=UTF-8' },
     }: IServerSendData) {
         // console.log(headers);
-
         for (const k in headers) {
             response.setHeader(k, headers[k]);
         }

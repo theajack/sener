@@ -34,8 +34,9 @@ export class Sener {
         this.use(...middlewares);
     }
 
-    use (...middlewares: IMiddleWare[]) {
+    use (...middlewares: (IMiddleWare|null)[]) {
         for (const middleware of middlewares) {
+            if (!middleware) continue;
             this.server.middleware.use(middleware);
             this.server.injectMiddleWare(middleware);
         };

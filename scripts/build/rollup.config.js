@@ -9,6 +9,7 @@ import dts from 'rollup-plugin-dts';
 import typescript from 'rollup-plugin-typescript2';
 import commonjs from '@rollup/plugin-commonjs';
 import { uglify } from 'rollup-plugin-uglify';
+import replace from 'rollup-plugin-replace';
 import path from 'path';
 const { plugins, name, buildFormats } = require('../build.config');
 
@@ -61,6 +62,9 @@ const createBaseConfig = ({
                 exclude: [ 'node_modules/**' ],
                 extensions,
                 configFile: path.join(__dirname, './babel.config.js'),
+            }),
+            replace({
+                'process.env.NODE_ENV': '"production"',
             }),
             ...plugins,
         ],

@@ -16,7 +16,7 @@ export interface IHttpInfo {
 }
 
 export interface ISenerOptions extends IServerOptions {
-    middlewares?: IMiddleWare[];
+    middlewares?: (IMiddleWare|null)[];
 }
 
 export interface IServerOptions {

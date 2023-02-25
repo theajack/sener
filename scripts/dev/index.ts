@@ -6,12 +6,12 @@
 
 
 import {
-    Router, IMiddleWare, MiddleWare, Sener,
-    IMiddleWareResponseData
-} from '../../packages/sener';
+    IMiddleWare, MiddleWare, Sener,
+    IMiddleWareResponseData,
+} from 'packages/sener';
 import { Json } from 'packages/json';
 import { Static } from 'packages/static';
-
+import { router } from './router';
 // console.log('--------', Router);
 
 const testMiddleware: IMiddleWare = {
@@ -29,51 +29,6 @@ class Test2Middle extends MiddleWare {
         res.data.middle2 = 'Test2Middle';
     }
 }
-// @ts-ignore
-const router = new Router({
-    'get:/aa': ({ read }) => {
-
-        const data = read('aa');
-        // console.log('router data', data);
-        return { data: data };
-    },
-    'get:/setaa': async ({ query, write }) => {
-        // const success = await file('aa').oprate((data) => {
-        //     data.push(query.text);
-        //     return data;
-        // });
-        // if (success) {
-        //     return { data: query.text };
-        // }
-        // return { data: 'error' };
-
-        const { data, save, id } = write('aa');
-        // console.log('body.data', query.text);
-        data.push({
-            ...query,
-            id: id(),
-        });
-        save();
-        return { data: data };
-
-    },
-    'post:/setaa': ({ body, write }) => {
-        // const success = await file('aa').oprate((data, geneId) => {
-        //     body.data.id = geneId();
-        //     data.push(body.data);
-        //     return data;
-        // });
-        // return {success, data: body.data};
-
-        const { data, save, id } = write('aa');
-
-        console.log('body.data', body);
-        body.id = id();
-        data.push(body);
-        save();
-        return { data: body };
-    },
-});
 
 function delay (time = 1000) {
     return new Promise(resolve => {
