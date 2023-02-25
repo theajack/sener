@@ -51,20 +51,30 @@ npm i sener sener-json
 import {Sener, Router} from 'sener';
 import {Json} from 'sener-json';
 const router = new Router({
-    '/data': ({ query, file }) => {
+    '/data': ({ query, read }) => {
         // 'data' is json file name
-        return { data: file('data').read() };
+        return { data: read('data') };
     },
-    'post:/data': async ({ body, json }) => {
-        const { data, save, id } = json('aa');
+    'post:/data': async ({ body, write }) => {
+        const { data, save, id } = write('aa');
         body.message = 'from post'
         data.push({...body, id: id()}); // Add increment id
-        save(); // save it
+        save(); // save it, THIS Method must be called
         return { data };
     },
 });
 new Sener({
-  middlewares: [router, new Json()],
+  middlewares: [router, new Json('you_app_name')], // you_app_name is optional, default to sener dir root as ~/sener-json-db/
+});
+```
+
+### Use Cors middleware
+
+```js
+import {Sener, Cors} from 'sener';
+new Sener({
+  middlewares: [new Cors()], 
+  // new Cors(header); Or Set your custom headers
 });
 ```
 
