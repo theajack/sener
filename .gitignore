@@ -7,3 +7,6 @@ bundle.js
 bundle.js.map
 .DS_Store
 sener-json-db
+bundles
+
+*.ignore.ts

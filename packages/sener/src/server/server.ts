@@ -68,10 +68,10 @@ export class Server {
         console.log(`Sener Runing Succeed On: http://localhost:${port}`);
         this.server = http.createServer(async (request, response) => {
             const sendHelper: IHelperFunc = {
-                send404: (mes) => {this.send404(response, mes);},
+                send404: (msg) => {this.send404(response, msg);},
                 sendJson: (data, statusCode) => {this.sendData({ response, data, statusCode });},
                 sendResponse: (data) => {this.sendData({ response, ...data });},
-                sendText: (mes, code) => {this.sendText(response, mes, code);},
+                sendText: (msg, code) => {this.sendText(response, msg, code);},
                 sendHtml: (html) => {this.sendHtml(response, html);},
             };
 

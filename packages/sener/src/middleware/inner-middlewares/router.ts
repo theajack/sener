@@ -32,13 +32,6 @@ export class Router extends MiddleWare {
         // console.log(this.routers);
     }
 
-    // enter ({ request, send404 }: Parameters<MiddleWare['enter']>[0]): ReturnType<MiddleWare['enter']> {
-    //     if (!this.isUrlExist(request)) {
-    //         send404(`Page not found: ${request.url}`);
-    //         return MiddleWareReturn.Return;
-    //     }
-    // }
-
     private buildRouteKey (url: string, method: string) {
         if (!url.endsWith('/')) url = `${url}/`;
         return `${(method || 'get').toLocaleLowerCase()}:${url}`;

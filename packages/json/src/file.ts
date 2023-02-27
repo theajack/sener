@@ -8,8 +8,8 @@ import { SyncFile, IFileTemplate } from './sync-file';
 
 export interface IOprateReturn {
     data: any[]
-    save: () => void,
-    clear: () => void,
+    save: (data?: any[]) => void,
+    clear: (data?: any) => void,
     id: () => number,
 }
 
@@ -21,7 +21,6 @@ export class File extends SyncFile {
 
     isReading = false;
 
-    // todo 逻辑可以再思考优化一下
     read (): IFileTemplate {
         if (this.template) return this.template;
         this.isReading = true;
@@ -68,17 +67,19 @@ export class File extends SyncFile {
     oprateCustom (): IOprateReturn {
 
         this.opratingCount ++;
+        console.log('opratingCount++', this.opratingCount);
         const template = this.read();
         return {
             data: template.data,
             save: (data?: any[]) => {
+                console.log('save', this.opratingCount);
                 if (data instanceof Array) template.data = data;
                 this.opratingCount --;
                 // console.log(`【debug 】 opratingCount-- ${this.opratingCount}`);
                 if (this.opratingCount > 0) return true;
                 return this.write();
             },
-            clear: () => {this.opratingCount --;},
+            clear: (data?: any) => {this.opratingCount --; return data;},
             id: () => this.generateId(template),
         };
     }

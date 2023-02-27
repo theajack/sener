@@ -3,37 +3,32 @@
  * @Date: 2023-02-21 22:55:55
  * @Description: Coding something
  */
+import { Json } from 'packages/json/src';
 import { Router } from 'packages/sener';
-
-function createTimeInfo () {
-    const now = Date.now();
-    return {
-        'createTime': now,
-        'lastUpdateTime': now
-    };
-}
+import { initSenerApp } from '../../utils/sample-base';
+import { createTimeInfo, error, success } from '../../utils/utils';
 
 function getComment ({ query, read }: any) {
     const { index, size, all, app } = query;
-    if (!app) return { data: { code: -1, data: [], mes: `app不能为空` } };
+    if (!app) return error(`app不能为空`);
     const data = read(app);
     if (all === 'true') {
-        return { data: { data, code: 0 } };
+        return success(data);
     }
     const i = parseInt(index);
     const s = parseInt(size);
 
     if (Number.isNaN(i) || Number.isNaN(s)) {
-        return { data: { code: -1, data: [], mes: `参数类型错误index=${index}, size=${size}` } };
+        return error(`参数类型错误index=${index}, size=${size}`);
     }
     const start = (i - 1) * s;
-    return { data: { data: data.slice(start, start + s), code: 0 } };
+    return success(data.slice(start, start + s));
 }
 
 function addComment ({ body, write }: any) {
     const { app, contact, content, name } = body;
     // console.log(body, app);
-    if (!app) return { data: { code: -1, data: [], mes: `app不能为空` } };
+    if (!app) return error(`app不能为空`);
     const { data, save, id } = write(app);
     data.unshift({
         contact,
@@ -45,17 +40,16 @@ function addComment ({ body, write }: any) {
     });
     save();
     // console.log('return', data.length);
-    return { data: { code: 0 } };
+    return success();
 }
 
 function addReply ({ body, write }: any) {
     const { app, commentId, contact, content, name } = body;
-    if (!app) return { data: { code: -1, data: [], mes: `app不能为空` } };
+    if (!app) return error(`app不能为空`);
     const { data, save } = write(app);
     const comment = data.find((item: any) => item.id === commentId);
-    if (!comment) {
-        return { data: { code: -1, mes: `错误的commentId: ${commentId}` } };
-    }
+    if (!comment) return error(`错误的commentId: ${commentId}`);
+
     comment.reply.unshift({
         contact,
         content,
@@ -63,10 +57,10 @@ function addReply ({ body, write }: any) {
         ...createTimeInfo(),
     });
     save();
-    return { data: { code: 0 } };
+    return success();
 }
 
-export const router = new Router({
+const router = new Router({
     '/message': ({ query, read }) => getComment({ query, read }),
     'post:/message': async ({ body, write }) => addComment({ body, write }),
     'post:/message/reply': ({ body, write }) => addReply({ body, write }),
@@ -84,4 +78,10 @@ export const router = new Router({
         body.app = 'cnchar';
         return addReply({ body, write });
     }
+});
+
+initSenerApp({
+    port: 3001,
+    router,
+    json: new Json('comment')
 });

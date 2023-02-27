@@ -20,9 +20,9 @@ const dirName = process.env.PACKAGE_NAME;
 const extensions = [ '.ts', '.d.ts', '.js' ];
 
 export default {
-    input: resolveRootPath(`scripts/samples/${dirName}/index.ts`),
+    input: resolveRootPath(`scripts/samples/packages/${dirName}/index.ts`),
     output: {
-        file: resolveRootPath(`scripts/samples/${dirName}/dist/${dirName}.prod.min.js`),
+        file: resolveRootPath(`scripts/samples/packages/${dirName}/dist/${dirName}.prod.min.js`),
         format: 'cjs',
     },
     plugins: [

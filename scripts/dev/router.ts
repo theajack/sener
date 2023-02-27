@@ -17,7 +17,7 @@ function createTimeInfo () {
 
 function getComment ({ query, read }: any) {
     const { index, size, all, app } = query;
-    if (!app) return { data: { code: -1, data: [], mes: `app不能为空` } };
+    if (!app) return { data: { code: -1, data: [], msg: `app不能为空` } };
     const data = read(app);
     if (all === 'true') {
         // console.log('all', app, data);
@@ -27,7 +27,7 @@ function getComment ({ query, read }: any) {
     const s = parseInt(size);
 
     if (Number.isNaN(i) || Number.isNaN(s)) {
-        return { data: { code: -1, data: [], mes: `参数类型错误index=${index}, size=${size}` } };
+        return { data: { code: -1, data: [], msg: `参数类型错误index=${index}, size=${size}` } };
     }
     const start = (i - 1) * s;
     return { data: { data: data.slice(start, start + s), code: 0 } };
@@ -36,7 +36,7 @@ function getComment ({ query, read }: any) {
 function addComment ({ body, write }: any) {
     const { app, contact, content, name } = body;
     // console.log(body, app);
-    if (!app) return { data: { code: -1, data: [], mes: `app不能为空` } };
+    if (!app) return { data: { code: -1, data: [], msg: `app不能为空` } };
     const { data, save, id } = write(app);
     data.unshift({
         contact,
@@ -53,11 +53,11 @@ function addComment ({ body, write }: any) {
 
 function addReply ({ body, write }: any) {
     const { app, commentId, contact, content, name } = body;
-    if (!app) return { data: { code: -1, data: [], mes: `app不能为空` } };
+    if (!app) return { data: { code: -1, data: [], msg: `app不能为空` } };
     const { data, save } = write(app);
     const comment = data.find((item: any) => item.id === commentId);
     if (!comment) {
-        return { data: { code: -1, mes: `错误的commentId: ${commentId}` } };
+        return { data: { code: -1, msg: `错误的commentId: ${commentId}` } };
     }
     comment.reply.unshift({
         contact,

@@ -5,6 +5,7 @@
  */
 
 import { MiddleWare } from 'sener-types';
+import { IJsonHelper } from './extend.d';
 import { JsonManager } from './json-manage';
 
 export class Json extends MiddleWare {
@@ -13,7 +14,7 @@ export class Json extends MiddleWare {
         super();
         this.json = new JsonManager(dir);
     }
-    helper () {
+    helper (): IJsonHelper {
         return {
             file: (key: string) => this.json.file(key),
             write: (key: string) => this.json.write(key),
