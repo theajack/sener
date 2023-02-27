@@ -6,13 +6,13 @@
     "dependencies": {
         "@types/mime": "^3.0.1",
         "mime": "^3.0.0",
-        "sener-types": "^0.0.9"
+        "sener-types": "^0.0.10"
     },
     "main": "src/index.ts",
     "typings": "src/index.ts",
     "description": "Easy-to-use And Powerful nodejs http server",
     "author": "tackchen <theajack@qq.com>",
-    "version": "0.0.9",
+    "version": "0.0.10",
     "repository": "git@github.com:theajack/sener.git",
     "license": "MIT",
     "publishConfig": {
