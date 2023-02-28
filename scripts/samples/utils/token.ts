@@ -6,7 +6,7 @@
 import { now } from 'packages/sener/src/utils';
 import { IUser } from '../types/user';
 import md5 from './md5';
-import tokenKey from './token.ignore';
+import tokenKey from './ignore/token.ignore';
 
 // {userId} {password} {expiresTime} {tokenKey}
 

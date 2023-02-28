@@ -1,3 +1,4 @@
+import { now } from 'packages/sener/src/utils';
 import { IJson, IMiddleWareResponseReturn } from 'packages/types/src';
 
 /*
@@ -36,7 +37,6 @@ export function success (
     };
 }
 
-
 export function convertData (data: IJson) {
     let res = '';
     for (const key in data) {
@@ -48,4 +48,26 @@ export function convertData (data: IJson) {
     }
     res = res.substring(0, res.length - 1);
     return res;
+}
+
+export function generateExpired (mins: number) {
+    const time = mins * 60 * 1000;
+    return {
+        expire: now() + time,
+        time,
+    };
+}
+
+export function random (a: number, b: number): number {
+    return (a + Math.round(Math.random() * (b - a)));
+}
+
+
+export function generateCode (len = 6, alpha = false) {
+    let dict = '0123456789';
+    if (alpha)  dict += 'abcdefghijklmnopqrstuvwxyz';
+    let code = '';
+    for (let i = 0; i < len; i++)
+        code += dict[random(0, dict.length - 1)];
+    return code;
 }

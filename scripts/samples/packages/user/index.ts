@@ -7,8 +7,9 @@ import { Json } from 'packages/json/src';
 import { Router } from 'packages/sener';
 import { IUser } from 'scripts/samples/types/user';
 import hex_md5 from 'scripts/samples/utils/md5';
-import { generateToken, isTokenExpired, isTokenValid } from 'scripts/samples/utils/token';
-import { createSimpleTimeInfo, error, success } from 'scripts/samples/utils/utils';
+import { sendEmail } from 'scripts/samples/utils/send-email';
+import { generateToken, isTokenExpired } from 'scripts/samples/utils/token';
+import { createSimpleTimeInfo, error, generateCode, generateExpired, success } from 'scripts/samples/utils/utils';
 import { RequestHandler } from '../../utils/http';
 import { initSenerApp } from '../../utils/sample-base';
 
@@ -31,11 +32,18 @@ const router = new Router({
         return success({ tk: user.tk, expire: user.expire }, '登录成功');
 
     },
-    'post:/user/regist': ({ body, write }) => {
+    'post:/user/regist': ({ body, write, read }) => {
+        const { nickname, pwd, email = '', code } = body;
+
+        const emailMap = read('email')[0];
+
+        if (!emailMap || !emailMap.code || emailMap.code !== code) {
+            return error('验证码错误');
+        }
         const { data, save, clear, id } = write('user');
-        const { nickname, pwd, email = '' } = body;
-        if (data.find(u => u.nickname === nickname)) {
-            return clear(error('昵称不可用'));
+        for (const item of data) {
+            if (item.nickname === nickname) return clear(error('昵称已被注册'));
+            if (item.email === email) return clear(error('邮箱已被注册'));
         }
         const user: IUser = {
             ...createSimpleTimeInfo(),
@@ -51,6 +59,35 @@ const router = new Router({
         save();
         return success({ tk: user.tk, expire: user.expire }, '注册登录成功');
     },
+    'post:/user/emailcode': async ({ body, write }) => {
+        const { email } = body;
+        if (!email) return error('邮箱不可为空');
+        const min = 5;
+        const { time, expire } = generateExpired(min);
+        const item = {
+            code: generateCode(),
+            expire,
+        };
+        const { result, msg } = await sendEmail({
+            title: '【验证码】来自shiyix.cn的验证码',
+            message: [
+                `验证码: ${item.code}`,
+                `有效期: ${min}分钟`,
+                `请勿将验证码转发给他人`,
+                '-- From shiyix.cn'
+            ].join('\n'),
+            to: email
+        });
+
+        if (!result) {
+            return error(`邮件发送失败:${msg}`);
+        }
+        const { data, save } = write('email');
+        if (!data[0]) data[0] = {};
+        data[0][email] = item;
+        save();
+        return success({ time }, '邮件发送成功');
+    },
     'post:/user/check': ({ body, read }) => {
         const data = read('user');
         const { tk } = body;
@@ -58,6 +95,13 @@ const router = new Router({
         if (!user) return error('错误的token', 1);
         if (isTokenExpired(user)) return error('token已过期', 2, { nickname: user.nickname });
         return success({ id: user.id, tk: user.tk, expire: user.expire }, '认证成功');
+    },
+    'get:/email': () => {
+        sendEmail({
+            message: 'from foxmail\nsadasa\nsasa',
+            to: 'theajack@qq.com'
+        });
+        return success({}, '发送成功');
     },
 
     '/user/test': () => {
