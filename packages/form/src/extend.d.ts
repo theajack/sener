@@ -1,13 +1,14 @@
 /*
  * @Author: chenzhongsheng
- * @Date: 2023-02-21 08:35:39
+ * @Date: 2023-02-21 22:08:31
  * @Description: Coding something
  */
+import { Files } from 'formidable';
+import { IJson } from 'sener-types';
 
 declare module 'sener-types-extend' {
-  interface ISenerHelper {
-  }
   interface ISenerRequestData {
-
+    files: Files;
+    formData: IJson;
   }
 }

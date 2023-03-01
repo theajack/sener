@@ -8,6 +8,7 @@ import {
     IPromiseMayBe, ICommonReturn, IJson,
     IMiddleWareRequestData,
     MiddleWareReturn,
+    IMiddleWareResponseData,
 } from 'sener-types';
 
 export type IRouter = IJson<IRouterHandler>;
@@ -37,7 +38,7 @@ export class Router extends MiddleWare {
         return `${(method || 'get').toLocaleLowerCase()}:${url}`;
     }
 
-    request ({ url, method, send404 }: IMiddleWareRequestData): IPromiseMayBe<IMiddleWareRequestData | ICommonReturn> {
+    request ({ url, method, send404 }: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | Partial<IMiddleWareRequestData>> {
         const key = this.buildRouteKey(url, method);
         // console.log('on request', key);
         if (!!this.routers[key]) {
@@ -47,7 +48,7 @@ export class Router extends MiddleWare {
         return MiddleWareReturn.Return;
     }
 
-    response (res: Parameters<MiddleWare['response']>[0]): ReturnType<MiddleWare['response']> {
+    response (res: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn | Partial<IMiddleWareResponseReturn>> {
         const key = this.buildRouteKey(res.url, res.method);
         // console.log('on response', key);
         const handler = this.routers[key];
@@ -56,7 +57,6 @@ export class Router extends MiddleWare {
             // res.sendHtml(`<h1>Page not found: ${res.url}<jh1>`);
             return MiddleWareReturn.Return;
         }
-
         return handler(res);
     }
 }

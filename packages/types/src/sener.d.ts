@@ -13,6 +13,7 @@ export interface IHttpInfo {
   method: IServeMethod;
   query: IJson<string>;
   body: IJson<any>;
+  buffer: Buffer|null;
 }
 
 export interface ISenerOptions extends IServerOptions {

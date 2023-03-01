@@ -3,7 +3,7 @@
  * @Date: 2023-02-19 08:11:43
  * @Description: Coding something
  */
-import http from 'http';
+import http, { IncomingMessage } from 'http';
 import { MiddleWareManager } from '../middleware/middleware-manager';
 import { IHelperFunc, IMiddleWare, parseParam, praseUrl } from 'sener-types';
 import {
@@ -34,31 +34,51 @@ export class Server {
             this.helper = Object.assign(this.helper, middleware.helper());
     }
 
-    private parseHttpInfo (request: http.IncomingMessage) {
-        return new Promise<IHttpInfo>((resolve) => {
-            const { headers, method } = request;
-            const { url, query } = praseUrl(request.url);
+    private async parseHttpInfo (request: http.IncomingMessage): Promise<IHttpInfo> {
+
+        const { headers, method } = request;
+        const { url, query } = praseUrl(request.url);
+
+        return {
+            requestHeaders: headers,
+            method: method as IServeMethod,
+            url,
+            query,
+            ...(await this.parseBody(request))
+        };
+    }
+
+    private parseBody (request: IncomingMessage) {
+        return new Promise<{body: IJson, buffer: Buffer|null}>((resolve) => {
             const chunks: any[] = [];
+            const contentType = request.headers['content-type'] || '';
+            // console.log('contentType', contentType);
+            if (contentType.includes('multipart/form-data')) {
+                resolve({ body: {}, buffer: null });
+                return;
+            }
             request.on('error', (err) => {
                 console.error(err);
             }).on('data', (chunk) => {
                 chunks.push(chunk);
             }).on('end', () => {
-                const bodyStr = Buffer.concat(chunks).toString();
-                // console.log(bodyStr);
-                let body: IJson<string>;
-                // todo 根据 header 判断
-                try {
-                    body = JSON.parse(bodyStr);
-                } catch (e) {
-                    body = parseParam(bodyStr);
+                const buffer = Buffer.concat(chunks);
+                let body: IJson<string> = {};
+
+                if (request.headers['content-type']?.includes('application/json')) {
+                    const bodyStr = buffer.toString();
+                    console.log('bodyStr', bodyStr);
+                    // console.log(bodyStr);
+                    // todo 根据 header 判断
+                    try {
+                        body = JSON.parse(bodyStr);
+                    } catch (e) {
+                        body = parseParam(bodyStr);
+                    }
                 }
                 resolve({
-                    requestHeaders: headers,
-                    method: method as IServeMethod,
-                    url,
-                    query,
                     body,
+                    buffer,
                 });
             });
         });
@@ -101,8 +121,7 @@ export class Server {
             const responseData = await this.middleware.applyResponse({
                 data: {},
                 statusCode: 200,
-                ...middlewareBase,
-                ...httpInfo,
+                ...requestData,
             });
 
             if (!responseData) return;

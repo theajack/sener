@@ -44,6 +44,7 @@ export class MiddleWareManager {
     async applyRequest (req: IMiddleWareRequestData) {
         for (const middleware of this.middlewares) {
             if (!middleware.request) continue;
+            // console.log(middleware.name);
             const result = await middleware.request(req);
             if (!result || result === MiddleWareReturn.Continue) continue;
             if (typeof result === 'object') {

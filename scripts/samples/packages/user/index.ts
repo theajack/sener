@@ -3,8 +3,10 @@
  * @Date: 2023-02-21 22:55:55
  * @Description: Coding something
  */
+import { Form } from '../../../../packages/form';
 import { Json } from 'packages/json/src';
 import { Router } from 'packages/sener';
+import { Static } from 'packages/static/src';
 import { IUser } from 'scripts/samples/types/user';
 import hex_md5 from 'scripts/samples/utils/md5';
 import { sendEmail } from 'scripts/samples/utils/send-email';
@@ -14,14 +16,21 @@ import { RequestHandler } from '../../utils/http';
 import { initSenerApp } from '../../utils/sample-base';
 import { checkEmailCode } from './email';
 
+
 const request = new RequestHandler({
     port: 3001
 });
 
 const json = new Json('user');
 
-
 const router = new Router({
+    'post:/image': ({ formData, request, files }) => {
+        for (const k in files) {
+            const file = files[k] as any;
+            file.filepath = `${request.headers.origin}/${file.filepath.split('/public/')[1]}`;
+        }
+        return success({ formData, files }, '文件上传成功');
+    },
     'post:/user/login': ({ body, write }) => {
         const { data, save, clear } = write('user');
         const { nickname, pwd } = body;
@@ -31,7 +40,6 @@ const router = new Router({
         generateToken(user);
         save();
         return success({ tk: user.tk, expire: user.expire }, '登录成功');
-
     },
     'post:/user/regist': ({ body, write }) => {
         const { nickname, pwd, email = '', code } = body;
@@ -118,5 +126,9 @@ const router = new Router({
 initSenerApp({
     port: 3002,
     router,
-    json
+    json,
+    middlewares: [
+        new Static(),
+        new Form(),
+    ]
 });

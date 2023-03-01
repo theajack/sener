@@ -10,3 +10,4 @@ sener-json-db
 bundles
 ignore
 *.ignore.ts
+public/upload

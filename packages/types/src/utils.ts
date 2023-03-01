@@ -5,6 +5,7 @@
  */
 
 import { IJson } from './common';
+import fs from 'fs';
 
 export function parseUrlSearch (url = '') {
     url = decodeURIComponent(url);
@@ -35,4 +36,28 @@ export function parseParam (str: string) {
         query[item[1]] = item[2];
     }
     return query;
+}
+
+export function now () {
+    return Date.now();
+}
+
+export const IS_DEV = process.env.NODE_ENV === 'development';
+
+export function makedir (dirPath: string) {
+
+    dirPath = '/' + dirPath.split('/').filter(n => !!n).join('/');
+
+    const next = () => {
+        dirPath = dirPath.substring(0, dirPath.lastIndexOf('/'));
+    };
+
+    const pathArr: string[] = [];
+    while (dirPath && !fs.existsSync(dirPath)) {
+        pathArr.unshift(dirPath);
+        next();
+    }
+    for (const dir of pathArr) {
+        fs.mkdirSync(dir, '700');
+    }
 }
