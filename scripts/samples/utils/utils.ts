@@ -58,6 +58,10 @@ export function generateExpired (mins: number) {
     };
 }
 
+export function isExpired (target: number) {
+    return now() > target;
+}
+
 export function random (a: number, b: number): number {
     return (a + Math.round(Math.random() * (b - a)));
 }

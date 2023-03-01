@@ -12,6 +12,7 @@ import { generateToken, isTokenExpired } from 'scripts/samples/utils/token';
 import { createSimpleTimeInfo, error, generateCode, generateExpired, success } from 'scripts/samples/utils/utils';
 import { RequestHandler } from '../../utils/http';
 import { initSenerApp } from '../../utils/sample-base';
+import { checkEmailCode } from './email';
 
 const request = new RequestHandler({
     port: 3001
@@ -32,18 +33,19 @@ const router = new Router({
         return success({ tk: user.tk, expire: user.expire }, '登录成功');
 
     },
-    'post:/user/regist': ({ body, write, read }) => {
+    'post:/user/regist': ({ body, write }) => {
         const { nickname, pwd, email = '', code } = body;
+        if (!nickname) return error('昵称不可为空', -1);
+        if (!pwd) return error('密码不可为空', -8);
 
-        const emailMap = read('email')[0];
+        const emailResult = checkEmailCode(email, code, write);
 
-        if (!emailMap || !emailMap.code || emailMap.code !== code) {
-            return error('验证码错误');
-        }
+        if (typeof emailResult === 'object') return emailResult;
+
         const { data, save, clear, id } = write('user');
         for (const item of data) {
-            if (item.nickname === nickname) return clear(error('昵称已被注册'));
-            if (item.email === email) return clear(error('邮箱已被注册'));
+            if (item.nickname === nickname) return emailResult(clear(error('昵称已被注册', -2)));
+            if (item.email === email) return emailResult(clear(error('邮箱已被注册', -3)));
         }
         const user: IUser = {
             ...createSimpleTimeInfo(),
@@ -56,6 +58,7 @@ const router = new Router({
         };
         generateToken(user);
         data.unshift(user);
+        emailResult(null, true);
         save();
         return success({ tk: user.tk, expire: user.expire }, '注册登录成功');
     },

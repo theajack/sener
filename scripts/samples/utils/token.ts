@@ -18,7 +18,7 @@ export enum TokenState {
 
 export function generateToken (
     user: IUser,
-    ExpiresTime = 10000 // 默认1天有效期
+    ExpiresTime = 86400000 // 默认1天有效期 86400000 ms
 ) {
     user.expire = now() + ExpiresTime;
     user.tk = md5(`${user.id} ${user.pwd} ${user.expire} ${tokenKey}`);

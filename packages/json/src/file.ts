@@ -9,7 +9,7 @@ import { SyncFile, IFileTemplate } from './sync-file';
 export interface IOprateReturn {
     data: any[]
     save: (data?: any[]) => void,
-    clear: (data?: any) => void,
+    clear: <T extends any>(data?: T) => T,
     id: () => number,
 }
 
