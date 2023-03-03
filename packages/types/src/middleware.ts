@@ -32,7 +32,7 @@ export type ICommonReturn = MiddleWareReturn|void;
 
 export interface IMiddleWareEnterData extends IMiddleWareDataBase {}
 
-export interface IMiddleWareResponseReturn<T=any> extends Partial<ISenerRequestData> {
+export interface IMiddleWareResponseReturn<T = any> extends Partial<ISenerRequestData> {
   data: T,
   statusCode?: number,
   headers?: IJson<string>

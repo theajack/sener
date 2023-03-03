@@ -3,7 +3,7 @@
  * @Date: 2023-03-03 01:15:32
  * @Description: Coding something
  */
-import { IBoolResult } from 'scripts/samples/types/sample';
+import { IBoolResult } from 'request/types/sample';
 import { Request } from './base-request';
 
 export class UserRequest extends Request {

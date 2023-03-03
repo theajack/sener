@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import { now } from 'packages/sener/src/utils';
-import { IUser } from '../types/user';
+import { IUser } from '../types/object';
 import md5 from './md5';
 import tokenKey from './ignore/token.ignore';
 

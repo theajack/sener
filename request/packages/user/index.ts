@@ -5,14 +5,14 @@
  */
 import { Json } from 'packages/json/src';
 import { Router } from 'packages/sener';
-import { IUser } from 'scripts/samples/types/object.d';
-import hex_md5 from 'scripts/samples/utils/md5';
-import { sendEmail } from 'scripts/samples/utils/send-email';
-import { generateToken, isTokenExpired } from 'scripts/samples/utils/token';
-import { createSimpleTimeInfo, error, generateCode, generateExpired, success } from 'scripts/samples/utils/utils';
+import { IUser } from 'request/types/object.d';
+import hex_md5 from 'request/utils/md5';
+import { sendEmail } from 'request/utils/send-email';
+import { generateToken, isTokenExpired } from 'request/utils/token';
+import { createSimpleTimeInfo, error, generateCode, generateExpired, success } from 'request/utils/utils';
 import { initSenerApp } from '../../utils/sample-base';
 import { checkEmailCode } from '../util/email';
-import { Comment } from 'scripts/samples/utils/request';
+import { Comment } from 'request/utils/request';
 
 
 const router = new Router({

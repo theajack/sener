@@ -47,8 +47,7 @@ export class Router extends MiddleWare {
         send404(`Page not found: ${url}`);
         return MiddleWareReturn.Return;
     }
-
-    response (res: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn | Partial<IMiddleWareResponseReturn>> {
+    response (res: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
         const key = this.buildRouteKey(res.url, res.method);
         // console.log('on response', key);
         const handler = this.routers[key];

@@ -2,11 +2,11 @@
  * @Autor: theajack
  * @Date: 2021-05-09 18:00:08
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-03-03 02:29:26
+ * @LastEditTime: 2023-03-03 09:50:17
  * @Description: Coding something
  */
 import { IJson, IMethod, IMiddleWareResponseReturn } from 'packages/types/src';
-import { IBoolResult, IRouterReturn } from 'scripts/samples/types/sample';
+import { IBoolResult, IRouterReturn } from 'request/types/sample';
 import { error, success } from '../../utils';
 import { request } from '../http';
 

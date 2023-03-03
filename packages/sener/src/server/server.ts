@@ -111,7 +111,7 @@ export class Server {
             const requestData = await this.middleware.applyRequest({
                 ...httpInfo,
                 ...middlewareBase,
-            });
+            }); // todo fix
             // console.log('requestData', requestData);
 
             if (!requestData) return;

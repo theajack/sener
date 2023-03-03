@@ -5,7 +5,7 @@
  */
 
 const execa = require('execa');
-const { resolveRootPath } = require('../helper/utils');
+const { resolveRootPath } = require('../scripts/helper/utils');
 
 let sampleName = process.argv[2];
 
@@ -22,7 +22,7 @@ async function build () {
         resolveRootPath('node_modules/rollup/dist/bin/rollup'),
         [
             '-c',
-            resolveRootPath('scripts/samples/rollup.sample.config.js'),
+            resolveRootPath('request/rollup.sample.config.js'),
             '--environment',
             [
                 `PACKAGE_NAME:${sampleName}`,

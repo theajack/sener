@@ -24,14 +24,14 @@
         "init:dev": "node ./scripts/init-packages-info.js dev",
         "init:dep": "node scripts/init-learn-dep.js",
         "test:ci": "node scripts/build/test-ci.js",
-        "build:sample": "node scripts/samples/build-sample.js",
-        "_dev:web": "serve -s scripts/samples/build-web-request/server -p 3333",
-        "build:web": "node scripts/samples/build-web-request/build-web-request.js",
+        "build:sample": "node request/build-sample.js",
+        "_dev:web": "serve -s request/web-request/server -p 3333",
+        "build:web": "node request/web-request/build-web-request.js",
         "_build:web": "npm run build:web watch",
         "dev:web": "run-p _build:web _dev:web && echo 111"
     },
     "nodemonConfig": {
-        "ignore": ["./sener-json-db", "./scripts/samples/build-web-request/dist"]
+        "ignore": ["./sener-json-db", "./request/web-request/dist"]
     },
     "license": "MIT",
     "devDependencies": {

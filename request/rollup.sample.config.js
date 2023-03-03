@@ -13,16 +13,16 @@ import path from 'path';
 
 const {
     resolveRootPath,
-} = require('../helper/utils');
+} = require('../scripts/helper/utils');
 
 const dirName = process.env.PACKAGE_NAME;
 
 const extensions = [ '.ts', '.d.ts', '.js' ];
 
 export default {
-    input: resolveRootPath(`scripts/samples/packages/${dirName}/index.ts`),
+    input: resolveRootPath(`request/packages/${dirName}/index.ts`),
     output: {
-        file: resolveRootPath(`scripts/samples/packages/${dirName}/dist/${dirName}.prod.min.js`),
+        file: resolveRootPath(`request/packages/${dirName}/dist/${dirName}.prod.min.js`),
         format: 'cjs',
     },
     plugins: [
@@ -35,7 +35,7 @@ export default {
         babel({
             exclude: [ 'node_modules/**' ],
             extensions,
-            configFile: path.join(__dirname, '../build/babel.config.js'),
+            configFile: path.join(__dirname, '../scripts/build/babel.config.js'),
         }),
         replace({
             'process.env.NODE_ENV': '"production"',

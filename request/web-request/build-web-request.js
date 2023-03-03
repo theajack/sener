@@ -5,13 +5,13 @@
  */
 
 const execa = require('execa');
-const { resolveRootPath } = require('../../helper/utils');
+const { resolveRootPath } = require('../../scripts/helper/utils');
 
 const arg = process.argv[2];
 
 const config = [
     '-c',
-    resolveRootPath('scripts/samples/build-web-request/rollup.web.config.js'),
+    resolveRootPath('request/web-request/rollup.web.config.js'),
 ];
 
 if (arg === 'watch') config.push('--watch');

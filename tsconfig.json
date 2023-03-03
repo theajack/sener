@@ -24,10 +24,10 @@
     },
     "include": [
         "packages/*/src/**/*",
+        "request/**/*",
         ".eslintrc.js",
         "../babel.config.js",
-        "scripts/**/*",
-        "src/**/*"
+        "scripts/**/*"
     ],
     "exclude": [
         "./node_modules"

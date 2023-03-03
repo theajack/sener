@@ -1,5 +1,5 @@
 import { IOprateReturn } from 'packages/json/src';
-import { error, isExpired } from 'scripts/samples/utils/utils';
+import { error, isExpired } from 'request/utils/utils';
 
 /*
  * @Author: chenzhongsheng

@@ -10,15 +10,12 @@ import commonjs from '@rollup/plugin-commonjs';
 import { uglify } from 'rollup-plugin-uglify';
 import replace from 'rollup-plugin-replace';
 import dts from 'rollup-plugin-dts';
-
-const {
-    resolveRootPath,
-} = require('../../helper/utils');
+const { resolveRootPath } = require('../../scripts/helper/utils');
 
 const extensions = [ '.ts', '.d.ts', '.js' ];
 
-const distPath = 'scripts/samples/build-web-request/server/dist/';
-const input = resolveRootPath(`scripts/samples/utils/request/index.ts`);
+const distPath = 'request/web-request/server/dist/';
+const input = resolveRootPath(`request/utils/request/index.ts`);
 
 export default [ {
     input,

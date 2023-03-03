@@ -6,10 +6,10 @@
 import { Form } from '../../../../packages/form';
 import { Router } from 'packages/sener';
 import { Static } from 'packages/static/src';
-import { sendEmail } from 'scripts/samples/utils/send-email';
-import { initSenerApp } from 'scripts/samples/utils/sample-base';
-import { IEmail } from 'scripts/samples/types/sample';
-import { error, success } from 'scripts/samples/utils/utils';
+import { sendEmail } from 'request/utils/send-email';
+import { initSenerApp } from 'request/utils/sample-base';
+import { IEmail } from 'request/types/sample';
+import { error, success } from 'request/utils/utils';
 
 const router = new Router({
     'post:/util/img/upload': ({ formData, request, files }) => {
