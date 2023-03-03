@@ -12,8 +12,8 @@ export class Cors extends MiddleWare {
 
     constructor (headers: IJson<string> = {
         'Access-Control-Allow-Origin': '*',
-        'access-control-allow-methods': 'POST, GET, PUT, DELETE, OPTIONS',
-        'access-control-allow-headers': '*',
+        'Access-Control-Allow-Methods': 'POST, GET, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': '*',
     }) {
         super();
         this.headers = headers;

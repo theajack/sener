@@ -3,34 +3,19 @@
  * @Date: 2023-02-21 22:55:55
  * @Description: Coding something
  */
-import { Form } from '../../../../packages/form';
 import { Json } from 'packages/json/src';
 import { Router } from 'packages/sener';
-import { Static } from 'packages/static/src';
-import { IUser } from 'scripts/samples/types/user';
+import { IUser } from 'scripts/samples/types/object.d';
 import hex_md5 from 'scripts/samples/utils/md5';
 import { sendEmail } from 'scripts/samples/utils/send-email';
 import { generateToken, isTokenExpired } from 'scripts/samples/utils/token';
 import { createSimpleTimeInfo, error, generateCode, generateExpired, success } from 'scripts/samples/utils/utils';
-import { RequestHandler } from '../../utils/http';
 import { initSenerApp } from '../../utils/sample-base';
-import { checkEmailCode } from './email';
+import { checkEmailCode } from '../util/email';
+import { Comment } from 'scripts/samples/utils/request';
 
-
-const request = new RequestHandler({
-    port: 3001
-});
-
-const json = new Json('user');
 
 const router = new Router({
-    'post:/image': ({ formData, request, files }) => {
-        for (const k in files) {
-            const file = files[k] as any;
-            file.filepath = `${request.headers.origin}/${file.filepath.split('/public/')[1]}`;
-        }
-        return success({ formData, files }, '文件上传成功');
-    },
     'post:/user/login': ({ body, write }) => {
         const { data, save, clear } = write('user');
         const { nickname, pwd } = body;
@@ -100,35 +85,25 @@ const router = new Router({
         return success({ time }, '邮件发送成功');
     },
     'post:/user/check': ({ body, read }) => {
-        const data = read('user');
+        const data = read<IUser>('user');
         const { tk } = body;
-        const user = data.find(u => u.tk === tk) as null | IUser;
+        const user = data.find(u => u.tk === tk);
         if (!user) return error('错误的token', 1);
         if (isTokenExpired(user)) return error('token已过期', 2, { nickname: user.nickname });
         return success({ id: user.id, tk: user.tk, expire: user.expire }, '认证成功');
     },
-    'get:/email': () => {
-        sendEmail({
-            message: 'from foxmail\nsadasa\nsasa',
-            to: 'theajack@qq.com'
-        });
-        return success({}, '发送成功');
-    },
 
-    '/user/test': () => {
-        return request.get('/message', {
-            all: true,
-            app: 'cnchar',
+    '/user/test': async () => {
+        const data = await Comment.getList({
+            app: 'cnchar'
         });
+        // console.log('------', data);
+        return data;
     }
 });
 
 initSenerApp({
     port: 3002,
     router,
-    json,
-    middlewares: [
-        new Static(),
-        new Form(),
-    ]
+    middlewares: [ new Json('user') ]
 });

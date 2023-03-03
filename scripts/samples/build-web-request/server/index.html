@@ -1,6 +1,6 @@
 <!--
  * @Author: chenzhongsheng
- * @Date: 2023-02-22 15:16:00
+ * @Date: 2023-03-03 09:13:13
  * @Description: Coding something
 -->
 <!DOCTYPE html>
@@ -12,17 +12,9 @@
   <title>Document</title>
 </head>
 <body>
-  <input id="file" type="file" onchange="onFileChange()">
+  <script src="./dist/web-request.min.js"></script>
   <script>
-
-    function onFileChange(){
-      console.log(file.files[0].size)
-      fetch('/image', {
-          method: 'post',
-          body: file.files[0],
-      });
-    }
-
+    console.log(SenerRequest);
   </script>
 </body>
 </html>

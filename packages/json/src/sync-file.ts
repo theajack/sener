@@ -6,9 +6,9 @@
 import { now, makedir } from './utils';
 import fs from 'fs';
 
-export interface IFileTemplate {
+export interface IFileTemplate<T=any> {
     key: string,
-    data: any[], // 数据集
+    data: T[], // 数据集
     id: number, // 索引
     count: number, // 数据大小
     lastUpdateTime: number, // 上次更新时间
@@ -16,7 +16,7 @@ export interface IFileTemplate {
 }
 
 // 同步模块
-export class SyncFile {
+export class SyncFile<T=any> {
 
     path: string;
 
@@ -35,7 +35,7 @@ export class SyncFile {
         this.isFileExist = this.isDirExist && fs.existsSync(this.path);
     }
 
-    readPure (): IFileTemplate {
+    readPure (): IFileTemplate<T> {
         if (!this.isFileExist)
             return this.generateDefaultData();
         try {
@@ -48,11 +48,11 @@ export class SyncFile {
         }
     }
 
-    generateId (data: IFileTemplate) {
+    generateId (data: IFileTemplate<T>) {
         return ++ data.id;
     }
 
-    generateDefaultData (data: any[] = []): IFileTemplate {
+    generateDefaultData (data: T[] = []): IFileTemplate<T> {
         const time = now();
         return {
             key: this.key,
@@ -64,12 +64,12 @@ export class SyncFile {
         };
     }
 
-    private updateInfo (data: IFileTemplate) {
+    private updateInfo (data: IFileTemplate<T>) {
         data.lastUpdateTime = now();
         data.count = data.data.length;
     }
 
-    writePure (data: IFileTemplate) {
+    writePure (data: IFileTemplate<T>) {
         if (!this.isDirExist) {
             makedir(this.dir);
             this.isDirExist = true;
@@ -85,7 +85,7 @@ export class SyncFile {
     }
 
     oprateSync (
-        handleData: (data: any[], geneId: (data: IFileTemplate) => number) => any[]
+        handleData: (data: T[], geneId: (data: IFileTemplate<T>) => number) => T[]
     ) {
         const template = this.readPure();
         template.data = handleData(template.data, () => this.generateId(template));

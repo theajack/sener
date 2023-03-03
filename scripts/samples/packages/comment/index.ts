@@ -83,5 +83,5 @@ const router = new Router({
 initSenerApp({
     port: 3001,
     router,
-    json: new Json('comment')
+    middlewares: [ new Json('comment') ]
 });

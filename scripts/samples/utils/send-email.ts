@@ -23,12 +23,12 @@ export function sendEmail ({
   to: string;
 }): Promise<{result: boolean, msg: string}> {
     return new Promise(resolve => {
-        console.log({
-            text: message, // 邮件内容
-            from: ShiyixConfig.fromEmail, // 你的邮箱号
-            to, // 发送给谁的
-            subject: title // 邮件主题
-        });
+        // console.log({
+        //     text: message, // 邮件内容
+        //     from: ShiyixConfig.fromEmail, // 你的邮箱号
+        //     to, // 发送给谁的
+        //     subject: title // 邮件主题
+        // });
         // 开始发送邮件
         client.send({
             text: message, // 邮件内容
@@ -37,7 +37,6 @@ export function sendEmail ({
             subject: title // 邮件主题
 
         }, function (err) {
-            console.log(err);
             if (!err) {
                 resolve({ result: true, msg: '发送通知邮件成功' });
             } else {

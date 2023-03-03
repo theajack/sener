@@ -1,5 +1,6 @@
 import { now } from 'packages/sener/src/utils';
 import { IJson, IMiddleWareResponseReturn } from 'packages/types/src';
+import { IRouterReturn } from '../types/sample';
 
 /*
  * @Author: chenzhongsheng
@@ -21,17 +22,17 @@ export function createSimpleTimeInfo () {
     };
 }
 
-export function error (
-    msg = '请求失败', code = -1, data: any = null
-): IMiddleWareResponseReturn {
+export function error<T = null> (
+    msg = '请求失败', code = -1, data: T = null as any
+): IMiddleWareResponseReturn<IRouterReturn<T>> {
     return {
         data: { code, data, msg }
     };
 }
 
-export function success (
-    data: any = null, msg = 'success'
-): IMiddleWareResponseReturn {
+export function success<T = any> (
+    data: T = null as any, msg = 'success'
+): IMiddleWareResponseReturn<IRouterReturn<T>> {
     return {
         data: { code: 0, data, msg }
     };
@@ -74,4 +75,12 @@ export function generateCode (len = 6, alpha = false) {
     for (let i = 0; i < len; i++)
         code += dict[random(0, dict.length - 1)];
     return code;
+}
+
+export function parseJson (str: string) {
+    try {
+        return JSON.parse(str);
+    } catch (e) {
+        return null;
+    }
 }

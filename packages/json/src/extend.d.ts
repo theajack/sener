@@ -6,9 +6,9 @@
 import { File, IOprateReturn } from './file';
 
 export interface IJsonHelper {
-  file: (key: string) => File;
-  write: (key: string) => IOprateReturn;
-  read: (key: string) => any[];
+  file: <Model=any>(key: string) => File<Model>;
+  write: <Model=any>(key: string) => IOprateReturn<Model>;
+  read: <Model=any>(key: string) => Model[];
 }
 
 declare module 'sener-types-extend' {

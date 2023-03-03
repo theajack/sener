@@ -67,8 +67,6 @@ export class Server {
 
                 if (request.headers['content-type']?.includes('application/json')) {
                     const bodyStr = buffer.toString();
-                    console.log('bodyStr', bodyStr);
-                    // console.log(bodyStr);
                     // todo 根据 header 判断
                     try {
                         body = JSON.parse(bodyStr);
@@ -106,7 +104,7 @@ export class Server {
 
             // ! options请求返回200 当使用nginx配置跨域时此处需要有返回
             // ! 使用 cors 中间件时不会执行到这里
-            if (request.method === 'OPTIONS') return sendHelper.sendResponse({ statusCode: 200 });
+            if (request.method === 'OPTIONS') return sendHelper.sendResponse({ data: null, statusCode: 200 });
 
             const httpInfo = await this.parseHttpInfo(request);
             // console.log('parseHttpInfo', httpInfo);

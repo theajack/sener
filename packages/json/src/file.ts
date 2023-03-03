@@ -6,22 +6,22 @@
 import { SyncFile, IFileTemplate } from './sync-file';
 
 
-export interface IOprateReturn {
-    data: any[]
-    save: (data?: any[]) => void,
+export interface IOprateReturn<Model=any> {
+    data: Model[]
+    save: (data?: Model[]) => void,
     clear: <T extends any>(data?: T) => T,
     id: () => number,
 }
 
-export class File extends SyncFile {
+export class File<T=any> extends SyncFile<T> {
 
-    template: IFileTemplate|null;
+    template: IFileTemplate<T>|null;
 
     opratingCount = 0;
 
     isReading = false;
 
-    read (): IFileTemplate {
+    read (): IFileTemplate<T> {
         if (this.template) return this.template;
         this.isReading = true;
         const template = this.readPure();
@@ -30,7 +30,7 @@ export class File extends SyncFile {
         return template;
     }
 
-    write (template?: IFileTemplate): boolean {
+    write (template?: IFileTemplate<T>): boolean {
         const data = template || this.template;
         if (!data) return false;
         const result = this.writePure(data);
@@ -45,7 +45,7 @@ export class File extends SyncFile {
     }
 
     async oprate (
-        handleData: (data: any[], geneId: () => number) => Promise<any[]>|any[],
+        handleData: (data: T[], geneId: () => number) => Promise<T[]>|T[],
     ): Promise<boolean> {
         try {
             this.opratingCount ++;
@@ -64,22 +64,35 @@ export class File extends SyncFile {
         }
     }
 
-    oprateCustom (): IOprateReturn {
+    oprateCustom (): IOprateReturn<T> {
+        if (this.opratingCount < 0) this.opratingCount = 0;
 
         this.opratingCount ++;
-        console.log('opratingCount++', this.opratingCount);
+        // console.log('opratingCount++', this.opratingCount);
         const template = this.read();
+
+        const writeDone = () => {
+            this.opratingCount --;
+            // console.log(`【debug 】 opratingCount-- ${this.opratingCount}`);
+            if (this.opratingCount > 0) return true; // ! 还有其他请求在操作这个文件暂时不写
+            return this.write(template);
+        };
+
+        const timer = setTimeout(writeDone, 5000);
+
         return {
             data: template.data,
-            save: (data?: any[]) => {
+            save: (data?: T[]) => {
+                clearTimeout(timer);
                 console.log('save', this.opratingCount);
                 if (data instanceof Array) template.data = data;
-                this.opratingCount --;
-                // console.log(`【debug 】 opratingCount-- ${this.opratingCount}`);
-                if (this.opratingCount > 0) return true;
-                return this.write();
+                return writeDone();
             },
-            clear: (data?: any) => {this.opratingCount --; return data;},
+            clear: (data?: any) => {
+                clearTimeout(timer);
+                this.opratingCount --;
+                return data;
+            },
             id: () => this.generateId(template),
         };
     }

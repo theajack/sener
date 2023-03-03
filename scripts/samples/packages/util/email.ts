@@ -23,7 +23,6 @@ export function checkEmailCode (
         return clear(error('验证码错误', -6));
     }
     if (isExpired(emailData.expired)) {
-        console.log('11111111111');
         delete data[0][email];
         save();
         return error('验证码已过期', -7);
@@ -31,7 +30,6 @@ export function checkEmailCode (
 
     return (passData: any, needSave = false) => {
         if (needSave) {
-            console.log('11111111111');
             delete data[0][email];
             save();
         } else {
