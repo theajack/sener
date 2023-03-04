@@ -14,3 +14,9 @@ export const BASE_DIR = path.resolve(
     `${IS_DEV ? process.cwd() : os.homedir()}`,
     `./sener-json-db`
 );
+
+export function delay (t: number) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, t);
+    });
+}

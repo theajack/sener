@@ -5,10 +5,12 @@
  */
 import { now, makedir } from './utils';
 import fs from 'fs';
+import { IJson } from 'sener-types';
 
 export interface IFileTemplate<T=any> {
     key: string,
     data: T[], // 数据集
+    map: IJson<T>,
     id: number, // 索引
     count: number, // 数据大小
     lastUpdateTime: number, // 上次更新时间
@@ -27,7 +29,10 @@ export class SyncFile<T=any> {
     isDirExist: boolean;
     isFileExist: boolean;
 
-    constructor (key: string, path: string) {
+    format = false;
+
+    constructor (key: string, path: string, format = false) {
+        this.format = format;
         this.key = key;
         this.path = path;
         this.dir = this.path.substring(0, this.path.lastIndexOf('/') + 1);
@@ -60,7 +65,8 @@ export class SyncFile<T=any> {
             id: 0, // 索引
             count: 0, // 数据大小
             lastUpdateTime: time, // 上次更新时间
-            createTime: time
+            createTime: time,
+            map: {} as IJson<T>
         };
     }
 
@@ -76,7 +82,8 @@ export class SyncFile<T=any> {
         }
         this.updateInfo(data);
         try {
-            fs.writeFileSync(this.path, JSON.stringify(data, null, 2), 'utf8');
+            const content = this.format ? JSON.stringify(data, null, 2) : JSON.stringify(data);
+            fs.writeFileSync(this.path, content, 'utf8');
         } catch (e) {
             return false;
         }

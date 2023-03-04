@@ -5,7 +5,7 @@
  */
 import http, { IncomingMessage } from 'http';
 import { MiddleWareManager } from '../middleware/middleware-manager';
-import { IHelperFunc, IMiddleWare, parseParam, praseUrl } from 'sener-types';
+import { IHelperFunc, IMiddleWare, IMiddleWareRequestData, parseParam, praseUrl } from 'sener-types';
 import {
     IJson, IServerOptions,
     IServerSendData, IResponse, IServeMethod, IHttpInfo, IMiddleWareDataBase
@@ -104,14 +104,14 @@ export class Server {
 
             // ! options请求返回200 当使用nginx配置跨域时此处需要有返回
             // ! 使用 cors 中间件时不会执行到这里
-            if (request.method === 'OPTIONS') return sendHelper.sendResponse({ data: null, statusCode: 200 });
+            if (request.method === 'OPTIONS') return sendHelper.sendResponse({ statusCode: 200 });
 
             const httpInfo = await this.parseHttpInfo(request);
             // console.log('parseHttpInfo', httpInfo);
             const requestData = await this.middleware.applyRequest({
                 ...httpInfo,
                 ...middlewareBase,
-            }); // todo fix
+            } as IMiddleWareRequestData); // todo fix
             // console.log('requestData', requestData);
 
             if (!requestData) return;
@@ -160,7 +160,7 @@ export class Server {
         data = '',
         statusCode = 200,
         headers = { 'Content-Type': 'application/json;charset=UTF-8' },
-    }: IServerSendData) {
+    }: Partial<IServerSendData> & Pick<IServerSendData, 'response'>) {
         // console.log(headers);
         for (const k in headers) {
             response.setHeader(k, headers[k]);

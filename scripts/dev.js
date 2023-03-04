@@ -30,7 +30,7 @@ function getBuildConfig () {
     }
     return {
         outfile: resolve(__dirname, `./dev/bundles/${projectName}.bundle.js`),
-        entry: EntryMap[projectName] || `./samples/packages/${projectName}/index.ts`
+        entry: resolve(__dirname, EntryMap[projectName] || `../services/packages/${projectName}/${projectName}-service.ts`)
     };
 }
 

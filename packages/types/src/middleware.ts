@@ -17,7 +17,7 @@ export type IResponse = ServerResponse & {
 }
 
 export interface IHelperFunc {
-  sendResponse: (data: IMiddleWareResponseReturn) => void;
+  sendResponse: (data: Partial<IMiddleWareResponseReturn>) => void;
   sendJson: (data: IJson, statusCode?: number) => void;
   send404: (errorMessage?: string) => void;
   sendText: (text: string, statusCode?: number) => void;

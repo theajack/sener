@@ -89,7 +89,7 @@ function readFile (filePath) {
     return fs.readFileSync(checkPath(filePath), 'utf-8');
 }
 
-async function exec (cmd) {
+async function exec (cmd, cb) {
     return new Promise(resolve => {
         const child = childProcess.exec(cmd, function (error, stdout, stderr) {
             if (error) {
@@ -105,6 +105,7 @@ async function exec (cmd) {
         });
         child.stdout.on('data', data => {
             console.log(data);
+            if (cb) cb(data);
         });
         child.stderr.on('data', data => {
             console.log(data);

@@ -95,17 +95,16 @@ export const router = new Router({
         // console.log('router data', data);
         return { data: data };
     },
-    'get:/setaa': async ({ query, write }) => {
-        // const success = await file('aa').oprate((data) => {
-        //     data.push(query.text);
-        //     return data;
-        // });
-        // if (success) {
-        //     return { data: query.text };
-        // }
-        // return { data: 'error' };
-
+    'get:/setaa': async ({ query, write, logger }) => {
         const { data, save, id } = write('aa');
+        // return route('/aa');
+        console.log(`logger:`, !!logger);
+        logger.log({
+            msg: '111',
+            payload: { a: 1 },
+            type: 'error',
+            // extend: { b: 1 }
+        });
         // console.log('body.data', query.text);
         data.push({
             ...query,
@@ -116,12 +115,6 @@ export const router = new Router({
 
     },
     'post:/setaa': ({ body, write }) => {
-        // const success = await file('aa').oprate((data, geneId) => {
-        //     body.data.id = geneId();
-        //     data.push(body.data);
-        //     return data;
-        // });
-        // return {success, data: body.data};
 
         const { data, save, id } = write('aa');
 

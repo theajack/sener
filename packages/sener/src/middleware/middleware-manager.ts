@@ -58,10 +58,13 @@ export class MiddleWareManager {
         return req;
     }
 
+    // 洋葱模型 entry=>request => response为倒序
     async applyResponse (
         res: IMiddleWareResponseData
     ): Promise<IMiddleWareResponseReturn|null> {
-        for (const middleware of this.middlewares) {
+        const ms = this.middlewares;
+        for (let i = ms.length - 1; i >= 0; i--) {
+            const middleware = ms[i];
             if (!middleware.response) continue;
             const result = await middleware.response(res);
             if (!result || result === MiddleWareReturn.Continue) continue;

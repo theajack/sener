@@ -12,6 +12,7 @@ import {
 import { Json } from 'packages/json';
 import { Static } from 'packages/static';
 import { router } from './router';
+import { Log } from 'packages/log/src';
 // console.log('--------', Router);
 
 const testMiddleware: IMiddleWare = {
@@ -38,6 +39,7 @@ function delay (time = 1000) {
 
 const sener = new Sener({
     middlewares: [
+        new Log(),
         new Static(),
         router,
         testMiddleware,

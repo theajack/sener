@@ -3,6 +3,59 @@
  * @Date: 2023-02-22 10:47:40
  * @Description: Coding something
 -->
+
+
+<!--
+ * @Author: chenzhongsheng
+ * @Date: 2023-03-03 17:31:41
+ * @Description: Coding something
+-->
+
+### Sener
+
+dev sener
+
+```
+npm run dev
+```
+
+build sener
+
+```
+npm run build
+```
+
+### Services
+
+dev Services
+
+```
+npm run dev:service <service name>
+```
+
+build services
+
+```
+npm run build:service <service name>
+npm run build:service all
+```
+
+### Web App
+
+dev web
+
+```
+npm run dev:web
+```
+
+build web
+
+```
+npm run build:web
+```
+
+
+
 ## 1. ebuild
 
 前置

@@ -17,20 +17,36 @@ export type IRouterHandler = (
     data: IMiddleWareRequestData,
 ) => IPromiseMayBe<IMiddleWareResponseReturn|ICommonReturn>;
 
+interface IRouterHelper {
+    index: ()=>number;
+    route(
+        url: string, data?: Partial<IMiddleWareRequestData>,
+    ): IPromiseMayBe<IMiddleWareResponseReturn|ICommonReturn>;
+}
+
+declare module 'sener-types-extend' {
+    interface ISenerHelper extends IRouterHelper {}
+}
+
+const REG = /^(post|get|put|delete):/;
+
 export class Router extends MiddleWare {
     routers: IJson<IRouterHandler> = {};
 
     constructor (routers: IJson<IRouterHandler>) {
         super();
-        const REG = /^(post|get|put|delete):/;
-        for (let k in routers) {
-            const origin = k;
-            k = k.trim();
-            if (!REG.test(k)) k = `get:${k}`;
-            if (!k.endsWith('/')) k = `${k}/`;
-            this.routers[k] = routers[origin];
+        for (const k in routers) {
+            const key = this.fillUrl(k);
+            this.routers[key] = routers[k];
         }
         // console.log(this.routers);
+    }
+
+    private fillUrl (k: string) {
+        k = k.trim();
+        if (!REG.test(k)) k = `get:${k}`;
+        if (!k.endsWith('/')) k = `${k}/`;
+        return k;
     }
 
     private buildRouteKey (url: string, method: string) {
@@ -56,6 +72,21 @@ export class Router extends MiddleWare {
             // res.sendHtml(`<h1>Page not found: ${res.url}<jh1>`);
             return MiddleWareReturn.Return;
         }
-        return handler(res);
+
+        let index = 0; // 路由中加入一个自增index，可以用于生成错误码 id等
+        res.index = () => index++;
+        res.route = (url, data) => {
+            const handler = this.routers[this.fillUrl(url)];
+            if (!handler) {
+                res.send404(`Route Dismiss: ${url}`);
+                return MiddleWareReturn.Return;
+            }
+            if (data) {
+                return handler(Object.assign({}, res, data));
+            }
+            return handler(res);
+        };
+
+        return handler(res as IMiddleWareRequestData);
     }
 }
