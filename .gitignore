@@ -6,4 +6,8 @@ lerna-debug.log
 bundle.js
 bundle.js.map
 .DS_Store
-sener-json-db
+sener-data
+bundles
+ignore
+*.ignore.ts
+public/upload
