@@ -3,6 +3,7 @@
  * @Date: 2023-02-21 22:55:55
  * @Description: Coding something
  */
+import { Config } from 'packages/config/src';
 import { Json } from 'packages/json/src';
 import { Log } from 'packages/log/src';
 import { Router } from 'packages/sener';
@@ -96,7 +97,7 @@ const router = new Router({
         return success({ id: user.id, tk: user.tk, expire: user.expire }, '认证成功');
     },
 
-    '/user/test': async ({ services, logger }) => {
+    '/user/test': async ({ services, logger, config }) => {
         logger.log('$$$test1', 'test');
 
         logger.log({
@@ -114,11 +115,21 @@ const router = new Router({
     }
 });
 
+const config = new Config();
+
+config.onConfigChange(data => {
+    console.log(data);
+});
+
+setTimeout(() => {
+    config.writeConfig('level', 2);
+}, 4000);
 initSenerApp({
     port: 3002,
     router,
     middlewares: [
-        new Log({ dir: 'user', level: 5 }),
+        config,
+        new Log({ dir: 'user', level: config.data.level }),
         new Services(),
         new Json({ dir: 'user' }),
     ]

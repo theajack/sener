@@ -30,7 +30,7 @@
     },
     "nodemonConfig": {
         "ignore": [
-            "./sener-json-db",
+            "./sener-data",
             "./services/web-request/dist"
         ]
     },

@@ -3,10 +3,12 @@
  * @Date: 2023-02-18 17:19:03
  * @Description: Coding something
  */
-import fs from 'fs';
-import { BASE_DIR, makedir } from './utils';
+import { readdirSync } from 'fs';
+import { makedir, buildSenerDir } from 'sener-types';
 import { File } from './file';
 import path from 'path';
+
+const BASE_DIR = buildSenerDir('json');
 
 export class JsonManager {
     private files: Record<string, File> = {};
@@ -62,7 +64,7 @@ function traverse (
     dir: string,
     onSingleFile: (path: string) => void
 ) {
-    const list = fs.readdirSync(dir);
+    const list = readdirSync(dir);
 
     for (const name of list) {
         if (name.endsWith('.json')) {

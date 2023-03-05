@@ -4,14 +4,11 @@
  * @Description: Coding something
  */
 import path from 'path';
-import os from 'os';
 import fs from 'fs';
-import { dateToString, IS_DEV, makedir } from 'sener-types';
+import { buildSenerDir, dateToString, makedir } from 'sener-types';
 
-const BASE_DIR = path.resolve(
-    `${IS_DEV ? process.cwd() : os.homedir()}`,
-    `./sener-log`
-);
+const BASE_DIR = buildSenerDir('log');
+
 export class Saver {
     baseDir = BASE_DIR;
     maxRecords = -1;
@@ -23,7 +20,7 @@ export class Saver {
 
     content: string = ''; // 写入日志周期内的日志
 
-    level = -1;
+    level: ()=>number;
 
     constructor ({
         dir,
@@ -34,10 +31,13 @@ export class Saver {
         dir: string;
         maxRecords?: number;
         interval?: number;
-        level: number;
+        level: (()=>number)|number;
     }) {
+        // setInterval(() => {
+        //     console.log(this.level());
+        // }, 2000);
         if (dir) this.baseDir = path.resolve(BASE_DIR, dir);
-        this.level = level;
+        this.level = typeof level === 'number' ? () => level : level;
         makedir(this.baseDir);
         console.log(this.baseDir);
         this.refreshFileName();
@@ -59,7 +59,7 @@ export class Saver {
     }
 
     addContent (content: string, level = 5) {
-        if (level < this.level) return false;
+        if (level < this.level()) return false;
         this.content += `${content}\n`;
         this.count ++;
 

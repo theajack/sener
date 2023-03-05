@@ -27,7 +27,7 @@ export class Log extends MiddleWare {
             ua: headers['user-agent'],
         };
 
-        const tid = headers['x-trace-id'];
+        const tid = headers['x-trace-id']; // 请求的traceid
         if (tid) baseInfo.traceid = tid as string;
 
         req.logger = new Logger(this.loggerOptions, baseInfo);

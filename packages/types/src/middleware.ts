@@ -30,7 +30,7 @@ export interface IMiddleWareDataBase extends ISenerHelper, IHelperFunc {
 }
 export type ICommonReturn = MiddleWareReturn|void;
 
-export interface IMiddleWareEnterData extends IMiddleWareDataBase {}
+export interface IMiddleWareEnterData extends IMiddleWareDataBase, IJson {}
 
 export interface IMiddleWareResponseReturn<T = any> extends Partial<ISenerRequestData> {
   data: T,

@@ -3,7 +3,7 @@
  * @Date: 2023-02-18 15:58:26
  * @Description: Coding something
  */
-import { now, makedir } from './utils';
+import { now, makedir } from 'sener-types';
 import fs from 'fs';
 import { IJson } from 'sener-types';
 

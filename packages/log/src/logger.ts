@@ -14,7 +14,7 @@ export interface ILoggerOptions {
     dir?: string;
     useConsole?: boolean;
     maxRecords?: number;
-    level?: number;
+    level?: (()=>number)|number;
 }
 
 export class Logger {

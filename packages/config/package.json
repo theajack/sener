@@ -1,0 +1,19 @@
+{
+    "name": "sener-config",
+    "version": "0.0.10",
+    "scripts": {
+        "build": "node ../../scripts/build/build.js config"
+    },
+    "dependencies": {
+        "sener-types": "^0.0.10"
+    },
+    "main": "src/index.ts",
+    "typings": "src/index.ts",
+    "description": "Easy-to-use And Powerful nodejs http server",
+    "author": "tackchen <theajack@qq.com>",
+    "repository": "git@github.com:theajack/sener.git",
+    "license": "MIT",
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/"
+    }
+}

@@ -6,6 +6,8 @@
 
 import { IJson } from './common';
 import fs from 'fs';
+import path from 'path';
+import { homedir } from 'os';
 
 export function parseUrlSearch (url = '') {
     url = decodeURIComponent(url);
@@ -119,4 +121,23 @@ export function parseJson (str: string) {
     } catch (e) {
         return null;
     }
+}
+
+export function formatJson (data: object, format = false) {
+    return format ? JSON.stringify(data, null, 4) : JSON.stringify(data);
+}
+
+export function delay (t: number) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, t);
+    });
+}
+
+const BASE_SENER_DIR = path.resolve(
+    `${IS_DEV ? process.cwd() : homedir()}`,
+    `./sener-data`
+);
+
+export function buildSenerDir (name: string) {
+    return path.resolve(BASE_SENER_DIR, name);
 }
