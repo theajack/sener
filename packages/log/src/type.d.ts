@@ -21,9 +21,9 @@ export interface ILogDBData {
   msg: string; //
   payload: any;
   type: TLogType;
-  duration: number;
   level: number;
 
+  duration: number;
   time: string;
   timestamp: number;
   logid: string;

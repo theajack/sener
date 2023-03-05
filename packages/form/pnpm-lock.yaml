@@ -1,28 +1,12 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@types/formidable': ^2.0.5
-  formidable: ^2.1.1
+  formidable-fix: ^2.1.4
 
 dependencies:
-  '@types/formidable': registry.npmmirror.com/@types/formidable/2.0.5
-  formidable: registry.npmmirror.com/formidable/2.1.1
+  formidable-fix: registry.npmmirror.com/formidable-fix/2.1.4
 
 packages:
-
-  registry.npmmirror.com/@types/formidable/2.0.5:
-    resolution: {integrity: sha512-uvMcdn/KK3maPOaVUAc3HEYbCEhjaGFwww4EsX6IJfWIJ1tzHtDHczuImH3GKdusPnAAmzB07St90uabZeCKPA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/formidable/-/formidable-2.0.5.tgz}
-    name: '@types/formidable'
-    version: 2.0.5
-    dependencies:
-      '@types/node': registry.npmmirror.com/@types/node/18.14.2
-    dev: false
-
-  registry.npmmirror.com/@types/node/18.14.2:
-    resolution: {integrity: sha512-1uEQxww3DaghA0RxqHx0O0ppVlo43pJhepY51OxuQIKHpjbnYLA7vcdwioNPzIqmC2u3I/dmylcqjlh0e7AyUA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/node/-/node-18.14.2.tgz}
-    name: '@types/node'
-    version: 18.14.2
-    dev: false
 
   registry.npmmirror.com/asap/2.0.6:
     resolution: {integrity: sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/asap/-/asap-2.0.6.tgz}
@@ -48,10 +32,10 @@ packages:
       wrappy: registry.npmmirror.com/wrappy/1.0.2
     dev: false
 
-  registry.npmmirror.com/formidable/2.1.1:
-    resolution: {integrity: sha512-0EcS9wCFEzLvfiks7omJ+SiYJAiD+TzK4Pcw1UlUoGnhUxDcMKjt0P7x8wEb0u6OHu8Nb98WG3nxtlF5C7bvUQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/formidable/-/formidable-2.1.1.tgz}
-    name: formidable
-    version: 2.1.1
+  registry.npmmirror.com/formidable-fix/2.1.4:
+    resolution: {integrity: sha512-FEjDanledz/0XvLDTYhqD7AnWMsFgoBnRqXf9UD1AcxQNQ+FqmiGJCNoC3bIyM/VjhzKsmUijUbORJ+F7C6ykA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/formidable-fix/-/formidable-fix-2.1.4.tgz}
+    name: formidable-fix
+    version: 2.1.4
     dependencies:
       dezalgo: registry.npmmirror.com/dezalgo/1.0.4
       hexoid: registry.npmmirror.com/hexoid/1.0.0

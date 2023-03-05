@@ -98,13 +98,14 @@ const router = new Router({
     },
 
     '/user/test': async ({ services, logger, config }) => {
+        // const level = config.level;
         logger.log('$$$test1', 'test');
 
         logger.log({
             msg: '$$$test2',
             payload: { a: 1 },
             type: 'error',
-            level: 6,
+            level: 9,
             // extend: { b: 1 }
         });
         const data = await services.comment.getList({

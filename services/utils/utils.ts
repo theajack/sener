@@ -1,4 +1,4 @@
-import { now, random } from 'packages/sener/src/utils';
+import { now, random } from 'packages/types';
 import { IJson, IMiddleWareResponseReturn } from 'packages/types/src';
 import { IRouterReturn } from '../types/sample';
 

@@ -5,8 +5,7 @@
         "build": "node ../../scripts/build/build.js form"
     },
     "dependencies": {
-        "@types/formidable": "^2.0.5",
-        "formidable": "^2.1.1",
+        "formidable-fix": "^2.1.4",
         "sener-types": "^0.0.10"
     },
     "main": "src/index.ts",

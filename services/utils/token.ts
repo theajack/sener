@@ -3,7 +3,7 @@
  * @Date: 2023-02-25 13:43:28
  * @Description: Coding something
  */
-import { now } from 'packages/sener/src/utils';
+import { now } from 'packages/types';
 import { IUser } from '../types/object';
 import md5 from './md5';
 import tokenKey from './ignore/token.ignore';

@@ -115,9 +115,10 @@ export function random (a: number, b: number): number {
     return (a + Math.round(Math.random() * (b - a)));
 }
 
-export function parseJson (str: string) {
+export function parseJson (data: any) {
+    if (typeof data === 'object') {return data;}
     try {
-        return JSON.parse(str);
+        return JSON.parse(data);
     } catch (e) {
         return null;
     }

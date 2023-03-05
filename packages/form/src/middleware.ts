@@ -6,7 +6,7 @@
 import {
     MiddleWare, ICommonReturn, IMiddleWareRequestData, IPromiseMayBe, makedir, MiddleWareReturn,
 } from 'sener-types';
-import formidable, { errors as formidableErrors } from 'formidable';
+import formidable, { errors as formidableErrors } from 'formidable-fix';
 import path from 'path';
 
 export class Form extends MiddleWare {

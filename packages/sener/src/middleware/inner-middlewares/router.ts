@@ -14,7 +14,7 @@ import {
 export type IRouter = IJson<IRouterHandler>;
 
 export type IRouterHandler = (
-    data: IMiddleWareRequestData,
+    data: IMiddleWareResponseData,
 ) => IPromiseMayBe<IMiddleWareResponseReturn|ICommonReturn>;
 
 interface IRouterHelper {
@@ -87,6 +87,6 @@ export class Router extends MiddleWare {
             return handler(res);
         };
 
-        return handler(res as IMiddleWareRequestData);
+        return handler(res);
     }
 }

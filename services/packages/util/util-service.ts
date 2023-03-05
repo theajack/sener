@@ -9,8 +9,9 @@ import { Static } from 'packages/static/src';
 import { sendEmail } from 'services/utils/send-email';
 import { initSenerApp } from 'services/utils/sample-base';
 import { createSimpleTimeInfo, error, IsDev, success } from 'services/utils/utils';
-import { Json, now } from 'packages/json/src';
+import { Json } from 'packages/json/src';
 import { Log } from 'packages/log/src';
+import { now } from 'packages/types';
 
 const router = new Router({
     'post:/util/img/upload': ({ formData, request, files }) => {

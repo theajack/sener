@@ -73,7 +73,6 @@ export class ConfigBase {
                     if (typeof v === 'undefined') {
                         return this.data[key];
                     }
-                    this.data[key] = v;
                     this.writeConfig(key, v);
                 };
             }

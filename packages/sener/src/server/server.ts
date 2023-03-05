@@ -20,13 +20,14 @@ export class Server {
     // @ts-ignore
     helper: ISenerHelper = {};
 
-    static DEFAULT_PORT = 9000;
+    port = 9000;
 
     constructor ({
         port,
     }: IServerOptions) {
+        if (port) this.port = port;
         this.middleware = new MiddleWareManager();
-        this.initServer(port);
+        this.initServer();
     }
 
     injectMiddleWare (middleware: IMiddleWare) {
@@ -82,8 +83,8 @@ export class Server {
         });
     }
 
-    private initServer (port = Server.DEFAULT_PORT) {
-        console.log(`Sener Runing Succeed On: http://localhost:${port}`);
+    private initServer () {
+        console.log(`Sener Runing Succeed On: http://localhost:${this.port}`);
         this.server = http.createServer(async (request, response) => {
             const sendHelper: IHelperFunc = {
                 send404: (msg) => {this.send404(response, msg);},
@@ -128,7 +129,7 @@ export class Server {
                 response,
                 ...responseData,
             });
-        }).listen(port);
+        }).listen(this.port);
     }
 
     private sendHtml (response: IResponse, html: string) {
