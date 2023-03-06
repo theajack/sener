@@ -107,10 +107,6 @@ new Json({
 
 ### 3.3 cors
 
-```
-npm i sener sener-cors
-```
-
 Middleware that handles cross-origin requests
 
 ```js
@@ -130,10 +126,6 @@ new Cors({
 ```
 
 ### 3.4 static
-
-```
-npm i sener sener-static
-```
 
 Middleware that handles static resources
 
@@ -155,10 +147,6 @@ new Static({
 ```
 
 ### 3.5 form
-
-```
-npm i sener sener-form
-```
 
 Middleware that handles formdata and file uploads
 
@@ -187,10 +175,6 @@ new Form({
 ```
 
 ### 3.6 log
-
-```
-npm i sener sener-log
-```
 
 Middleware that supports logging systems
 
@@ -244,10 +228,6 @@ new Log({
 
 ### 3.7 config
 
-```
-npm i sener sener-config
-```
-
 Middleware that supports flexible use of JSON configuration files
 
 
@@ -298,73 +278,7 @@ new Config({
 })
 ```
 
-### 3.8 mysql
 
-```
-npm i sener sener-mysql
-```
-
-Middleware that supports mysql
-
-```js
-import {Sener, Router} from 'sener';
-import {Mysql} from 'sener-mysql';
-
-const router = new Router({
-    'post:/test': async ({ query, querySql, mysqlConn }) => {
-        const { results, fields } = await querySql('select * from user');
-        // Or use mysqlConn
-        return { query }
-    },
-});
-
-const mysql = new Mysql({
-  //  Please refer to (https://www.npmjs.com/package/mysql) for details 
-}
-
-mysql.connection;
-
-new Sener({
-  middlewares: [mysql, router], 
-});
-```
-
-Please refer to [mysql](https://www.npmjs.com/package/mysql) for details 
-
-
-### 3.9 mysql
-
-```
-npm i sener sener-mongodb
-```
-
-Middleware that supports mongodb
-
-```js
-import {Sener, Router} from 'sener';
-import {MongoDB} from 'sener-mongodb';
-
-const router = new Router({
-    'post:/test': async ({ query, queryMongoDB, mongoClient }) => {
-        const {db, close} = await queryMongoDB('user');
-        // do something
-        // Or use mongoClient
-        return { query }
-    },
-});
-
-const mongodb = new MongoDB({
-  //  Please refer to (https://www.npmjs.com/package/mongodb) for details 
-}
-
-mongodb.client;
-
-new Sener({
-  middlewares: [mongodb, router], 
-});
-```
-
-Please refer to [mongodb](https://www.npmjs.com/package/mongodb) for details 
 ## Custom Middleware
 
 Documentation will continue to be improved
