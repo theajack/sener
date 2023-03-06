@@ -4,22 +4,28 @@
  * @Description: 浏览器中使用的模块 需要单独打包
  */
 
-import { IJson } from 'sener-types';
 import { Request } from './request';
-
+interface IJson<T=any> {
+    [prop: string]: T;
+}
 export class WebRPC extends Request {
     constructor (base: string) {
         super({ base, });
     }
 
-    static create (map: IJson<string>): IJson<WebRPC> {
-        const rpc: IJson<Request> = {};
-        for (const key in map) {
-            const base = map[key];
-            rpc[key] = new WebRPC(base);
-        }
-        return rpc;
+    static create = create;
+}
+
+export function create (base: string): WebRPC;
+export function create (base: IJson<string>): IJson<WebRPC>;
+export function create (map: (IJson<string>)|string): IJson<WebRPC>|WebRPC {
+    if (typeof map === 'string') return new WebRPC(map);
+    const rpc: IJson<Request> = {};
+    for (const key in map) {
+        const base = map[key];
+        rpc[key] = new WebRPC(base);
     }
+    return rpc;
 }
 
 export default WebRPC;

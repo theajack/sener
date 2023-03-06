@@ -8,7 +8,6 @@ import { ICommonReturn, IMiddleWareEnterData, IMiddleWareResponseData, IMiddleWa
 import { ILoggerOptions, Logger } from './logger';
 import { IBaseInfo } from './type';
 
-
 export class Log extends MiddleWare {
     loggerOptions: ILoggerOptions;
     constructor (options: ILoggerOptions = {}) {

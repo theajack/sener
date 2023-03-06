@@ -133,7 +133,7 @@ config.onConfigChange(data => {
 });
 
 setTimeout(() => {
-    config.writeConfig('level', 2);
+    config.writeConfig('level', 9);
 }, 4000);
 initSenerApp({
     port: 3002,

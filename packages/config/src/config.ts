@@ -48,12 +48,13 @@ export class ConfigBase {
     }
 
     private fileNameToPath (file: string) {
+        // if (typeof file === 'undefined') console.trace(file);
         return path.join(this.baseDir, file + '.json');
     }
 
     private initFiles (files: string[]) {
 
-        this.fileMap = files.length === 0 ? files[0] : {};
+        this.fileMap = files.length === 1 ? files[0] : {};
 
         files.forEach(file => {
 
@@ -100,7 +101,9 @@ export class ConfigBase {
         const changed = this.onNewValue(key, v);
         // console.log('writeConfigChanged', changed);
         if (changed) {
+            // console.log('this.fileMap = ', this.isSingle, this.fileMap);
             const file: string = this.isSingle ? this.fileMap : (this.fileMap as any)[key];
+            if (typeof file !== 'string') throw new Error(`Can not find config file: key=${key}`);
             let data: any = null;
             if (this.isSingle) {
                 data = this.data;

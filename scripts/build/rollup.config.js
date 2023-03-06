@@ -33,6 +33,21 @@ console.log(inputFile);
 
 const packageName = buildPackageName(dirName);
 
+function createDts (input, bundleName) {
+    if (!bundleName) {
+        bundleName = `${packageName}.d.ts`;
+    }
+    return {
+        // 生成 .d.ts 类型声明文件
+        input,
+        output: {
+            file: resolvePackagePath(`${dirName}/dist/${bundleName}`),
+            format: 'es',
+        },
+        plugins: [ dts() ],
+    };
+}
+
 const createBaseConfig = ({
     format = 'esm',
     bundleName,
@@ -79,19 +94,11 @@ const config = [
         }
         return data;
     }),
-    {
-    // 生成 .d.ts 类型声明文件
-        input: inputFile,
-        output: {
-            file: resolvePackagePath(`${dirName}/dist/${packageName}.d.ts`),
-            format: 'es',
-        },
-        plugins: [ dts() ],
-    },
+    createDts(inputFile)
 ];
 
 if (onBuildConfig) {
-    onBuildConfig(config, dirName, createBaseConfig);
+    onBuildConfig(config, dirName, createBaseConfig, createDts);
 }
 
 export default config;

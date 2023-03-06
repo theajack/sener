@@ -15,5 +15,8 @@
     "license": "MIT",
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
-    }
+    },
+    "module": "dist/sener-rpc.esm.js",
+    "unpkg": "dist/web.iife.js",
+    "jsdelivr": "dist/web.iife.js"
 }

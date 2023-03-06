@@ -34,9 +34,9 @@ module.exports = {
             handler: (content) => `import "./extend.d";\n${content}`,
         });
     },
-    onBuildConfig (config, dirName, create) {
+    onBuildConfig (config, dirName, create, createDts) {
         if (dirName === 'rpc') {
-            const input = resolvePackagePath(`${dirName}/src/rpc-web.js`);
+            const input = resolvePackagePath(`${dirName}/src/rpc-web.ts`);
             config.push(
                 create({
                     format: 'umd',
@@ -47,7 +47,8 @@ module.exports = {
                     format: 'iife',
                     input,
                     bundleName: 'web.iife.js',
-                })
+                }),
+                createDts(input, 'web.umd.d.ts'),
             );
         }
     },

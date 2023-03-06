@@ -26,7 +26,7 @@ function initSinglePackageInfo (dir, isDev = false) {
                 package.main = `dist/${packageName}.${packageMain || 'iife'}.js`;
                 package.module = `dist/${packageName}.${packageModule || 'esm'}.js`;
                 package.typings = `dist/${packageName}.d.ts`;
-                if (handlerBuildPackage) handlerBuildPackage(package, dirName, packageName);
+                if (handlerBuildPackage) handlerBuildPackage(package, dir, packageName);
             }
             [
                 'description', 'author', 'repository',

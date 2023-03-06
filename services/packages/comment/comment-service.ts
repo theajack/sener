@@ -63,6 +63,7 @@ function addReply ({ body, write }: any) {
 
 const router = new Router({
     '/message': ({ query, read, logger }) => {
+        console.log('message', '11111111111111');
         logger.log('$$$message', query);
         return getComment({ query, read });
     },

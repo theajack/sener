@@ -46,6 +46,8 @@ export function now () {
 
 export const IS_DEV = process.env.NODE_ENV === 'development';
 
+// console.log('process.env.NODE_ENV============', process.env.NODE_ENV);
+
 export function makedir (dirPath: string, chmod = '777') {
 
     dirPath = '/' + dirPath.split('/').filter(n => !!n).join('/');
@@ -134,11 +136,13 @@ export function delay (t: number) {
     });
 }
 
-const BASE_SENER_DIR = path.resolve(
-    `${IS_DEV ? process.cwd() : homedir()}`,
-    `./sener-data`
-);
+let BASE_SENER_DIR = '';
 
 export function buildSenerDir (name: string) {
+    if (!BASE_SENER_DIR)
+        BASE_SENER_DIR = path.resolve(
+            `${IS_DEV ? process.cwd() : homedir()}`,
+            `./sener-data`
+        );
     return path.resolve(BASE_SENER_DIR, name);
 }
