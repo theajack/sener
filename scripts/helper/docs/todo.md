@@ -4,6 +4,7 @@
  * @Description: Coding something
 -->
 - [x] config middleware
+- [x] mysql & mongodb middleware
 - [ ] sener cli template and files
 - [ ] sener rpc
 - [ ] common service

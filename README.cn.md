@@ -36,34 +36,33 @@
     <a href="https://www.github.com/theajack/sener"><img src="https://img.shields.io/librariesio/dependent-repos/npm/sener.svg" alt="Dependent"></a>
 </p>
 
-<h3>🚀 Easy-to-use And Powerful nodejs http server</h3>
+<h3>🚀 简单易用、功能强大、高可扩展的nodejs http服务器</h3>
 
-**[中文](https://github.com/theajack/sener/blob/master/README.cn.md) | [Update log](https://github.com/theajack/sener/blob/master/scripts/version.md) | [Feedback](https://github.com/theajack/sener/issues/new) | [Gitee](https://gitee.com/theajack/sener) | [Message Board](https://theajack.github.io/message-board/?app=sener)**
+**[English](https://github.com/theajack/sener) | [更新日志](https://github.com/theajack/cnchar/blob/master/scripts/version.cn.md) | [反馈](https://github.com/theajack/sener/issues/new) | [Gitee](https://gitee.com/theajack/sener) | [留言板](https://theajack.github.io/message-board/?app=sener)**
 
-Documentation will continue to be improved
+文档持续完善中
 
-## 1. Features
+## 1. 特性
 
-1. Simple and efficient architecture, full TS writing, highly friendly TS declaration support
-2. Support highly customized middleware system
-3. Built-in router middleware
-4. JSON middleware: Support JSON files for data storage
-5. CORS middleware: supports cross-origin requests
-6. Static Middleware: Support static file directories
-7. Form middleware: Support formdata parsing and file upload
-8. Config middleware: supports highly flexible parameter configuration and dynamic change and monitoring
-9.log Middleware: Support flexible logging system and log level control
-10. MySQL Middleware: Supports MySQL connections
-11) MongoDB middleware: Support for MongoDB connections
+1. 简单高效的架构，全ts编写，高度友好的ts声明支持
+2. 支持高度自定义的中间件体系
+3. 内置router中间件
+4. json中间件：支持json文件用于数据存储
+5. cors中间件：支持跨域请求
+6. static中间件：支持静态文件目录
+7. form中间件：支持formdata解析和文件上传
+8. config中间件：支持高度灵活的参数配置和动态变更与监听
+9. log中间件：支持灵活的日志体系，支持日志级别控制
+10. mysql中间件：支持mysql连接
+11. mongodb中间件：支持mongodb连接
 
-
-## 2. Basic Use
+## 2. 基础使用
 
 ```
 npm i sener
 ```
 
-Simple demo:
+最简demo:
 
 ```js
 import {Sener} from 'sener';
@@ -79,9 +78,9 @@ new Sener({
 });
 ```
 
-Sener stores all files in the sener-data folder
+Sener 将所有文件存储在 sener-data 文件夹中
 
-In the development environment, the root directory is the directory where the current cmd is executed, and in the production environment, the root directory is homedir
+在开发环境中，根目录是执行当前cmd的目录，在生产环境中，根目录是homedir。
 
 
 ```js
@@ -92,11 +91,11 @@ const BASE_SENER_DIR = path.resolve(
 ```
 
 
-## 3. Middlewares
+## 3. 中间件
 
 ### 3.1 router
 
-Router middleware
+路由中间件
 
 ```js
 import {Sener, Router} from 'sener';
@@ -117,7 +116,7 @@ new Sener({
 
 ### 3.2 json
 
-Use a JSON file as a database
+使用json文件进行数据存储
 
 ```
 npm i sener sener-json
@@ -144,7 +143,7 @@ new Sener({
 });
 ```
 
-options
+可选参数：
 
 ```js
 new Json({
@@ -155,11 +154,11 @@ new Json({
 
 ### 3.3 cors
 
-Middleware that handles cross-origin requests
-
 ```
 npm i sener sener-cors
 ```
+
+支持跨域请求的中间件
 
 ```js
 import {Sener, Cors} from 'sener';
@@ -169,7 +168,7 @@ new Sener({
 });
 ```
 
-options
+可选参数
 
 ```js
 new Cors({
@@ -179,7 +178,7 @@ new Cors({
 
 ### 3.4 static
 
-Middleware that handles static resources
+支持静态资源的中间件
 
 ```
 npm i sener sener-static
@@ -194,7 +193,7 @@ new Sener({
 });
 ```
 
-options
+可选参数：
 
 ```js
 new Static({
@@ -204,7 +203,7 @@ new Static({
 
 ### 3.5 form
 
-Middleware that handles formdata and file uploads
+支持form表单和文件上传的中间件
 
 ```
 npm i sener sener-form
@@ -226,7 +225,7 @@ new Sener({
 });
 ```
 
-options
+可选参数
 
 ```js
 new Form({
@@ -236,11 +235,11 @@ new Form({
 
 ### 3.6 log
 
+支持日志打印和控制的中间件
+
 ```
 npm i sener sener-log
 ```
-
-Middleware that supports logging systems
 
 ```js
 import {Sener, Router} from 'sener';
@@ -258,7 +257,7 @@ new Sener({
 });
 ```
 
-typings
+声明文件
 
 ```ts
 class Logger {
@@ -277,21 +276,21 @@ interface IMessageData {
 }
 ```
 
-options
+可选参数
 
 ```js
 new Log({
-  dir: '', // The directory where the log file is stored. default value is '', use root directory
-  useConsole: false, // Whether to enable console.log Print logs when the service is running. It is not recommended to turn on the production environment. default value is false
-  maxRecords: 10000, // The maximum number of stored records for a single log file , default value is 10000
-  level: -1, // The level of log printing, logs with a level less than this number will not be printed
-  // level?: (()=>number) Level can also be a method for dynamically obtaining level values, typically used in conjunction with config middleware
+  dir: ''， // 存储日志文件的目录。默认值为“”，使用根目录
+  useConsole: false, // 是否启用控制台.log服务运行时打印日志。不建议打开生产环境。默认值为 false
+  maxRecords: 10000, // 单个日志文件的最大存储记录数，默认值为 10000
+  level: -1, // 日志打印级别，级别小于此数字的日志将不打印
+  // level?: ()=>number // 级别也可以是一种动态获取级别值的方法，通常与配置中间件结合使用
 })
 ```
 
 ### 3.7 config
 
-Middleware that supports flexible use of JSON configuration files
+支持灵活使用 JSON 配置文件的中间件
 
 ```
 npm i sener sener-config
@@ -337,16 +336,16 @@ options
 
 ```ts
 new Config({
-  dir: '', // directory for save config files. default value is ''
-  file: 'default', // file name of your config file. default value is 'default'
-  // file: ['c1', 'c2'], // Passing in an array indicates that multiple profiles are used
-  format: false, // Whether to format the JSON file. Default value: The development environment is false and the production environment is true
+  dir: '', // 用于保存配置文件的目录。默认值为“”
+  file: 'default', // 配置文件的文件名。默认值为“默认值”
+  // file: ['c1', 'c2'],  // 传入数组表示使用了多个配置文件
+  format: false, // 是否格式化 JSON 文件。默认值：开发环境为假，生产环境为真
 })
 ```
 
 ### 3.8 mysql
 
-Middleware that supports mysql
+支持mysql连接的中间件
 
 ```
 npm i sener sener-mysql
@@ -365,7 +364,7 @@ const router = new Router({
 });
 
 const mysql = new Mysql({
-  //  Please refer to (https://www.npmjs.com/package/mysql) for details 
+  //  详情请参考 [mysql](https://www.npmjs.com/package/mysql) 
 }
 
 mysql.connection;
@@ -375,12 +374,12 @@ new Sener({
 });
 ```
 
-Please refer to [mysql](https://www.npmjs.com/package/mysql) for details 
+详情请参考 [mysql](https://www.npmjs.com/package/mysql)
 
 
 ### 3.9 mongodb
 
-Middleware that supports mongodb
+支持mongodb连接的中间件
 
 ```
 npm i sener sener-mongodb
@@ -400,7 +399,7 @@ const router = new Router({
 });
 
 const mongodb = new MongoDB({
-  //  Please refer to (https://www.npmjs.com/package/mongodb) for details 
+  //  详情请参考 [mongodb](https://www.npmjs.com/package/mongodb)
 }
 
 mongodb.client;
@@ -410,12 +409,12 @@ new Sener({
 });
 ```
 
-Please refer to [mongodb](https://www.npmjs.com/package/mongodb) for details 
+详情请参考 [mongodb](https://www.npmjs.com/package/mongodb)
 
-## Custom Middleware
+## 自定义中间件
 
-Documentation will continue to be improved
+文档将持续完善中
 
-For now please refer to [middleware packages](https://github.com/theajack/sener/blob/master/packages)
+现在请参考 [中间件包](https://github.com/theajack/sener/blob/master/packages)
 
 
