@@ -8,7 +8,7 @@ import { IS_DEV, Router } from 'packages/sener';
 import { Static } from 'packages/static/src';
 import { sendEmail } from 'services/utils/send-email';
 import { initSenerApp } from 'services/utils/sample-base';
-import { createSimpleTimeInfo, error, IsDev, success } from 'services/utils/utils';
+import { createSimpleTimeInfo, error, success } from 'services/utils/utils';
 import { Json } from 'packages/json/src';
 import { Log } from 'packages/log/src';
 import { now } from 'packages/types';
@@ -19,11 +19,9 @@ const router = new Router({
             const file = files[k] as any;
             const host = request.headers.host || '';
             const head = `http${host.includes('localhost') ? '' : 's'}://${host}/`;
-            if (IsDev) {
-                file.filepath = `${head}${file.filepath.split('/public/')[1]}`;
-            } else {
-                file.filepath = `${head}${file.filepath.split('/data/')[1]}`;
-            }
+            file.filepath = `${head}${file.filepath.split(
+                IS_DEV ? '/public/' : '/data/'
+            )[1]}`;
         }
         return success({ formData, files }, '文件上传成功');
     },

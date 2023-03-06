@@ -4,10 +4,10 @@
  * @Description: Coding something
  */
 import { SMTPClient } from 'emailjs';
+import { dateToString } from 'packages/types';
 import { ShiyixConfig } from './ignore/email-token';
 import tokenIgnore from './ignore/token.ignore';
 import hex_md5 from './md5';
-import { getDateMinString } from './utils';
 
 const client = new SMTPClient({
     user: ShiyixConfig.fromEmail, // 你的QQ用户
@@ -17,7 +17,7 @@ const client = new SMTPClient({
 });
 
 export function generateEmailToken () {
-    return hex_md5(getDateMinString() + tokenIgnore);
+    return hex_md5(dateToString({ type: 'minute' }) + tokenIgnore);
 }
 
 export function sendEmail ({

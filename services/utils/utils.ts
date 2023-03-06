@@ -1,12 +1,12 @@
-import { now, random } from 'packages/types';
-import { IJson, IMiddleWareResponseReturn } from 'packages/types/src';
-import { IRouterReturn } from '../types/sample';
-
 /*
  * @Author: chenzhongsheng
  * @Date: 2023-02-25 13:16:03
  * @Description: Coding something
  */
+import { now, random } from 'packages/types';
+import { IJson, IMiddleWareResponseReturn } from 'packages/types/src';
+import { IRouterReturn } from '../types/sample';
+
 export function createTimeInfo () {
     const now = Date.now();
     return {
@@ -70,19 +70,4 @@ export function generateCode (len = 6, alpha = false) {
     for (let i = 0; i < len; i++)
         code += dict[random(0, dict.length - 1)];
     return code;
-}
-
-export const IsDev = process.env.NODE_ENV === 'development';
-
-export function getDateString () {
-    const date = new Date();
-    return `${date.getFullYear()}-${fixNum(date.getMonth() + 1)}-${fixNum(date.getDate())}`;
-}
-export function getDateMinString () {
-    const date = new Date();
-    return `${getDateString()} ${fixNum(date.getHours())}:${fixNum(date.getMinutes())}`;
-}
-
-function fixNum (n: number) {
-    return n < 10 ? `0${n}` : `${n}`;
 }
