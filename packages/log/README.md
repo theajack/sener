@@ -5,11 +5,59 @@
 -->
 # [Sener](https://github.com/theajack/sener)
 
-Easy-to-use And Powerful nodejs http server
+<p align="left">
+    <a href="https://www.github.com/theajack/sener/stargazers" target="_black">
+        <img src="https://img.shields.io/github/stars/theajack/sener?logo=github" alt="stars" />
+    </a>
+    <a href="https://www.github.com/theajack/sener/network/members" target="_black">
+        <img src="https://img.shields.io/github/forks/theajack/sener?logo=github" alt="forks" />
+    </a>
+    <a href="https://www.npmjs.com/package/sener" target="_black">
+        <img src="https://img.shields.io/npm/v/sener?logo=npm" alt="version" />
+    </a>
+    <a href="https://www.npmjs.com/package/sener" target="_black">
+        <img src="https://img.shields.io/npm/dm/sener?color=%23ffca28&logo=npm" alt="downloads" />
+    </a>
+    <a href="https://www.jsdelivr.com/package/npm/sener" target="_black">
+        <img src="https://data.jsdelivr.com/v1/package/npm/sener/badge" alt="jsdelivr" />
+    </a>
+</p>
+
+<p align="left">
+    <a href="https://github.com/theajack" target="_black">
+        <img src="https://img.shields.io/badge/Author-%20theajack%20-7289da.svg?&logo=github" alt="author" />
+    </a>
+    <a href="https://www.github.com/theajack/sener/blob/master/LICENSE" target="_black">
+        <img src="https://img.shields.io/github/license/theajack/sener?color=%232DCE89&logo=github" alt="license" />
+    </a>
+    <a href="https://fastly.jsdelivr.net/gh/theajack/sener/dist/sener.latest.min.js"><img src="https://img.shields.io/bundlephobia/minzip/sener.svg" alt="Size"></a>
+    <a href="https://github.com/theajack/sener/search?l=javascript"><img src="https://img.shields.io/github/languages/top/theajack/sener.svg" alt="TopLang"></a>
+    <a href="https://github.com/theajack/sener/issues"><img src="https://img.shields.io/github/issues-closed/theajack/sener.svg" alt="issue"></a>
+    <a href="https://www.github.com/theajack/sener"><img src="https://img.shields.io/librariesio/dependent-repos/npm/sener.svg" alt="Dependent"></a>
+</p>
+
+<h3>🚀 Easy-to-use And Powerful nodejs http server</h3>
+
+**[中文](https://github.com/theajack/sener/blob/master/README.cn.md) | [Update log](https://github.com/theajack/sener/blob/master/scripts/version.md) | [Feedback](https://github.com/theajack/sener/issues/new) | [Gitee](https://gitee.com/theajack/sener) | [Message Board](https://theajack.github.io/message-board/?app=sener)**
 
 Documentation will continue to be improved
 
-## 1. Basic Use
+## 1. Features
+
+1. Simple and efficient architecture, full TS writing, highly friendly TS declaration support
+2. Support highly customized middleware system
+3. Built-in router middleware
+4. JSON middleware: Support JSON files for data storage
+5. CORS middleware: supports cross-origin requests
+6. Static Middleware: Support static file directories
+7. Form middleware: Support formdata parsing and file upload
+8. Config middleware: supports highly flexible parameter configuration and dynamic change and monitoring
+9.log Middleware: Support flexible logging system and log level control
+10. MySQL Middleware: Supports MySQL connections
+11) MongoDB middleware: Support for MongoDB connections
+
+
+## 2. Basic Use
 
 ```
 npm i sener
@@ -92,7 +140,7 @@ const router = new Router({
     },
 });
 new Sener({
-  middlewares: [router, new Json()], // you_app_name is optional, default to sener dir root as ~/sener-json-db/
+  middlewares: [router, new Json()],
 });
 ```
 
@@ -108,6 +156,10 @@ new Json({
 ### 3.3 cors
 
 Middleware that handles cross-origin requests
+
+```
+npm i sener sener-cors
+```
 
 ```js
 import {Sener, Cors} from 'sener';
@@ -129,6 +181,10 @@ new Cors({
 
 Middleware that handles static resources
 
+```
+npm i sener sener-static
+```
+
 ```js
 import {Sener} from 'sener';
 import {Static} from 'sener-static';
@@ -149,6 +205,10 @@ new Static({
 ### 3.5 form
 
 Middleware that handles formdata and file uploads
+
+```
+npm i sener sener-form
+```
 
 ```js
 import {Sener, Router} from 'sener';
@@ -175,6 +235,10 @@ new Form({
 ```
 
 ### 3.6 log
+
+```
+npm i sener sener-log
+```
 
 Middleware that supports logging systems
 
@@ -211,7 +275,6 @@ interface IMessageData {
   level?: number;
   extend?: object;
 }
-
 ```
 
 options
@@ -230,6 +293,9 @@ new Log({
 
 Middleware that supports flexible use of JSON configuration files
 
+```
+npm i sener sener-config
+```
 
 ```js
 import {Sener, Router} from 'sener';
@@ -278,6 +344,73 @@ new Config({
 })
 ```
 
+### 3.8 mysql
+
+Middleware that supports mysql
+
+```
+npm i sener sener-mysql
+```
+
+```js
+import {Sener, Router} from 'sener';
+import {Mysql} from 'sener-mysql';
+
+const router = new Router({
+    'post:/test': async ({ query, querySql, mysqlConn }) => {
+        const { results, fields } = await querySql('select * from user');
+        // Or use mysqlConn
+        return { query }
+    },
+});
+
+const mysql = new Mysql({
+  //  Please refer to (https://www.npmjs.com/package/mysql) for details 
+}
+
+mysql.connection;
+
+new Sener({
+  middlewares: [mysql, router], 
+});
+```
+
+Please refer to [mysql](https://www.npmjs.com/package/mysql) for details 
+
+
+### 3.9 mongodb
+
+Middleware that supports mongodb
+
+```
+npm i sener sener-mongodb
+```
+
+```js
+import {Sener, Router} from 'sener';
+import {MongoDB} from 'sener-mongodb';
+
+const router = new Router({
+    'post:/test': async ({ query, queryMongoDB, mongoClient }) => {
+        const {db, close} = await queryMongoDB('user');
+        // do something
+        // Or use mongoClient
+        return { query }
+    },
+});
+
+const mongodb = new MongoDB({
+  //  Please refer to (https://www.npmjs.com/package/mongodb) for details 
+}
+
+mongodb.client;
+
+new Sener({
+  middlewares: [mongodb, router], 
+});
+```
+
+Please refer to [mongodb](https://www.npmjs.com/package/mongodb) for details 
 
 ## Custom Middleware
 
