@@ -4,52 +4,48 @@
  * @Description: Coding something
  */
 
-import { IJson, IMethod, parseJson } from 'packages/types/src';
-import { convertData } from '../utils';
+import { IJson, IMethod, parseJson } from 'sener-types';
+import { convertData } from './utils';
 
 let _http: any, _https: any = null;
 
 interface IBaseOptions {
-  host: string,
-  path: string, // get方式使用的地址
-  method: IMethod, // get方式或post方式
-  headers: IJson,
-  https: boolean,
-  port?: number,
-  body?: any,
-  form?: boolean,
-  traceid?: string,
+    url: string,
+    method: IMethod, // get方式或post方式
+    headers: IJson,
+    body?: any,
+    form?: boolean,
+    traceid?: string,
 }
 
 interface IRequestOptions extends IBaseOptions {
-  query?: any,
+    query?: any,
 }
 
 type ICommenReturn = Promise<{
-  success: boolean,
-  data?: any,
-  code?: number,
-  msg: string,
-  err?: any
+    success: boolean,
+    data?: any,
+    code?: number,
+    msg: string,
+    err?: any
 }>
 
 export function request ({
-    host, path, method, headers = {}, https, port, body, query, form, traceid
+    url, method, headers = {}, body, query, form, traceid
 }: IRequestOptions) {
-    if (!path.startsWith('/')) path = `/${path}`;
-    path = path + (query ? `${convertData(query)}` : '');
+    url = url + (query ? `${convertData(query)}` : '');
 
     if (!form) headers = Object.assign({ 'Content-Type': 'application/json;charset=utf-8' }, headers || {});
 
     if (typeof window !== 'undefined') {
-        return windowFetch({ host, path, method, headers, https, port, body, form });
+        return windowFetch({ url, method, headers, body, form });
     } else {
-        return nodeRequest({ host, path, method, headers, https, port, body, traceid });
+        return nodeRequest({ url, method, headers, body, traceid });
     }
 }
 
 async function windowFetch ({
-    host, path, method, headers, https, port, body, form
+    url, method, headers, body, form
 }: IBaseOptions): ICommenReturn {
     const options: IJson = {
         method,
@@ -59,10 +55,7 @@ async function windowFetch ({
         options.body = form ? body : JSON.stringify(body);
     }
     try {
-        const protocol = https ? 'https' : 'http';
-        host = host || location.host;
-        if (port) host += `:${port}`;
-        const result = await fetch(`${protocol}://${host}${path}`, options);
+        const result = await fetch(url, options);
 
         const json = await result.json();
         return { success: json.code === 0, ...json };
@@ -72,7 +65,7 @@ async function windowFetch ({
 }
 
 function nodeRequest ({
-    host, path, method, headers, https, port, body, traceid
+    url, method, headers, body, traceid
 }: IBaseOptions): ICommenReturn {
     // console.log('----host', host, path, method, headers, https, port, body);
     if (!_http) _http = require('http');
@@ -82,12 +75,9 @@ function nodeRequest ({
 
     // console.log({ host, path, method, headers, https, port, body });
     return new Promise((resolve) => {
-        const target = (https ? _https : _http);
-        console.log({
-            host, path, method, headers, port
-        });
-        const req = target.request({
-            host, path, method, headers, port
+        const target = (url.startsWith('https://') ? _https : _http);
+        const req = target.request(url, {
+            method, headers,
         }, function (res: any) {
             res.setEncoding('utf-8');
             let responseString = '';
@@ -116,7 +106,6 @@ function nodeRequest ({
             });
         });
         req.on('error', (e: any) => {
-            console.log(e, host);
             resolve({
                 success: false,
                 msg: `请求错误: ${e.message}`

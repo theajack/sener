@@ -8,4 +8,5 @@
 - [ ] sener cli template and files
 - [ ] sener rpc
 - [ ] common service
+- [ ] sener docs
 - [ ] 社区

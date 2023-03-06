@@ -11,7 +11,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import { uglify } from 'rollup-plugin-uglify';
 import replace from 'rollup-plugin-replace';
 import path from 'path';
-const { plugins, name, buildFormats } = require('../build.config');
+const { plugins, name, buildFormats, onBuildConfig } = require('../build.config');
 
 const {
     extractSinglePackageInfo,
@@ -89,6 +89,10 @@ const config = [
         plugins: [ dts() ],
     },
 ];
+
+if (onBuildConfig) {
+    onBuildConfig(config, dirName, createBaseConfig);
+}
 
 export default config;
 

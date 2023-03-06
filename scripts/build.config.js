@@ -7,7 +7,7 @@
 // const yaml = require('@rollup/plugin-yaml');
 // const json = require('@rollup/plugin-json');
 
-const { copyFile } = require('./helper/utils');
+const { copyFile, resolvePackagePath } = require('./helper/utils');
 
 const { name } = require('../package.json');
 
@@ -18,7 +18,12 @@ module.exports = {
         // yaml(),
         // vuePlugin(),
     ],
-    afterBuild (dirName) {
+    async afterBuild (dirName) {
+
+        if (dirName === 'rpc') {
+
+        }
+
         if (dirName !== 'types') return;
         copyFile({
             src: '#types/src/extend.d.ts',
@@ -29,12 +34,32 @@ module.exports = {
             handler: (content) => `import "./extend.d";\n${content}`,
         });
     },
+    onBuildConfig (config, dirName, create) {
+        if (dirName === 'rpc') {
+            const input = resolvePackagePath(`${dirName}/src/rpc-web.js`);
+            config.push(
+                create({
+                    format: 'umd',
+                    input,
+                    bundleName: 'web.umd.js',
+                }),
+                create({
+                    format: 'iife',
+                    input,
+                    bundleName: 'web.iife.js',
+                })
+            );
+        }
+    },
     buildFormats: [
         'cjs', 'esm'
     ],
     packageMain: 'cjs',
     packageModule: 'esm',
-    // handlerBuildPackage(package, name){
-    //   return package;
-    // }
+    handlerBuildPackage (package, dirName) {
+        if (dirName === 'rpc') {
+            package.unpkg = `dist/web.iife.js`;
+            package.jsdelivr = `dist/web.iife.js`;
+        }
+    }
 };

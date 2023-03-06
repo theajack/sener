@@ -6,6 +6,7 @@
 import { Config } from 'packages/config/src';
 import { Json } from 'packages/json/src';
 import { Log } from 'packages/log/src';
+import { RPC } from 'packages/rpc/src';
 import { Router } from 'packages/sener';
 import { IUser } from 'services/types/object.d';
 import hex_md5 from 'services/utils/md5';
@@ -97,26 +98,35 @@ const router = new Router({
         return success({ id: user.id, tk: user.tk, expire: user.expire }, '认证成功');
     },
 
-    '/user/test': async ({ services, logger, config }) => {
-        // const level = config.level;
-        logger.log('$$$test1', 'test');
-
-        logger.log({
-            msg: '$$$test2',
-            payload: { a: 1 },
-            type: 'error',
-            level: 9,
-            // extend: { b: 1 }
-        });
-        const data = await services.comment.getList({
-            app: 'cnchar'
-        });
-        // console.log('------', data);
+    '/user/test': async ({ services, logger, rpc, config }) => {
+        console.log('xxxxx');
+        const data = await rpc.comment.get('/message', { app: 'cnchar', index: 1, size: 10 });
+        console.log(data);
         return data;
+        // // const level = config.level;
+        // logger.log('$$$test1', 'test');
+
+        // logger.log({
+        //     msg: '$$$test2',
+        //     payload: { a: 1 },
+        //     type: 'error',
+        //     level: 9,
+        //     // extend: { b: 1 }
+        // });
+        // const data = await services.comment.getList({
+        //     app: 'cnchar'
+        // });
+        // // console.log('------', data);
+        // return data;
     }
 });
 
 const config = new Config();
+
+
+const rpc = new RPC({
+    comment: 'http://localhost:3001'
+});
 
 config.onConfigChange(data => {
     console.log(data);
@@ -129,6 +139,7 @@ initSenerApp({
     port: 3002,
     router,
     middlewares: [
+        rpc,
         config,
         new Log({ dir: 'user', level: config.data.level }),
         new Services(),

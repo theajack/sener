@@ -1,0 +1,19 @@
+{
+    "name": "sener-rpc",
+    "version": "0.0.12",
+    "scripts": {
+        "build": "node ../../scripts/build/build.js rpc"
+    },
+    "dependencies": {
+        "sener-types": "^0.0.12"
+    },
+    "main": "src/index.ts",
+    "typings": "src/index.ts",
+    "description": "Easy-to-use And Powerful nodejs http server",
+    "author": "tackchen <theajack@qq.com>",
+    "repository": "git@github.com:theajack/sener.git",
+    "license": "MIT",
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/"
+    }
+}
