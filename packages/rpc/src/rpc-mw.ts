@@ -7,10 +7,12 @@
 import {  IJson, MiddleWare, ICommonReturn, IMiddleWareEnterData, IPromiseMayBe } from 'sener-types';
 import { Request } from './request';
 
+type IOptions = IJson<string> | ((traceid:string)=>IJson<Request>);
+
 export class RPC extends MiddleWare {
-    config: IJson<string>;
+    config: IOptions;
     rpc: IJson<Request>;
-    constructor (config: IJson<string>) {
+    constructor (config: IOptions) {
         super();
         this.config = config;
         this.rpc = this.create();
@@ -20,6 +22,9 @@ export class RPC extends MiddleWare {
     }
 
     private create (traceid = '') {
+        if (typeof this.config === 'function') {
+            return this.config(traceid);
+        }
         const rpc: IJson<Request> = {};
         for (const key in this.config) {
             const base = this.config[key];

@@ -3,7 +3,7 @@
  * @Date: 2023-03-03 01:15:32
  * @Description: Coding something
  */
-import { Request } from '../base-request';
+import { Request } from 'packages/rpc/src';
 
 export class UserRequest extends Request {
     // @RequestMethod('/user/login', 'nickname', 'pwd')

@@ -9,14 +9,15 @@ import { UserRequest } from './request/user-request';
 import { UtilRequest } from './request/util-request';
 
 export function createServices (traceid = '') {
-    const host = 'localhost';
-    const base = '';
+    const base = (port: number) => `http://localhost:${port}`;
     return {
-        comment: new CommentRequest({ host, base, port: 3001, traceid }),
-        user: new UserRequest({ host, base, port: 3002, traceid }),
-        util: new UtilRequest({ host, base, port: 3003, traceid }),
+        comment: new CommentRequest({ base: base(3001), traceid }),
+        user: new UserRequest({ base: base(3002), traceid }),
+        util: new UtilRequest({ base: base(3003), traceid }),
     };
 }
+
+export type IServices = ReturnType<typeof createServices>;
 
 export const ServiceHelper = createServices();
 

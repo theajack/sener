@@ -6,16 +6,16 @@
 import { Config } from 'packages/config/src';
 import { Json } from 'packages/json/src';
 import { Log } from 'packages/log/src';
-import { RPC } from 'packages/rpc/src';
 import { Router } from 'packages/sener';
 import { IUser } from 'services/types/object.d';
 import hex_md5 from 'services/utils/md5';
-import { Services } from 'services/utils/request/services-middlleware';
+import { RPC } from 'packages/rpc/src';
 import { generateEmailToken, sendEmail } from 'services/utils/send-email';
 import { generateToken, isTokenExpired } from 'services/utils/token';
 import { createSimpleTimeInfo, error, generateCode, generateExpired, success } from 'services/utils/utils';
 import { initSenerApp } from '../../utils/sample-base';
 import { checkEmailCode } from '../util/email';
+import { createServices, IServices } from 'services/utils/request';
 
 const router = new Router({
     'post:/user/login': ({ body, write }) => {
@@ -99,8 +99,9 @@ const router = new Router({
     },
 
     '/user/test': async ({ services, logger, rpc, config }) => {
-        console.log('xxxxx');
-        const data = await rpc.comment.get('/message', { app: 'cnchar', index: 1, size: 10 });
+        console.log('xx11xxx');
+        // const data = await rpc.comment.get('/message', { app: 'cnchar', index: 1, size: 10 });
+        const data = await (rpc as IServices).comment.getList();
         console.log(data);
         return data;
         // // const level = config.level;
@@ -124,9 +125,11 @@ const router = new Router({
 const config = new Config();
 
 
-const rpc = new RPC({
-    comment: 'http://localhost:3001'
-});
+// const rpc = new RPC({
+//     comment: 'http://localhost:3001'
+// });
+
+const rpc = new RPC(createServices);
 
 config.onConfigChange(data => {
     console.log(data);
@@ -142,7 +145,6 @@ initSenerApp({
         rpc,
         config,
         new Log({ dir: 'user', level: config.data.level }),
-        new Services(),
         new Json({ dir: 'user' }),
     ]
 });
