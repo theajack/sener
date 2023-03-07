@@ -4,6 +4,11 @@
  * @Description: Coding something
 -->
 
+## 0.0.13
+
+bugfix
+rpc middleware
+
 ## 0.0.12 
 
 增加 mysql和mongodb中间件

@@ -98,12 +98,12 @@ const router = new Router({
         return success({ id: user.id, tk: user.tk, expire: user.expire }, '认证成功');
     },
 
-    '/user/test': async ({ services, logger, rpc, config }) => {
+    '/user/test': async ({ query, services, logger, rpc, config }) => {
         console.log('xx11xxx');
         // const data = await rpc.comment.get('/message', { app: 'cnchar', index: 1, size: 10 });
         const data = await (rpc as IServices).comment.getList();
         console.log(data);
-        return data;
+        return { data: query, headers: {}, statusCode: 200 };
         // // const level = config.level;
         // logger.log('$$$test1', 'test');
 

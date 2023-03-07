@@ -55,6 +55,7 @@
 9. log中间件：支持灵活的日志体系，支持日志级别控制
 10. mysql中间件：支持mysql连接
 11. mongodb中间件：支持mongodb连接
+12. rpc中间件：远程调用支持，支持客户端和服务端使用，支持注入请求的x-trace-id
 
 ## 2. 基础使用
 
@@ -82,7 +83,6 @@ Sener 将所有文件存储在 sener-data 文件夹中
 
 在开发环境中，根目录是执行当前cmd的目录，在生产环境中，根目录是homedir。
 
-
 ```js
 const BASE_SENER_DIR = path.resolve(
     `${IS_DEV ? process.cwd() : homedir()}`,
@@ -101,8 +101,11 @@ const BASE_SENER_DIR = path.resolve(
 import {Sener, Router} from 'sener';
 const router = new Router({
     '/demo': ({ query }) => {
+    // or: 'get:/demo': ({ query }) => { // get: prefix can be ignored
         query.message = 'from get';
         return { data: query };
+        // Custom headers or statusCode
+        // return { data: query, headers: {}, statusCode: 200  };
     },
     'post:/demo': async ({ body }) => {
         body.message = 'from post'
@@ -246,9 +249,9 @@ import {Sener, Router} from 'sener';
 import {Log} from 'sener-log';
 
 const router = new Router({
-    'post:/test': ({ query, logger }) => {
+    'get:/test': ({ query, logger }) => {
         logger.log('msg', 'payload')
-        return { query }
+        return { data: query }
     },
 });
 
@@ -301,7 +304,7 @@ import {Sener, Router} from 'sener';
 import {Config} from 'sener-config';
 
 const router = new Router({
-    'post:/test': ({ query, config, writeConfig, onConfigChange }) => {
+    'get:/test': ({ query, config, writeConfig, onConfigChange }) => {
         const level = config.level;
         level(); // read config
         level(5); // write config
@@ -309,7 +312,7 @@ const router = new Router({
         onConfigChange(({key, value, prev}) => { // on config change
             console.log(key, value, prev);
         })
-        return { query }
+        return { data: query }
     },
 });
 
@@ -356,10 +359,10 @@ import {Sener, Router} from 'sener';
 import {Mysql} from 'sener-mysql';
 
 const router = new Router({
-    'post:/test': async ({ query, querySql, mysqlConn }) => {
+    'get:/test': async ({ query, querySql, mysqlConn }) => {
         const { results, fields } = await querySql('select * from user');
         // Or use mysqlConn
-        return { query }
+        return { data: query }
     },
 });
 
@@ -390,11 +393,11 @@ import {Sener, Router} from 'sener';
 import {MongoDB} from 'sener-mongodb';
 
 const router = new Router({
-    'post:/test': async ({ query, queryMongoDB, mongoClient }) => {
+    'get:/test': async ({ query, queryMongoDB, mongoClient }) => {
         const {db, close} = await queryMongoDB('user');
         // do something
         // Or use mongoClient
-        return { query }
+        return { data: query }
     },
 });
 
@@ -410,6 +413,126 @@ new Sener({
 ```
 
 详情请参考 [mongodb](https://www.npmjs.com/package/mongodb)
+
+### 3.10 rpc middleware
+
+rpc 中间件作用是对部署在不同服务器或者同一服务器不同端口上的服务进行远程调用，可以让开发者像函数调用一样像远程服务发起请求
+
+也可用于web客户端像服务端发起请求的场景
+
+该中间还会向请求中注入 x-trace-id header来保证同一次访问调用的接口有相同的tracid，与log中间件配合使用可以很有效的定位问题
+
+```
+npm i sener sener-rpc
+```
+
+#### 3.10.1 服务端使用
+
+1. 使用配置
+
+```js
+import {Sener, Router} from 'sener';
+import {RPC} from 'sener-rpc';
+
+const router = new Router({
+    'get:/test': async ({ query, rpc }) => {
+        const list = rpc.comment.get('/message', {page: 1}); // url and query
+        // use rpc.comment.request for more details
+        return { data: {query, list} }
+    },
+});
+new Sener({
+  middlewares: [new RPC({
+    user: 'http://localhost:3000', // user 服务的访问base地址
+    comment: 'http://localhost:3001', // comment 服务的访问base地址
+  }), router], 
+});
+```
+
+2. 使用createServices函数
+
+```js
+import {Sener, Router} from 'sener';
+import {RPC, Request} from 'sener-rpc';
+
+class CommentRequest extends Request {
+    getList ({ app = 'common', index = 1 }: {
+        app?: string
+        index?: number
+    } = {}) {
+        return this.get('/message', {
+            app,
+            index,
+            size: 10,
+        });
+    }
+}
+
+function createServices(traceid = '') {
+    const base = (port: number) => `http://localhost:${port}`;
+    return {
+        comment: new CommentRequest({ base: base(3001), traceid }),
+    };
+}
+
+const router = new Router({
+    'get:/test': async ({ query, rpc }) => {
+        const list = rpc.comment.getList();
+        return { data: {query, list} }
+    },
+});
+
+new Sener({
+  middlewares: [new RPC(createServices), router], 
+});
+```
+
+#### 3.10.1 客户端使用
+
+1. npm 安装使用
+
+```
+npm i sener-rpc
+```
+
+```js
+import {WebRPC} from 'sener-rpc/dist/web.umd';
+
+// 1. 单个服务可以传入base地址
+const comment = new WebRPC('http://localhost:3001');
+await comment.comment.get('/message', {page: 1});
+
+// 2. 多个服务传入map
+const rpc = new WebRPC({
+    user: 'http://localhost:3000', // user 服务的访问base地址
+    comment: 'http://localhost:3001', // comment 服务的访问base地址
+});
+await rpc.comment.comment.get('/message', {page: 1});
+
+// 3. 使用继承方式
+class Comment extends WebRPC {
+    getList ({ app = 'common', index = 1 }: {
+        app?: string
+        index?: number
+    } = {}) {
+        return this.get('/message', {
+            app,
+            index,
+            size: 10,
+        });
+    }
+}
+await (new Comment()).getList();
+```
+
+2. cdn 使用
+
+```html
+<script src='https://cdn.jsdelivr.net/npm/sener-rpc'></script>
+<script>
+  SenerRpc.WebRPC
+</script>
+```
 
 ## 自定义中间件
 

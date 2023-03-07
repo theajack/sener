@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { Request } from 'packages/rpc/src';
+import { Request } from 'packages/rpc';
 
 export class CommentRequest extends Request {
 
