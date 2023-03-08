@@ -54,8 +54,8 @@ Documentation will continue to be improved
 8. Config middleware: supports highly flexible parameter configuration and dynamic change and monitoring
 9.log Middleware: Support flexible logging system and log level control
 10. MySQL Middleware: Supports MySQL connections
-11) MongoDB middleware: Support for MongoDB connections
-
+11. MongoDB middleware: Support for MongoDB connections
+12. RPC middleware: remote call support, support client and server use, support injection request X-trace-id
 
 ## 2. Basic Use
 
@@ -82,7 +82,6 @@ new Sener({
 Sener stores all files in the sener-data folder
 
 In the development environment, the root directory is the directory where the current cmd is executed, and in the production environment, the root directory is homedir
-
 
 ```js
 const BASE_SENER_DIR = path.resolve(
@@ -247,9 +246,9 @@ import {Sener, Router} from 'sener';
 import {Log} from 'sener-log';
 
 const router = new Router({
-    'post:/test': ({ query, logger }) => {
+    'get:/test': ({ query, logger }) => {
         logger.log('msg', 'payload')
-        return { query }
+        return { data: query }
     },
 });
 
@@ -302,7 +301,7 @@ import {Sener, Router} from 'sener';
 import {Config} from 'sener-config';
 
 const router = new Router({
-    'post:/test': ({ query, config, writeConfig, onConfigChange }) => {
+    'get:/test': ({ query, config, writeConfig, onConfigChange }) => {
         const level = config.level;
         level(); // read config
         level(5); // write config
@@ -310,7 +309,7 @@ const router = new Router({
         onConfigChange(({key, value, prev}) => { // on config change
             console.log(key, value, prev);
         })
-        return { query }
+        return { data: query }
     },
 });
 
@@ -357,10 +356,10 @@ import {Sener, Router} from 'sener';
 import {Mysql} from 'sener-mysql';
 
 const router = new Router({
-    'post:/test': async ({ query, querySql, mysqlConn }) => {
+    'get:/test': async ({ query, querySql, mysqlConn }) => {
         const { results, fields } = await querySql('select * from user');
         // Or use mysqlConn
-        return { query }
+        return { data: query }
     },
 });
 
@@ -391,11 +390,11 @@ import {Sener, Router} from 'sener';
 import {MongoDB} from 'sener-mongodb';
 
 const router = new Router({
-    'post:/test': async ({ query, queryMongoDB, mongoClient }) => {
+    'get:/test': async ({ query, queryMongoDB, mongoClient }) => {
         const {db, close} = await queryMongoDB('user');
         // do something
         // Or use mongoClient
-        return { query }
+        return { data: query }
     },
 });
 
@@ -411,6 +410,126 @@ new Sener({
 ```
 
 Please refer to [mongodb](https://www.npmjs.com/package/mongodb) for details 
+
+### 3.10 rpc middleware
+
+RPC middleware is used to make remote calls to services deployed on different servers or on different ports of the same server, allowing developers to initiate requests like remote services like function calls
+
+It can also be used in scenarios where web clients initiate requests like the server
+
+The middle will also inject an x-trace-id header into the request to ensure that the interface of the same access call has the same tracid, which can be used effectively with log middleware to locate the problem
+
+```
+npm i sener sener-rpc
+```
+
+#### 3.10.1 Server-side usage
+
+1. Use configuration
+
+```js
+import {Sener, Router} from 'sener';
+import {RPC} from 'sener-rpc';
+
+const router = new Router({
+    'get:/test': async ({ query, rpc }) => {
+        const list = rpc.comment.get('/message', {page: 1}); // url and query
+        // use rpc.comment.request for more details
+        return { data: {query, list} }
+    },
+});
+new Sener({
+  middlewares: [new RPC({
+    user: 'http://localhost:3000', // The access base address of the user service
+    comment: 'http://localhost:3001', // The access base address of the comment service
+  }), router], 
+});
+```
+
+2. Use the createServices function
+
+```js
+import {Sener, Router} from 'sener';
+import {RPC, Request} from 'sener-rpc';
+
+class CommentRequest extends Request {
+    getList ({ app = 'common', index = 1 }: {
+        app?: string
+        index?: number
+    } = {}) {
+        return this.get('/message', {
+            app,
+            index,
+            size: 10,
+        });
+    }
+}
+
+function createServices(traceid = '') {
+    const base = (port: number) => `http://localhost:${port}`;
+    return {
+        comment: new CommentRequest({ base: base(3001), traceid }),
+    };
+}
+
+const router = new Router({
+    'get:/test': async ({ query, rpc }) => {
+        const list = rpc.comment.getList();
+        return { data: {query, list} }
+    },
+});
+
+new Sener({
+  middlewares: [new RPC(createServices), router], 
+});
+```
+
+#### 3.10.1 Client use
+
+1. npm use
+
+```
+npm i sener-rpc
+```
+
+```js
+import {WebRPC} from 'sener-rpc/dist/web.umd';
+
+// 1. A single service can pass in the base address
+const comment = new WebRPC('http://localhost:3001');
+await comment.comment.get('/message', {page: 1});
+
+// 2. Multiple services pass into the map
+const rpc = new WebRPC({
+    user: 'http://localhost:3000', // The access base address of the user service
+    comment: 'http://localhost:3001', // The access base address of the comment service
+});
+await rpc.comment.comment.get('/message', {page: 1});
+
+// 3. Use inheritance
+class Comment extends WebRPC {
+    getList ({ app = 'common', index = 1 }: {
+        app?: string
+        index?: number
+    } = {}) {
+        return this.get('/message', {
+            app,
+            index,
+            size: 10,
+        });
+    }
+}
+await (new Comment()).getList();
+```
+
+2. cdn use
+
+```html
+<script src='https://cdn.jsdelivr.net/npm/sener-rpc'></script>
+<script>
+  SenerRpc.WebRPC
+</script>
+```
 
 ## Custom Middleware
 
