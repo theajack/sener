@@ -8,8 +8,8 @@
         "mongodb": "^5.1.0",
         "sener-types": "^0.0.13"
     },
-    "main": "dist/sener-mongodb.cjs.js",
-    "typings": "dist/sener-mongodb.d.ts",
+    "main": "src/index.ts",
+    "typings": "src/index.ts",
     "description": "Easy-to-use And Powerful nodejs http server",
     "author": "tackchen <theajack@qq.com>",
     "repository": "git@github.com:theajack/sener.git",
