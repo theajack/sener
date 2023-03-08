@@ -3,9 +3,21 @@
  * @Date: 2023-02-23 10:37:01
  * @Description: Coding something
  */
-const { extractPackagesInfo } = require('./helper/utils');
+const { readdirSync } = require('fs');
+const { resolve } = require('path');
 
-console.log(extractPackagesInfo());
+console.log(readdirSync(resolve(__dirname, '../packages')).map(
+    item => {
+        if (item === 'types') return '';
+        if (item === 'sener') return 'sener';
+        return `sener-${item}`;
+    }
+).join(' '));
+
+// const { extractPackagesInfo } = require('./helper/utils');
+
+// console.log(extractPackagesInfo());
+
 
 // const http = require('http');
 // const { URL } = require('url');

@@ -500,14 +500,14 @@ import {WebRPC} from 'sener-rpc/dist/web.umd';
 
 // 1. 单个服务可以传入base地址
 const comment = new WebRPC('http://localhost:3001');
-await comment.comment.get('/message', {page: 1});
+await comment.get('/message', {page: 1});
 
 // 2. 多个服务传入map
 const rpc = new WebRPC({
     user: 'http://localhost:3000', // user 服务的访问base地址
     comment: 'http://localhost:3001', // comment 服务的访问base地址
 });
-await rpc.comment.comment.get('/message', {page: 1});
+await rpc.comment.get('/message', {page: 1});
 
 // 3. 使用继承方式
 class Comment extends WebRPC {
