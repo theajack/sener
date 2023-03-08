@@ -6,7 +6,7 @@
 const { build } = require('esbuild');
 const { resolve } = require('path');
 // const { yamlPlugin } = require('esbuild-plugin-yaml');
-const { dtsPlugin } = require('esbuild-plugin-d.ts');
+// const { dtsPlugin } = require('esbuild-plugin-d.ts');
 // const vuePlugin = require('esbuild-plugin-vue3');
 const { name } = require('./build.config');
 
@@ -69,7 +69,7 @@ function buildEntry (entry, outfile) {
         // },
         plugins: [
             // yamlPlugin(),
-            dtsPlugin(),
+            // dtsPlugin(),
             // vuePlugin(),
         ],
         watch: {

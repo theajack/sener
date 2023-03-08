@@ -2,13 +2,15 @@
  * @Autor: theajack
  * @Date: 2021-05-09 18:00:08
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-03-07 00:30:10
+ * @LastEditTime: 2023-03-08 09:10:28
  * @Description: Coding something
  */
-import { IJson, IMethod, IMiddleWareResponseReturn } from 'sener-types';
-import { IBoolResult, IRouterReturn } from './type.d';
-import { error, success } from './utils';
+import {
+    IJson, IMethod, IMiddleWareResponseReturn,
+    error, success, IRouterReturn
+} from 'sener-types';
 import { request } from './http';
+import { IBoolResult } from './type';
 
 interface ICommonRequestOptions {
     headers?: IJson<string>;

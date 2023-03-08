@@ -13,5 +13,5 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "dist/sener-types.esm.js"
+    "module": "src/index.ts"
 }

@@ -18,5 +18,5 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "dist/sener-mysql.esm.js"
+    "module": "src/index.ts"
 }

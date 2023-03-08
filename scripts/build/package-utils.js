@@ -22,6 +22,7 @@ function initSinglePackageInfo (dir, isDev = false) {
             if (isDev) {
                 package.main = 'src/index.ts';
                 package.typings = 'src/index.ts';
+                package.module = 'src/index.ts';
             } else {
                 package.main = `dist/${packageName}.${packageMain || 'iife'}.js`;
                 package.module = `dist/${packageName}.${packageModule || 'esm'}.js`;

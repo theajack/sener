@@ -20,10 +20,6 @@ module.exports = {
     ],
     async afterBuild (dirName) {
 
-        if (dirName === 'rpc') {
-
-        }
-
         if (dirName !== 'types') return;
         copyFile({
             src: '#types/src/extend.d.ts',

@@ -365,7 +365,7 @@ const router = new Router({
 
 const mysql = new Mysql({
   //  Please refer to (https://www.npmjs.com/package/mysql) for details 
-}
+})
 
 mysql.connection;
 
@@ -400,7 +400,7 @@ const router = new Router({
 
 const mongodb = new MongoDB({
   //  Please refer to (https://www.npmjs.com/package/mongodb) for details 
-}
+});
 
 mongodb.client;
 

@@ -4,12 +4,6 @@
  * @Description: Coding something
  */
 
-export interface IRouterReturn<TObject=any> {
-    code: number;
-    data: TObject;
-    msg?: string;
-}
-
 export interface IBoolResult {
   success: boolean;
   msg?: string;

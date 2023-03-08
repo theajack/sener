@@ -17,5 +17,5 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "dist/sener-form.esm.js"
+    "module": "src/index.ts"
 }

@@ -23,3 +23,9 @@ export interface ISenerOptions extends IServerOptions {
 export interface IServerOptions {
   port?: number;
 }
+
+export interface IRouterReturn<TObject=any> {
+    code: number;
+    data: TObject;
+    msg?: string;
+}

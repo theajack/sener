@@ -365,7 +365,7 @@ const router = new Router({
 
 const mysql = new Mysql({
   //  Please refer to (https://www.npmjs.com/package/mysql) for details 
-}
+})
 
 mysql.connection;
 
@@ -400,7 +400,7 @@ const router = new Router({
 
 const mongodb = new MongoDB({
   //  Please refer to (https://www.npmjs.com/package/mongodb) for details 
-}
+});
 
 mongodb.client;
 
@@ -497,14 +497,14 @@ import {WebRPC} from 'sener-rpc/dist/web.umd';
 
 // 1. A single service can pass in the base address
 const comment = new WebRPC('http://localhost:3001');
-await comment.comment.get('/message', {page: 1});
+await comment.get('/message', {page: 1});
 
 // 2. Multiple services pass into the map
 const rpc = new WebRPC({
     user: 'http://localhost:3000', // The access base address of the user service
     comment: 'http://localhost:3001', // The access base address of the comment service
 });
-await rpc.comment.comment.get('/message', {page: 1});
+await rpc.comment.get('/message', {page: 1});
 
 // 3. Use inheritance
 class Comment extends WebRPC {

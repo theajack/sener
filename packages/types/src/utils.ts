@@ -8,6 +8,8 @@ import { IJson } from './common';
 import fs from 'fs';
 import path from 'path';
 import { homedir } from 'os';
+import { IMiddleWareResponseReturn } from './middleware';
+import { IRouterReturn } from './sener';
 
 export function parseUrlSearch (url = '') {
     url = decodeURIComponent(url);
@@ -145,4 +147,20 @@ export function buildSenerDir (name: string) {
             `./sener-data`
         );
     return path.resolve(BASE_SENER_DIR, name);
+}
+
+export function error<T = null> (
+    msg = '请求失败', code = -1, data: T = null as any
+): IMiddleWareResponseReturn<IRouterReturn<T>> {
+    return {
+        data: { code, data, msg }
+    };
+}
+
+export function success<T = any> (
+    data: T = null as any, msg = 'success'
+): IMiddleWareResponseReturn<IRouterReturn<T>> {
+    return {
+        data: { code: 0, data, msg }
+    };
 }

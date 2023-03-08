@@ -10,3 +10,8 @@
 - [ ] common service
 - [ ] sener docs
 - [ ] 社区
+
+
+fix:
+
+sener-types.d.ts 中 import extend 多次

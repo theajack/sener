@@ -31,9 +31,20 @@ declare module 'sener-types-extend' {
 const REG = /^(post|get|put|delete):/;
 
 export class Router extends MiddleWare {
-    routers: IJson<IRouterHandler> = {};
+    routers: IRouter = {};
 
-    constructor (routers: IJson<IRouterHandler>) {
+    static _routers: IRouter = {};
+    static Add (routers: IRouter) {
+        Object.assign(this._routers, routers);
+    }
+    static Create (routers?: IRouter) {
+        if (routers) this.Add(routers);
+        const router = new Router(this._routers);
+        this._routers = {};
+        return router;
+    }
+
+    constructor (routers: IRouter) {
         super();
         for (const k in routers) {
             const key = this.fillUrl(k);
