@@ -10,8 +10,5 @@
 - [ ] common service
 - [ ] sener docs
 - [ ] 社区
+- [ ] base-dir sener-data 支持传入
 
-
-fix:
-
-sener-types.d.ts 中 import extend 多次

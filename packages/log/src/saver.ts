@@ -39,7 +39,7 @@ export class Saver {
         if (dir) this.baseDir = path.resolve(BASE_DIR, dir);
         this.level = typeof level === 'number' ? () => level : level;
         makedir(this.baseDir);
-        console.log(this.baseDir);
+        // console.log(this.baseDir);
         this.refreshFileName();
         this.count = this.countLines();
         if (maxRecords < 1000) maxRecords = 1000;
