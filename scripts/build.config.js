@@ -19,7 +19,6 @@ module.exports = {
         // vuePlugin(),
     ],
     async afterBuild (dirName) {
-
         if (dirName !== 'types') return;
         copyFile({
             src: '#types/src/extend.d.ts',
