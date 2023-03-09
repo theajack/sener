@@ -531,6 +531,16 @@ await (new Comment()).getList();
 </script>
 ```
 
+## other
+
+1. Customize the default data storage directory of sener
+
+Use sener static properties
+
+```ts
+Sener.Dir = 'xxxxx'
+```
+
 ## Custom Middleware
 
 Documentation will continue to be improved
