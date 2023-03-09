@@ -79,17 +79,24 @@ new Sener({
 });
 ```
 
-Sener 将所有文件存储在 sener-data 文件夹中
+### 最佳实践
 
-在开发环境中，根目录是执行当前cmd的目录，在生产环境中，根目录是homedir。
+1. 使用ebuild-cli
 
-```js
-const BASE_SENER_DIR = path.resolve(
-    `${IS_DEV ? process.cwd() : homedir()}`,
-    `./sener-data`
-);
+```
+npm i ebuild-cli -g
+ebuild init <Project name>
+cd <Project name>
+npm i
 ```
 
+在随后的模式选择中 选择 sener 即可
+
+2. 从[github地址](https://github.com/theajack/sener-best-practice)上拷贝
+
+```
+git clone https://github.com/theajack/sener-best-practice.git
+```
 
 ## 3. 中间件
 
@@ -538,7 +545,14 @@ await (new Comment()).getList();
 
 1. 自定义sener默认的数据存储目录
 
-使用sener静态属性
+
+Sener 将所有文件存储在 sener-data 文件夹中
+
+```js
+let BASE_SENER_DIR = path.resolve(homedir(), './sener-data')
+```
+
+如果想要修改这个目录，请使用sener静态属性
 
 ```ts
 Sener.Dir = 'xxxxx'

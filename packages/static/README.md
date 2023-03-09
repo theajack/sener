@@ -79,17 +79,25 @@ new Sener({
 });
 ```
 
-Sener stores all files in the sener-data folder
+### Best Practices
 
-In the development environment, the root directory is the directory where the current cmd is executed, and in the production environment, the root directory is homedir
+1. Use ebuild-cli
 
-```js
-const BASE_SENER_DIR = path.resolve(
-    `${IS_DEV ? process.cwd() : homedir()}`,
-    `./sener-data`
-);
+```
+npm i ebuild-cli -g
 ```
 
+```
+ebuild init <Project name>
+```
+
+In the subsequent mode selection, select sener
+
+2. Copy from [github address](https://github.com/theajack/sener-best-practice)
+
+```
+git clone https://github.com/theajack/sener-best-practice.git
+```
 
 ## 3. Middlewares
 
@@ -535,7 +543,13 @@ await (new Comment()).getList();
 
 1. Customize the default data storage directory of sener
 
-Use sener static properties
+Sener stores all files in the sener-data folder
+
+```js
+let BASE_SENER_DIR = path.resolve(homedir(), './sener-data')
+```
+
+If you want to modify，Please use the static property Dir
 
 ```ts
 Sener.Dir = 'xxxxx'
