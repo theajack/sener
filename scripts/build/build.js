@@ -7,6 +7,7 @@
 const execa = require('execa');
 const { afterBuild } = require('../build.config');
 const { resolveRootPath } = require('../helper/utils');
+const pkg = require(resolveRootPath('packages/sener/package.json'));
 
 const dirName = process.argv[2];
 
@@ -23,6 +24,7 @@ async function build () {
             [
                 `PACKAGE_NAME:${dirName}`,
                 `NODE_ENV:production`,
+                `VERSION:${pkg.version}`,
             ],
         ],
         { stdio: 'inherit' },

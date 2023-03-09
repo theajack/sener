@@ -543,10 +543,9 @@ await (new Comment()).getList();
 
 ## 其他
 
-1. 自定义sener默认的数据存储目录
+1. Dir
 
-
-Sener 将所有文件存储在 sener-data 文件夹中
+Sener 默认将所有数据文件存储在 ~/sener-data 文件夹中
 
 ```js
 let BASE_SENER_DIR = path.resolve(homedir(), './sener-data')
@@ -556,6 +555,14 @@ let BASE_SENER_DIR = path.resolve(homedir(), './sener-data')
 
 ```ts
 Sener.Dir = 'xxxxx'
+```
+
+2. Version
+
+获取版本号
+
+```ts
+Sener.Version
 ```
 
 ## 自定义中间件

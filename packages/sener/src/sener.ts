@@ -22,6 +22,8 @@ import { Server } from './server/server';
 
 export class Sener {
 
+    static Version = process.env.VERSION;
+
     server: Server;
 
     static get Dir () {

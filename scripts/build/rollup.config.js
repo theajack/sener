@@ -11,13 +11,17 @@ import commonjs from '@rollup/plugin-commonjs';
 import { uglify } from 'rollup-plugin-uglify';
 import replace from 'rollup-plugin-replace';
 import path from 'path';
+
 const { plugins, name, buildFormats, onBuildConfig } = require('../build.config');
 
 const {
     extractSinglePackageInfo,
     resolvePackagePath,
     upcaseFirstLetter,
+    resolveRootPath,
 } = require('../helper/utils');
+const pkg = require(resolveRootPath('packages/sener/package.json'));
+
 const { buildPackageName } = require('./package-utils');
 
 const dirName = process.env.PACKAGE_NAME;
@@ -80,6 +84,7 @@ const createBaseConfig = ({
             }),
             replace({
                 'process.env.NODE_ENV': '"production"',
+                'process.env.VERSION': `"${pkg.version}"`,
             }),
             ...plugins,
         ],
