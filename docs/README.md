@@ -79,17 +79,25 @@ new Sener({
 });
 ```
 
-Sener stores all files in the sener-data folder
+### Best Practices
 
-In the development environment, the root directory is the directory where the current cmd is executed, and in the production environment, the root directory is homedir
+1. Use ebuild-cli
 
-```js
-const BASE_SENER_DIR = path.resolve(
-    `${IS_DEV ? process.cwd() : homedir()}`,
-    `./sener-data`
-);
+```
+npm i ebuild-cli -g
 ```
 
+```
+ebuild init <Project name>
+```
+
+In the subsequent mode selection, select sener
+
+2. Copy from [github address](https://github.com/theajack/sener-best-practice)
+
+```
+git clone https://github.com/theajack/sener-best-practice.git
+```
 
 ## 3. Middlewares
 
@@ -365,7 +373,7 @@ const router = new Router({
 
 const mysql = new Mysql({
   //  Please refer to (https://www.npmjs.com/package/mysql) for details 
-}
+})
 
 mysql.connection;
 
@@ -400,7 +408,7 @@ const router = new Router({
 
 const mongodb = new MongoDB({
   //  Please refer to (https://www.npmjs.com/package/mongodb) for details 
-}
+});
 
 mongodb.client;
 
@@ -497,14 +505,14 @@ import {WebRPC} from 'sener-rpc/dist/web.umd';
 
 // 1. A single service can pass in the base address
 const comment = new WebRPC('http://localhost:3001');
-await comment.comment.get('/message', {page: 1});
+await comment.get('/message', {page: 1});
 
 // 2. Multiple services pass into the map
 const rpc = new WebRPC({
     user: 'http://localhost:3000', // The access base address of the user service
     comment: 'http://localhost:3001', // The access base address of the comment service
 });
-await rpc.comment.comment.get('/message', {page: 1});
+await rpc.comment.get('/message', {page: 1});
 
 // 3. Use inheritance
 class Comment extends WebRPC {
@@ -529,6 +537,30 @@ await (new Comment()).getList();
 <script>
   SenerRpc.WebRPC
 </script>
+```
+
+## other
+
+1. Dir
+
+Sener stores all data files in ~/sener-data folder by default
+
+```js
+let BASE_SENER_DIR = path.resolve(homedir(), './sener-data')
+```
+
+If you want to modify，Please use the static property Dir
+
+```ts
+Sener.Dir = 'xxxxx'
+```
+
+2. Version
+
+Get version
+
+```ts
+Sener.Version
 ```
 
 ## Custom Middleware

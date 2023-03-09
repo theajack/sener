@@ -541,9 +541,9 @@ await (new Comment()).getList();
 
 ## other
 
-1. Customize the default data storage directory of sener
+1. Dir
 
-Sener stores all files in the sener-data folder
+Sener stores all data files in ~/sener-data folder by default
 
 ```js
 let BASE_SENER_DIR = path.resolve(homedir(), './sener-data')
@@ -553,6 +553,14 @@ If you want to modify，Please use the static property Dir
 
 ```ts
 Sener.Dir = 'xxxxx'
+```
+
+2. Version
+
+Get version
+
+```ts
+Sener.Version
 ```
 
 ## Custom Middleware

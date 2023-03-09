@@ -1,14 +1,14 @@
 {
     "name": "sener-log",
-    "version": "0.0.13",
+    "version": "0.0.14",
     "scripts": {
         "build": "node ../../scripts/build/build.js log"
     },
     "dependencies": {
-        "sener-types": "^0.0.13"
+        "sener-types": "^0.0.14"
     },
-    "main": "src/index.ts",
-    "typings": "src/index.ts",
+    "main": "dist/sener-log.cjs.js",
+    "typings": "dist/sener-log.d.ts",
     "description": "Easy-to-use And Powerful nodejs http server",
     "author": "tackchen <theajack@qq.com>",
     "repository": "git@github.com:theajack/sener.git",
@@ -16,5 +16,5 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "src/index.ts"
+    "module": "dist/sener-log.esm.js"
 }
