@@ -8,22 +8,18 @@ import { makedir, buildSenerDir } from 'sener-types';
 import { File } from './file';
 import path from 'path';
 
-const BASE_DIR = buildSenerDir('json');
-
 export class JsonManager {
     private files: Record<string, File> = {};
 
-    baseDir = BASE_DIR;
+    baseDir = '';
 
     format = false;
 
     constructor (dir = '', format = false) {
-        if (dir) {
-            this.baseDir = path.resolve(BASE_DIR, dir);
-            // if (fs.existsSync(this.baseDir)) {
-            //     throw new Error(`Dir is Exist: ${this.baseDir}`);
-            // }
-        }
+        this.baseDir = buildSenerDir('json', dir);
+        // if (fs.existsSync(this.baseDir)) {
+        //     throw new Error(`Dir is Exist: ${this.baseDir}`);
+        // }
         this.format = format;
         makedir(this.baseDir);
 

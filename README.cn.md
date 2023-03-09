@@ -534,6 +534,16 @@ await (new Comment()).getList();
 </script>
 ```
 
+## 其他
+
+1. 自定义sener默认的数据存储目录
+
+使用sener静态属性
+
+```ts
+Sener.Dir = 'xxxxx'
+```
+
 ## 自定义中间件
 
 文档将持续完善中

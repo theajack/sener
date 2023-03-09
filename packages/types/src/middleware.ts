@@ -64,6 +64,7 @@ export interface IMiddleWare {
 }
 
 export class MiddleWare implements IMiddleWare {
+    dir = '';
     name: string = '';
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     enter (req: IMiddleWareEnterData): IPromiseMayBe<ICommonReturn> {}

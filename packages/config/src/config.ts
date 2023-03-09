@@ -10,11 +10,10 @@ import fs from 'fs';
 import { IConfig } from './extend';
 import Event from 'events';
 
-const BASE_DIR = buildSenerDir('config');
 
 export class ConfigBase {
-    baseDir = BASE_DIR;
     data: IJson<any> = {};
+    baseDir = '';
 
     event: Event;
 
@@ -32,9 +31,10 @@ export class ConfigBase {
         dir, files, format
     }: {dir: string, files: string[], format: boolean}) {
 
+
         this.format = format;
         this.event = new Event();
-        if (dir) this.baseDir = path.resolve(BASE_DIR, dir);
+        this.baseDir = buildSenerDir('config', dir);
 
         makedir(this.baseDir);
 

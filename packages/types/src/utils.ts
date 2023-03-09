@@ -138,15 +138,28 @@ export function delay (t: number) {
     });
 }
 
-let BASE_SENER_DIR = '';
+let SENER_BASE_DIR = '';
 
-export function buildSenerDir (name: string) {
-    if (!BASE_SENER_DIR)
-        BASE_SENER_DIR = path.resolve(
+export function senerBaseDir (): string;
+export function senerBaseDir (v: string): void;
+export function senerBaseDir (v?: string) {
+    if (typeof v === 'string') {
+        SENER_BASE_DIR = v;
+        return;
+    }
+    if (!SENER_BASE_DIR) {
+        SENER_BASE_DIR = path.resolve(
             `${IS_DEV ? process.cwd() : homedir()}`,
             `./sener-data`
         );
-    return path.resolve(BASE_SENER_DIR, name);
+    }
+    return SENER_BASE_DIR;
+}
+
+export function buildSenerDir (name: string, sub = '') {
+    const base = path.resolve(senerBaseDir(), name);
+    if (sub) return path.resolve(base, sub);
+    return base;
 }
 
 export function error<T = null> (

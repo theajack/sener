@@ -3,7 +3,7 @@
  * @Date: 2023-02-18 15:28:21
  * @Description: Coding something
  */
-import { IMiddleWare, ISenerOptions } from 'sener-types';
+import { IMiddleWare, ISenerOptions, senerBaseDir } from 'sener-types';
 import { Server } from './server/server';
 
 
@@ -23,6 +23,14 @@ import { Server } from './server/server';
 export class Sener {
 
     server: Server;
+
+    static get Dir () {
+        return senerBaseDir();
+    }
+
+    static set Dir (v: string) {
+        senerBaseDir(v);
+    }
 
     constructor ({
         port,

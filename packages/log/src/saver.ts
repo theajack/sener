@@ -7,10 +7,8 @@ import path from 'path';
 import fs from 'fs';
 import { buildSenerDir, dateToString, makedir } from 'sener-types';
 
-const BASE_DIR = buildSenerDir('log');
-
 export class Saver {
-    baseDir = BASE_DIR;
+    baseDir = '';
     maxRecords = -1;
 
     count = 0;
@@ -33,10 +31,7 @@ export class Saver {
         interval?: number;
         level: (()=>number)|number;
     }) {
-        // setInterval(() => {
-        //     console.log(this.level());
-        // }, 2000);
-        if (dir) this.baseDir = path.resolve(BASE_DIR, dir);
+        this.baseDir = buildSenerDir('log', dir);
         this.level = typeof level === 'number' ? () => level : level;
         makedir(this.baseDir);
         // console.log(this.baseDir);
@@ -48,7 +43,7 @@ export class Saver {
 
         setInterval(() => {
             this.save();
-        }, interval); // 十秒钟写一次日志
+        }, interval); // 间隔一段时间写一次日志（如果有的话）
     }
 
     save () {

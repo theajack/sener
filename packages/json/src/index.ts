@@ -18,5 +18,6 @@ export default {
     Json,
     JsonManager,
     SyncFile,
-    File
+    File,
 };
+
