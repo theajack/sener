@@ -17,10 +17,17 @@ function resolvePackagePath (str) {
 
 function extractSinglePackageInfo (dir) {
     const { name, version, dependencies } = require(resolvePackagePath(`${dir}/package.json`));
+    const array = dependencies ? Object.keys(dependencies) : [];
+    // ! github ci 构建中 会有一个莫名的 undefined 依赖不知道哪里来的
+    // 本地构建不会有这个问题
+    if (array.includes('undefined')) {
+        array.splice(array.indexOf('undefined'), 1);
+    }
+    console.log('extractSinglePackageInfo ---- ', array, name, version, dependencies, dir);
     return {
         name,
         version,
-        dependencies: dependencies ? Object.keys(dependencies) : [],
+        dependencies: array,
     };
 }
 
