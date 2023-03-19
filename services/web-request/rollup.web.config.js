@@ -15,7 +15,7 @@ const { resolveRootPath } = require('../../scripts/helper/utils');
 const extensions = [ '.ts', '.d.ts', '.js' ];
 
 const distPath = 'services/web-request/server/dist/';
-const input = resolveRootPath(`services/utils/request/index.ts`);
+const input = resolveRootPath(`services/request/index.ts`);
 
 const config = [ {
     input,

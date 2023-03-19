@@ -4,14 +4,14 @@
  * @Description: Coding something
  */
 
-import { Request } from 'packages/rpc';
+import { IRequestReturn, Request } from 'packages/rpc';
 
 export class CommentRequest extends Request {
 
     async getList ({ app = 'common', index = 1 }: {
         app?: string
         index?: number
-    } = {}) {
+    } = {}): IRequestReturn {
         const data = await this.get('/message', {
             app,
             index,

@@ -3,19 +3,17 @@
  * @Date: 2023-02-21 22:55:55
  * @Description: Coding something
  */
-import { Config } from 'packages/config/src';
+// import { Config } from 'packages/config/src';
 import { Json } from 'packages/json/src';
-import { Log } from 'packages/log/src';
+// import { Log } from 'packages/log/src';
 import { Router } from 'packages/sener';
 import { IUser } from 'services/types/object.d';
 import hex_md5 from 'services/utils/md5';
-import { RPC } from 'packages/rpc/src';
 import { generateEmailToken, sendEmail } from 'services/utils/send-email';
 import { generateToken, isTokenExpired } from 'services/utils/token';
 import { createSimpleTimeInfo, error, generateCode, generateExpired, success } from 'services/utils/utils';
 import { initSenerApp } from '../../utils/sample-base';
 import { checkEmailCode } from '../util/email';
-import { createServices, IServices } from 'services/utils/request';
 
 const router = new Router({
     'post:/user/login': ({ body, write }) => {
@@ -97,54 +95,16 @@ const router = new Router({
         if (isTokenExpired(user)) return error('token已过期', 2, { nickname: user.nickname });
         return success({ id: user.id, tk: user.tk, expire: user.expire }, '认证成功');
     },
-
-    '/user/test': async ({ query, services, logger, rpc, config }) => {
-        console.log('xx11xxx');
-        // const data = await rpc.comment.get('/message', { app: 'cnchar', index: 1, size: 10 });
-        const data = await (rpc as IServices).comment.getList();
-        console.log(data);
-        return { data: query, headers: {}, statusCode: 200 };
-        // // const level = config.level;
-        // logger.log('$$$test1', 'test');
-
-        // logger.log({
-        //     msg: '$$$test2',
-        //     payload: { a: 1 },
-        //     type: 'error',
-        //     level: 9,
-        //     // extend: { b: 1 }
-        // });
-        // const data = await services.comment.getList({
-        //     app: 'cnchar'
-        // });
-        // // console.log('------', data);
-        // return data;
-    }
 });
 
-const config = new Config();
+// const config = new Config();
 
-
-// const rpc = new RPC({
-//     comment: 'http://localhost:3001'
-// });
-
-const rpc = new RPC(createServices);
-
-config.onConfigChange(data => {
-    console.log(data);
-});
-
-setTimeout(() => {
-    config.writeConfig('level', 9);
-}, 4000);
 initSenerApp({
     port: 3002,
     router,
     middlewares: [
-        rpc,
-        config,
-        new Log({ dir: 'user', level: config.data.level }),
+        // config,
+        // new Log({ dir: 'user', level: config.data.level }),
         new Json({ dir: 'user' }),
     ]
 });

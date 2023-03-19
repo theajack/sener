@@ -70,6 +70,7 @@ const router = new Router({
     'post:/message': async ({ body, write }) => addComment({ body, write }),
     'post:/message/reply': ({ body, write }) => addReply({ body, write }),
 
+    // 兼容cnchar的路由
     '/comment/cnchar': ({ query, read }) => {
         query.app = 'cnchar';
         return getComment({ query, read });

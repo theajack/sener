@@ -3,7 +3,7 @@
  * @Date: 2023-03-03 01:15:32
  * @Description: Coding something
  */
-import { Request } from 'packages/rpc/src';
+import { Request, IParsedReturn } from 'packages/rpc/src';
 
 export class UserRequest extends Request {
     // @RequestMethod('/user/login', 'nickname', 'pwd')
@@ -11,13 +11,13 @@ export class UserRequest extends Request {
     // // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     // ll (nickname: string, pwd: string): Promise<IBoolResult & IJson<any>> {}
 
-    login (nickname: string, pwd: string) {
+    login (nickname: string, pwd: string): IParsedReturn {
         return this.postReturn('/user/login', { nickname, pwd });
     }
-    sendEmailCode (email: string) {
+    sendEmailCode (email: string): IParsedReturn {
         return this.postReturn('/user/emailcode', { email });
     }
-    checkToken (tk: string) {
+    checkToken (tk: string): IParsedReturn {
         return this.postReturn('/user/check', { tk });
     }
 }

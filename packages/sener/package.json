@@ -11,7 +11,8 @@
     },
     "license": "MIT",
     "dependencies": {
-        "sener-types": "^0.0.13"
+        "sener-types": "^0.0.13",
+        "undefined": "^0.1.0"
     },
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"

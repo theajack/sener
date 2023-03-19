@@ -3,11 +3,11 @@
  * @Date: 2023-03-03 01:15:32
  * @Description: Coding something
  */
-import { Request } from 'packages/rpc/src';
+import { IParsedReturn, Request } from 'packages/rpc/src';
 
 export class UtilRequest extends Request {
 
-    email (to: string, message: string, title: string, tk: string) {
+    email (to: string, message: string, title: string, tk: string): IParsedReturn {
         return this.postReturn('/util/email', { title, message, to, tk });
     }
 
@@ -41,11 +41,11 @@ export class UtilRequest extends Request {
         }
     }
 
-    getStat (name: string, type: string) {
+    getStat (name: string, type: string): IParsedReturn {
         return this.getReturn('/util/stat', { name, type });
     }
 
-    stat (name: string, type: string) {
+    stat (name: string, type: string): IParsedReturn {
         return this.postReturn('/util/stat', { name, type });
     }
 

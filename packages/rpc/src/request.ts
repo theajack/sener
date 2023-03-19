@@ -2,7 +2,7 @@
  * @Autor: theajack
  * @Date: 2021-05-09 18:00:08
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-03-08 09:10:28
+ * @LastEditTime: 2023-03-19 17:33:51
  * @Description: Coding something
  */
 import {
@@ -10,7 +10,7 @@ import {
     error, success, IRouterReturn
 } from 'sener-types';
 import { request } from './http';
-import { IBoolResult } from './type';
+import { IParsedData, IRequestReturn } from './type';
 
 interface ICommonRequestOptions {
     headers?: IJson<string>;
@@ -46,7 +46,9 @@ export class Request {
         if (traceid) this.traceid = traceid;
     }
 
-    parseResult<T = any> (result: IMiddleWareResponseReturn<IRouterReturn<T>>): IBoolResult & IJson {
+    parseResult<T = any> (
+        result: IMiddleWareResponseReturn<IRouterReturn<T>>
+    ): IParsedData {
         const { data, code, msg } = result.data;
         // console.log('result=', result, data, code, msg);
         return {
@@ -99,7 +101,7 @@ export class Request {
         headers = {},
         base = this.base,
         form,
-    }: IRequestOptions): Promise<IMiddleWareResponseReturn<IRouterReturn<T>>> {
+    }: IRequestOptions): IRequestReturn<T> {
         headers = Object.assign({}, this.headers, headers);
 
         // console.log(body);
