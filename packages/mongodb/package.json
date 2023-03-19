@@ -1,12 +1,12 @@
 {
     "name": "sener-mongodb",
-    "version": "0.0.13",
+    "version": "0.0.14",
     "scripts": {
         "build": "node ../../scripts/build/build.js mongodb"
     },
     "dependencies": {
         "mongodb": "^5.1.0",
-        "sener-types": "^0.0.13"
+        "sener-types": "^0.0.14"
     },
     "main": "src/index.ts",
     "typings": "src/index.ts",
