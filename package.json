@@ -21,17 +21,11 @@
         "init:package": "node ./scripts/init-packages-info.js",
         "init:dev": "node ./scripts/init-packages-info.js dev",
         "init:dep": "node scripts/init-learn-dep.js",
-        "test:ci": "node scripts/build/test-ci.js",
-        "dev:service": "node services/dev-service.js",
-        "build:service": "node services/build-service.js",
-        "dev:web": "run-p \"build:web watch\" _dev:web",
-        "build:web": "node services/web-request/build-web-request.js",
-        "_dev:web": "serve -s services/web-request/server -p 3333 & npx open-cli http://localhost:3333"
+        "test:ci": "node scripts/build/test-ci.js"
     },
     "nodemonConfig": {
         "ignore": [
-            "./sener-data",
-            "./services/web-request/dist"
+            "./sener-data"
         ]
     },
     "license": "MIT",

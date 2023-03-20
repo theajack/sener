@@ -25,37 +25,6 @@ build sener
 npm run build
 ```
 
-### Services
-
-dev Services
-
-```
-npm run dev:service <service name>
-```
-
-build services
-
-```
-npm run build:service <service name>
-npm run build:service all
-```
-
-### Web App
-
-dev web
-
-```
-npm run dev:web
-```
-
-build web
-
-```
-npm run build:web
-```
-
-
-
 ## 1. ebuild
 
 前置
