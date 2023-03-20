@@ -93,7 +93,7 @@ export class File<T=any> extends SyncFile<T> {
                 clearTimeout(timer);
                 // console.log('save', this.opratingCount);
                 if (data instanceof Array) template.data = data;
-                if (map) template.map = map;
+                if (map) template.map = map as any; // fix dts error
                 if (imme) return writeDone();
                 return new Promise<boolean>(resolve => {
                     setTimeout(() => {
