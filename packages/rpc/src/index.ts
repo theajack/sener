@@ -9,4 +9,6 @@ export * from './type.d';
 
 export * from './utils';
 
+export * from './http'
+
 export { Request } from './request';

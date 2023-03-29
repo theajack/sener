@@ -12,10 +12,11 @@ let _http: any, _https: any = null;
 interface IBaseOptions {
     url: string,
     method: IMethod, // get方式或post方式
-    headers: IJson,
+    headers?: IJson,
     body?: any,
     form?: boolean,
     traceid?: string,
+    stringifyBody?: boolean,
 }
 
 interface IRequestOptions extends IBaseOptions {
@@ -27,7 +28,8 @@ type ICommenReturn = Promise<{
     data?: any,
     code?: number,
     msg: string,
-    err?: any
+    err?: any,
+    [prop: string]: any,
 }>
 
 export function request ({
@@ -40,7 +42,7 @@ export function request ({
     if (typeof window !== 'undefined') {
         return windowFetch({ url, method, headers, body, form });
     } else {
-        return nodeRequest({ url, method, headers, body, traceid });
+        return nodeRequest({ url, method, headers, body, traceid, stringifyBody: false });
     }
 }
 
@@ -64,15 +66,14 @@ async function windowFetch ({
     }
 }
 
-function nodeRequest ({
-    url, method, headers, body, traceid
+export function nodeRequest ({
+    url, method, headers = {}, body, traceid, stringifyBody = true
 }: IBaseOptions): ICommenReturn {
     // console.log('----host', host, path, method, headers, https, port, body);
     if (!_http) _http = require('http');
     if (!_https) _https = require('https');
 
     if (traceid) headers['x-trace-id'] = traceid;
-
     // console.log({ host, path, method, headers, https, port, body });
     return new Promise((resolve) => {
         const target = (url.startsWith('https://') ? _https : _http);
@@ -87,7 +88,7 @@ function nodeRequest ({
             res.on('end', function () {
                 const result = parseJson(responseString);
                 resolve({
-                    success: (result && result.code === 0),
+                    success: (!!result && result.code === 0),
                     ...(result || {}),
                 });
             });
@@ -112,7 +113,7 @@ function nodeRequest ({
             });
         });
         if (body && method !== 'get') {
-            req.write(convertData(body, false));
+            req.write(stringifyBody ? JSON.stringify(body): convertData(body, false));
         }
         req.end();
     });
