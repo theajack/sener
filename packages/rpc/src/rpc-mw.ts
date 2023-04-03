@@ -4,10 +4,10 @@
  * @Description: Coding something
  */
 
-import {  IJson, MiddleWare, ICommonReturn, IMiddleWareEnterData, IPromiseMayBe } from 'sener-types';
+import { IJson, MiddleWare, ICommonReturn, IMiddleWareEnterData, IPromiseMayBe } from 'sener-types';
 import { Request } from './request';
 
-type IOptions = IJson<string> | ((traceid:string)=>IJson<Request>);
+type IOptions = IJson<string> | ((traceid:string) => IJson<Request|any>);
 
 export class RPC extends MiddleWare {
     config: IOptions;
