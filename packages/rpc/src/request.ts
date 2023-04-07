@@ -2,8 +2,6 @@
  * @Autor: theajack
  * @Date: 2021-05-09 18:00:08
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-03-19 17:33:51
- * @Description: Coding something
  */
 import {
     IJson, IMethod, IMiddleWareResponseReturn,
@@ -36,6 +34,8 @@ export class Request {
     base: string;
     headers: IJson<string> = {};
     traceid: string = '';
+    tk = '';
+    setToken(tk: string){ this.tk = tk; }
     constructor ({
         base,
         headers,
