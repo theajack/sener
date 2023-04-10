@@ -171,9 +171,9 @@ export function error<T = null> (
 }
 
 export function success<T = any> (
-    data: T = null as any, msg = 'success'
+    data: T = null as any, msg = 'success', extra = {}
 ): IMiddleWareResponseReturn<IRouterReturn<T>> {
     return {
-        data: { code: 0, data, msg }
+        data: { code: 0, data, msg, extra }
     };
 }

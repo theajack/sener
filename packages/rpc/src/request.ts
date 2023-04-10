@@ -49,11 +49,16 @@ export class Request {
     parseResult<T = any> (
         result: IMiddleWareResponseReturn<IRouterReturn<T>>
     ): IParsedData {
-        const { data, code, msg } = result.data;
-        // console.log('result=', result, data, code, msg);
-        return {
+        const { data, code, msg, extra } = result.data;
+        return data instanceof Array ? {
             success: code === 0,
             msg,
+            data,
+            ...extra,
+        }: {
+            success: code === 0,
+            msg,
+            ...extra,
             ...data,
         };
     }
@@ -105,7 +110,7 @@ export class Request {
         headers = Object.assign({}, this.headers, headers);
 
         // console.log(body);
-        const { msg, data, success: suc, code = -1, err = null } = await request({
+        const { msg, data, success: suc, code = -1, err = null, extra } = await request({
             url: base + url,
             method, // get方式或post方式
             headers,
@@ -114,12 +119,13 @@ export class Request {
             form,
             traceid: this.traceid,
         });
+        console.warn('==========relatime', data, extra);
 
         // console.log('request result', msg, suc, code);
 
         if (!suc) {
             return error(msg, code, err);
         }
-        return success(data, msg);
+        return success(data, msg, extra);
     }
 }

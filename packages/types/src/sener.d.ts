@@ -27,5 +27,6 @@ export interface IServerOptions {
 export interface IRouterReturn<TObject=any> {
     code: number;
     data: TObject;
+    extra?: any;
     msg?: string;
 }
