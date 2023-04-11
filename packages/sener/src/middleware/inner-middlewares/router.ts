@@ -9,6 +9,7 @@ import {
     IMiddleWareRequestData,
     MiddleWareReturn,
     IMiddleWareResponseData,
+    IMiddleWareEnterData,
 } from 'sener-types';
 
 export type IRouter = IJson<IRouterHandler|IRouterHandlerData>;
@@ -101,6 +102,26 @@ export class Router extends MiddleWare {
         return `${(method || 'get').toLocaleLowerCase()}:${url}`;
     }
 
+    enter (res: IMiddleWareEnterData): IPromiseMayBe<ICommonReturn> {
+        const {url, method} = res;
+        // console.log('enterenterenter', res,url, method)
+        const key = this.buildRouteKey(url, method);
+        const route = this.routers[key];
+        res.meta = route?.meta || {};
+        let index = 0; // 路由中加入一个自增index，可以用于生成错误码 id等
+        res.index = () => index++;
+        res.route = (url, data) => this._route(url, data, res)
+    }
+
+    private _route(url: string, data = {}, res: any){
+        const route = this.routers[this.fillUrl(url)];
+        if (!route) {
+            res.send404(`Route Dismiss: ${url}`);
+            return MiddleWareReturn.Return;
+        }
+        return route.exe(Object.assign({}, res, data));
+    }
+
     request (req: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | Partial<IMiddleWareRequestData>> {
         const { url, method, send404 } = req;
         const key = this.buildRouteKey(url, method);
@@ -121,40 +142,7 @@ export class Router extends MiddleWare {
             // res.sendHtml(`<h1>Page not found: ${res.url}<jh1>`);
             return MiddleWareReturn.Return;
         }
-
-        let index = 0; // 路由中加入一个自增index，可以用于生成错误码 id等
-        res.index = () => index++;
-        res.meta = route.meta;
-        res.route = (url, data) => {
-            const route = this.routers[this.fillUrl(url)];
-            if (!route) {
-                res.send404(`Route Dismiss: ${url}`);
-                return MiddleWareReturn.Return;
-            }
-            if (data) {
-                return route.exe(Object.assign({}, res, data));
-            }
-            return route.exe(res);
-        };
-
+        res.route = (url, data) => this._route(url, data, res)
         return route.exe(res);
-    }
-
-    private _injectHelper(obj: any){
-
-        let index = 0; // 路由中加入一个自增index，可以用于生成错误码 id等
-        obj.index = () => index++;
-        obj.meta = route.meta;
-        obj.route = (url, data) => {
-            const route = this.routers[this.fillUrl(url)];
-            if (!route) {
-                res.send404(`Route Dismiss: ${url}`);
-                return MiddleWareReturn.Return;
-            }
-            if (data) {
-                return route.exe(Object.assign({}, res, data));
-            }
-            return route.exe(res);
-        };
     }
 }

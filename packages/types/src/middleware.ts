@@ -28,7 +28,7 @@ export interface IMiddleWareDataBase extends ISenerHelper, IHelperFunc {
   request: IncomingMessage;
   response: IResponse;
 }
-export type ICommonReturn = MiddleWareReturn|void;
+export type ICommonReturn = MiddleWareReturn|void|false;
 
 export interface IMiddleWareEnterData extends IMiddleWareDataBase, IJson {}
 

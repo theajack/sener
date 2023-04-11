@@ -93,12 +93,18 @@ export class Server {
                 sendText: (msg, code) => {this.sendText(response, msg, code);},
                 sendHtml: (html) => {this.sendHtml(response, html);},
             };
+            const httpInfo = await this.parseHttpInfo(request);
+
+            // let cookie = '';
+
+            // const setCookie
 
             const middlewareBase: IMiddleWareDataBase = {
                 request,
                 response,
                 ...this.helper,
                 ...sendHelper,
+                ...httpInfo,
             };
 
             if (!await this.middleware.applyEnter(middlewareBase)) return;
@@ -107,7 +113,6 @@ export class Server {
             // ! 使用 cors 中间件时不会执行到这里
             if (request.method === 'OPTIONS') return sendHelper.sendResponse({ statusCode: 200 });
 
-            const httpInfo = await this.parseHttpInfo(request);
             // console.log('parseHttpInfo', httpInfo);
             const requestData = await this.middleware.applyRequest({
                 ...httpInfo,
@@ -163,8 +168,13 @@ export class Server {
         headers = { 'Content-Type': 'application/json;charset=UTF-8' },
     }: Partial<IServerSendData> & Pick<IServerSendData, 'response'>) {
         // console.log(headers);
-        for (const k in headers) {
-            response.setHeader(k, headers[k]);
+        try{
+            for (const k in headers) {
+                response.setHeader(k, headers[k]);
+            }
+        }catch(e){
+            console.error('router中如果已经对请求做了返回处理，请return false',e);
+            return;
         }
         // todo 数据类型判断
         if (typeof data !== 'string') {

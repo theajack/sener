@@ -31,9 +31,10 @@ export class MiddleWareManager {
         for (const middleware of this.middlewares) {
             if (!middleware.enter) continue;
             const result = await middleware.enter(req);
-            if (!result || result === MiddleWareReturn.Continue) continue;
-            if (result === MiddleWareReturn.Return) {
+            if (result === MiddleWareReturn.Return || result === false) {
                 return false;
+            } else if(!result || result === MiddleWareReturn.Continue) {
+                continue;
             } else {
                 break;
             }
@@ -46,6 +47,7 @@ export class MiddleWareManager {
             if (!middleware.request) continue;
             // console.log(middleware.name);
             const result = await middleware.request(req);
+            if(result === false) return null;
             if (!result || result === MiddleWareReturn.Continue) continue;
             if (typeof result === 'object') {
                 Object.assign(req, result);
@@ -67,6 +69,7 @@ export class MiddleWareManager {
             const middleware = ms[i];
             if (!middleware.response) continue;
             const result = await middleware.response(res);
+            if(result === false) return null;
             if (!result || result === MiddleWareReturn.Continue) continue;
             if (typeof result === 'object') {
                 Object.assign(res, result);

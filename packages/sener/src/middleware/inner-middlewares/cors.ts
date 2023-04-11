@@ -14,6 +14,7 @@ export class Cors extends MiddleWare {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'POST, GET, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': '*',
+        'Access-Control-Allow-Credentials': 'true',
     }) {
         super();
         this.headers = headers;
