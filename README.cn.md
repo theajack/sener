@@ -410,7 +410,7 @@ const router = new Router({
 
 const mongodb = new MongoDB({
   //  详情请参考 [mongodb](https://www.npmjs.com/package/mongodb)
-}
+})
 
 mongodb.client;
 
