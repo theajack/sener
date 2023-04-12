@@ -31,9 +31,6 @@ export class Cors extends MiddleWare {
     }
 
     response (res: Parameters<MiddleWare['response']>[0]): ReturnType<MiddleWare['response']> {
-        if (!res.headers) {
-            res.headers = { 'Content-Type': 'application/json;charset=UTF-8' };
-        }
         Object.assign(res.headers, this.headers);
     }
 }

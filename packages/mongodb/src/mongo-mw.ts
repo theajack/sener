@@ -3,28 +3,35 @@
  * @Date: 2023-03-06 21:23:36
  * @Description: Coding something
  */
-import { MiddleWare } from 'sener-types';
-import { MongoClient, MongoClientOptions } from 'mongodb';
+import { ICommonReturn, IMiddleWareResponseData, IMiddleWareResponseReturn, IPromiseMayBe, MiddleWare } from 'sener-types';
+import { MongoClient } from 'mongodb';
 import { IMongoHelper } from './extend';
+import { IMongoProxyOptions, MongoProxy } from './mongo-proxy';
 
-export class MongoDB extends MiddleWare {
+export class Mongo extends MiddleWare {
     client: MongoClient;
-    constructor (url: string, config?: MongoClientOptions) {
+    mongo: MongoProxy;
+    constructor (options: IMongoProxyOptions) {
         super();
-        this.client = new MongoClient(url, config);
+        this.mongo = new MongoProxy(options);
     }
 
     helper (): IMongoHelper {
         return {
-            queryMongoDB: async (dbName: string) => {
-                await this.client.connect();
-                console.log('Connected successfully to server');
-                return {
-                    db: this.client.db(dbName),
-                    close: () => this.client.close()
-                };
-            },
-            mongoClient: this.client
+            mongo: this.mongo,
+            // queryMongoDB: async (dbName: string) => {
+            //     await this.client.connect();
+            //     console.log('Connected successfully to server');
+            //     return {
+            //         db: this.client.db(dbName),
+            //         close: () => this.client.close()
+            //     };
+            // },
+            // mongoClient: this.client
         };
+    }
+
+    response (res: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
+        // todo
     }
 }

@@ -11,6 +11,7 @@ import {
     IServerSendData, IResponse, IServeMethod, IHttpInfo, IMiddleWareDataBase
 } from 'sener-types';
 import { ISenerHelper } from 'sener-types-extend';
+import { Cookie } from './cookie';
 
 export class Server {
     server: http.Server;
@@ -95,13 +96,12 @@ export class Server {
             };
             const httpInfo = await this.parseHttpInfo(request);
 
-            // let cookie = '';
-
-            // const setCookie
-
             const middlewareBase: IMiddleWareDataBase = {
                 request,
                 response,
+                // @ts-ignore
+                cookie: new Cookie(request, response),
+                headers: {},
                 ...this.helper,
                 ...sendHelper,
                 ...httpInfo,
@@ -168,12 +168,15 @@ export class Server {
         headers = { 'Content-Type': 'application/json;charset=UTF-8' },
     }: Partial<IServerSendData> & Pick<IServerSendData, 'response'>) {
         // console.log(headers);
-        try{
+        try {
+            if (!headers['Content-Type']) {
+                headers['Content-Type'] = 'application/json;charset=UTF-8';
+            }
             for (const k in headers) {
                 response.setHeader(k, headers[k]);
             }
-        }catch(e){
-            console.error('router中如果已经对请求做了返回处理，请return false',e);
+        } catch (e) {
+            console.error('router中如果已经对请求做了返回处理，请return false', e);
             return;
         }
         // todo 数据类型判断

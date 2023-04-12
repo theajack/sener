@@ -54,7 +54,7 @@ Documentation will continue to be improved
 8. Config middleware: supports highly flexible parameter configuration and dynamic change and monitoring
 9.log Middleware: Support flexible logging system and log level control
 10. MySQL Middleware: Supports MySQL connections
-11. MongoDB middleware: Support for MongoDB connections
+11. Mongo middleware: Support for Mongo connections
 12. RPC middleware: remote call support, support client and server use, support injection request X-trace-id
 
 ## 2. Basic Use
@@ -395,7 +395,7 @@ npm i sener sener-mongodb
 
 ```js
 import {Sener, Router} from 'sener';
-import {MongoDB} from 'sener-mongodb';
+import {Mongo} from 'sener-mongodb';
 
 const router = new Router({
     'get:/test': async ({ query, queryMongoDB, mongoClient }) => {
@@ -406,7 +406,7 @@ const router = new Router({
     },
 });
 
-const mongodb = new MongoDB({
+const mongodb = new Mongo({
   //  Please refer to (https://www.npmjs.com/package/mongodb) for details 
 });
 

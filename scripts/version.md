@@ -17,7 +17,7 @@ rpc middleware
 
 ## 0.0.12 
 
-Add MySQL and MongoDB middleware
+Add MySQL and Mongo middleware
 
 ## 0.0.11
 

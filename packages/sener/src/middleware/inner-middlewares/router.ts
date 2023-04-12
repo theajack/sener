@@ -11,6 +11,7 @@ import {
     IMiddleWareResponseData,
     IMiddleWareEnterData,
 } from 'sener-types';
+import { Cookie } from '../../server/cookie';
 
 export type IRouter = IJson<IRouterHandler|IRouterHandlerData>;
 
@@ -18,7 +19,7 @@ export type IRouterHandler = (
     data: IMiddleWareResponseData,
 ) => IPromiseMayBe<IMiddleWareResponseReturn|ICommonReturn>;
 
-export type IRouterHandlerData = {
+export interface IRouterHandlerData {
     exe: IRouterHandler;
     meta: IJson;
 }
@@ -29,6 +30,7 @@ interface IRouterHelper {
     route(
         url: string, data?: Partial<IMiddleWareRequestData>,
     ): IPromiseMayBe<IMiddleWareResponseReturn|ICommonReturn>;
+    cookie: Cookie;
 }
 
 declare module 'sener-types-extend' {
@@ -55,14 +57,14 @@ export class Router extends MiddleWare {
         super();
         for (const k in routers) {
             const value = routers[k];
-            if(typeof value === 'function'){
-                const {meta, url} = this.extractMeta(k);
+            if (typeof value === 'function') {
+                const { meta, url } = this.extractMeta(k);
                 const key = this.fillUrl(url);
                 this.routers[key] = {
                     exe: value,
                     meta: meta
-                }
-            }else{
+                };
+            } else {
                 const key = this.fillUrl(k);
                 this.routers[key] = value;
             }
@@ -70,24 +72,24 @@ export class Router extends MiddleWare {
         // console.log(this.routers);
     }
 
-    private extractMeta(url: string){
-        if(!url.startsWith('[')) return {meta:{}, url}
+    private extractMeta (url: string) {
+        if (!url.startsWith('[')) return { meta: {}, url };
         const arr = url.matchAll(/(?<=[\[\&])(.*?)(=(.*?))?(?=[\&\]])/g);
 
         const meta: IJson = {};
 
-        for(let item of arr){
+        for (const item of arr) {
             const key = item[1];
             let value: any = item[2];
-            if(typeof value === 'undefined'){
+            if (typeof value === 'undefined') {
                 value = true;
             }
-            meta[key] = value
+            meta[key] = value;
         }
         return {
             meta,
             url: url.replace(/^\[.*?\]/, '')
-        }
+        };
     }
 
     private fillUrl (k: string) {
@@ -103,17 +105,17 @@ export class Router extends MiddleWare {
     }
 
     enter (res: IMiddleWareEnterData): IPromiseMayBe<ICommonReturn> {
-        const {url, method} = res;
+        const { url, method } = res;
         // console.log('enterenterenter', res,url, method)
         const key = this.buildRouteKey(url, method);
         const route = this.routers[key];
         res.meta = route?.meta || {};
         let index = 0; // 路由中加入一个自增index，可以用于生成错误码 id等
         res.index = () => index++;
-        res.route = (url, data) => this._route(url, data, res)
+        res.route = (url, data) => this._route(url, data, res);
     }
 
-    private _route(url: string, data = {}, res: any){
+    private _route (url: string, data = {}, res: any) {
         const route = this.routers[this.fillUrl(url)];
         if (!route) {
             res.send404(`Route Dismiss: ${url}`);
@@ -142,7 +144,7 @@ export class Router extends MiddleWare {
             // res.sendHtml(`<h1>Page not found: ${res.url}<jh1>`);
             return MiddleWareReturn.Return;
         }
-        res.route = (url, data) => this._route(url, data, res)
+        res.route = (url, data) => this._route(url, data, res);
         return route.exe(res);
     }
 }

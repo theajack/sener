@@ -4,14 +4,10 @@
  * @Description: Coding something
  */
 
-import { Db, MongoClient } from 'mongodb';
+import type { MongoProxy } from './mongo-proxy';
 
 export interface IMongoHelper {
-  queryMongoDB: (dbName: string) => Promise<{
-    db: Db;
-    close: () => Promise<void>;
-  }>;
-  mongoClient: MongoClient;
+  mongo: MongoProxy;
 }
 
 declare module 'sener-types-extend' {

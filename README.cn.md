@@ -397,7 +397,7 @@ npm i sener sener-mongodb
 
 ```js
 import {Sener, Router} from 'sener';
-import {MongoDB} from 'sener-mongodb';
+import {Mongo} from 'sener-mongodb';
 
 const router = new Router({
     'get:/test': async ({ query, queryMongoDB, mongoClient }) => {
@@ -408,7 +408,7 @@ const router = new Router({
     },
 });
 
-const mongodb = new MongoDB({
+const mongodb = new Mongo({
   //  详情请参考 [mongodb](https://www.npmjs.com/package/mongodb)
 })
 

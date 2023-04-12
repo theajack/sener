@@ -27,6 +27,7 @@ export interface IHelperFunc {
 export interface IMiddleWareDataBase extends ISenerHelper, IHelperFunc {
   request: IncomingMessage;
   response: IResponse;
+  headers: IJson<string>;
 }
 export type ICommonReturn = MiddleWareReturn|void|false;
 
@@ -35,9 +36,10 @@ export interface IMiddleWareEnterData extends IMiddleWareDataBase, IJson {}
 export interface IMiddleWareResponseReturn<T = any> extends Partial<ISenerRequestData> {
   data: T,
   statusCode?: number,
-  headers?: IJson<string>
+  headers?: IJson<string>;
 }
 
+// @ts-ignore
 export interface IMiddleWareResponseData extends
   IMiddleWareDataBase,
   IMiddleWareResponseReturn,
