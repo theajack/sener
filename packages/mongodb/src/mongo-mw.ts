@@ -3,35 +3,44 @@
  * @Date: 2023-03-06 21:23:36
  * @Description: Coding something
  */
-import { ICommonReturn, IMiddleWareResponseData, IMiddleWareResponseReturn, IPromiseMayBe, MiddleWare } from 'sener-types';
-import { MongoClient } from 'mongodb';
-import { IMongoHelper } from './extend';
+import {
+    ICommonReturn, IJson, IMiddleWareRequestData, 
+    IMiddleWareResponseData, IMiddleWareResponseReturn, 
+    MiddleWare 
+} from 'sener-types';
+import { IModels, IMongoHelper } from './extend.d';
 import { IMongoProxyOptions, MongoProxy } from './mongo-proxy';
+import { MongoCol } from './mongo-col';
 
-export class Mongo extends MiddleWare {
-    client: MongoClient;
-    mongo: MongoProxy;
-    constructor (options: IMongoProxyOptions) {
+export class Mongo<
+    T = IJson<MongoCol>,
+    Models extends IModels = Record<keyof T, typeof MongoCol>
+> extends MiddleWare {
+    mongo: MongoProxy<Models>;
+
+    
+    constructor (options: IMongoProxyOptions<Models>) {
         super();
-        this.mongo = new MongoProxy(options);
+        this.mongo = new MongoProxy<Models>(options);
     }
 
-    helper (): IMongoHelper {
+    helper (): IMongoHelper<Models> {
         return {
             mongo: this.mongo,
-            // queryMongoDB: async (dbName: string) => {
-            //     await this.client.connect();
-            //     console.log('Connected successfully to server');
-            //     return {
-            //         db: this.client.db(dbName),
-            //         close: () => this.client.close()
-            //     };
-            // },
-            // mongoClient: this.client
+            col: (name)=> this.mongo.col(name)
         };
     }
 
-    response (res: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
+    async request ({ meta }: IMiddleWareRequestData): Promise<ICommonReturn | Partial<IMiddleWareRequestData>> {
+        console.log('mg request meta', meta);
+        if (meta?.db !== true) return;
+        await this.mongo.connect();
+    }
+
+    async response ({ meta }: IMiddleWareResponseData): Promise<ICommonReturn | IMiddleWareResponseReturn<any>> {
         // todo
+        console.log('mg response meta', meta);
+        if (meta?.db !== true) return;
+        await this.mongo.close();
     }
 }

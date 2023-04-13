@@ -8,20 +8,28 @@ import { Collection } from 'mongodb';
 import { IJson } from 'sener-types';
 import type { MongoProxy } from './mongo-proxy';
 
-export class MongoCol<T extends IJson = IJson> {
+export class MongoCol<T extends any = IJson> {
     name = '';
     col: Collection;
     mongoProxy: MongoProxy;
-    constructor (name: string) {
+    constructor (name: string, mongoProxy?: MongoProxy) {
         this.name = name;
-        this.col = this.mongoProxy.db.collection(name);
+        if (mongoProxy) {
+            this.init(mongoProxy);
+        }
+    }
+
+    init (mongo: MongoProxy) {
+        this.mongoProxy = mongo;
+        this.col = this.mongoProxy.db.collection(this.name);
+        this.mongoProxy.cols[this.name] = this;
     }
 
     // 增
     add (data: T|T[]) {
         return (data instanceof Array) ?
-            this.col.insertMany(data) :
-            this.col.insertOne(data);
+            this.col.insertMany(data as any) :
+            this.col.insertOne(data as any);
     }
     // 删
     remove (filter: IJson, all = false) {

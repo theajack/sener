@@ -4,28 +4,31 @@
  * @Description: Coding something
  */
 import { MongoClient, MongoClientOptions, Db } from 'mongodb';
-import { IJson } from 'sener-types';
+import { Instanceof } from 'sener-types';
+import {IModels} from './extend';
 import { MongoCol } from './mongo-col';
 
-export interface IMongoProxyOptions {
+export interface IMongoProxyOptions<Models> {
     url: string;
-    models?: IJson<typeof MongoCol>;
-    dbName?: string;
+    dbName: string;
+    models?: Models;
     config?: MongoClientOptions;
 }
 
-export class MongoProxy<T extends IJson<MongoCol> = IJson<MongoCol>> {
+
+export class MongoProxy<Models extends IModels = any> {
     client: MongoClient;
     dbName: string;
     db: Db;
-    cols: T = {} as any;
-    models: IJson<typeof MongoCol> = {};
+    cols: {[key in keyof Models]: Instanceof<Models[key]>} = {} as any;
+    models: Models = {} as any;
     constructor ({
         url, models, dbName, config,
-    }: IMongoProxyOptions) {
+    }: IMongoProxyOptions<Models>) {
         this.client = new MongoClient(url, config);
         if (models) this.models = models;
-        if (dbName) this.switchDB(dbName);
+        if (!dbName) throw new Error('请传入dbName');
+        this.switchDB(dbName);
     }
     switchDB (dbName: string) {
         this.dbName = dbName;
@@ -39,10 +42,10 @@ export class MongoProxy<T extends IJson<MongoCol> = IJson<MongoCol>> {
         await this.close();
     }
 
-    col <Key extends keyof T> (name: Key): T[Key] {
+    col <Key extends keyof Models> (name: Key): Instanceof<Models[Key]> {
         if (!this.cols[name]) {
             // @ts-ignore
-            this.cols[name] = new (this.models[name as any] || MongoCol)(name);
+            this.cols[name] = new (this.models[name as any] || MongoCol)(name, this);
         }
         return this.cols[name];
     }

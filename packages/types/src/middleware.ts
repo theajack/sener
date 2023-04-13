@@ -43,10 +43,10 @@ export interface IMiddleWareResponseReturn<T = any> extends Partial<ISenerReques
 export interface IMiddleWareResponseData extends
   IMiddleWareDataBase,
   IMiddleWareResponseReturn,
-  IHttpInfo {
+  IHttpInfo, IJson {
 }
 
-export interface IMiddleWareRequestData extends IMiddleWareDataBase, IHttpInfo, ISenerRequestData {
+export interface IMiddleWareRequestData extends IMiddleWareDataBase, IHttpInfo, ISenerRequestData, IJson {
 }
 
 export type IMiddleWareRequest = (req: IMiddleWareRequestData) => IPromiseMayBe<ICommonReturn|Partial<IMiddleWareRequestData>>;
@@ -74,6 +74,8 @@ export class MiddleWare implements IMiddleWare {
     request (req: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn|Partial<IMiddleWareRequestData>> {};
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     response (res: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn|IMiddleWareResponseReturn> {};
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
+    leave (res: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn|IMiddleWareResponseReturn> {};
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     helper () {}
 }

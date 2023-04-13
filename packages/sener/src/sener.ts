@@ -4,6 +4,7 @@
  * @Description: Coding something
  */
 import { IMiddleWare, ISenerOptions, senerBaseDir } from 'sener-types';
+import { Router } from './middleware/entry';
 import { Server } from './server/server';
 
 
@@ -36,11 +37,13 @@ export class Sener {
 
     constructor ({
         port,
+        router,
         middlewares = [],
-    }: ISenerOptions = {}) {
+    }: ISenerOptions & {router?: Router} = {}) {
         this.server = new Server({
             port,
         });
+        if(router) middlewares.push(router);
         this.use(...middlewares);
     }
 
