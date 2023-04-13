@@ -4,9 +4,9 @@
  * @Description: Coding something
  */
 import {
-    ICommonReturn, IJson, IMiddleWareRequestData, 
-    IMiddleWareResponseData, IMiddleWareResponseReturn, 
-    MiddleWare 
+    ICommonReturn, IJson, IMiddleWareRequestData,
+    IMiddleWareResponseData, IMiddleWareResponseReturn,
+    MiddleWare
 } from 'sener-types';
 import { IModels, IMongoHelper } from './extend.d';
 import { IMongoProxyOptions, MongoProxy } from './mongo-proxy';
@@ -18,7 +18,7 @@ export class Mongo<
 > extends MiddleWare {
     mongo: MongoProxy<Models>;
 
-    
+
     constructor (options: IMongoProxyOptions<Models>) {
         super();
         this.mongo = new MongoProxy<Models>(options);
@@ -27,19 +27,18 @@ export class Mongo<
     helper (): IMongoHelper<Models> {
         return {
             mongo: this.mongo,
-            col: (name)=> this.mongo.col(name)
+            col: (name) => this.mongo.col(name)
         };
     }
 
     async request ({ meta }: IMiddleWareRequestData): Promise<ICommonReturn | Partial<IMiddleWareRequestData>> {
-        console.log('mg request meta', meta);
+        // console.log('mg request meta', meta);
         if (meta?.db !== true) return;
         await this.mongo.connect();
     }
 
     async response ({ meta }: IMiddleWareResponseData): Promise<ICommonReturn | IMiddleWareResponseReturn<any>> {
-        // todo
-        console.log('mg response meta', meta);
+        // console.log('mg response meta', meta);
         if (meta?.db !== true) return;
         await this.mongo.close();
     }

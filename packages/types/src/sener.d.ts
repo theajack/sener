@@ -4,8 +4,8 @@
  * @Description: Coding something
  */
 import { IncomingHttpHeaders } from 'http';
-import { IMiddleWare } from './middleware';
-import { IServeMethod, IJson } from './common';
+import { IMiddleWare, IMiddleWareResponseReturn } from './middleware';
+import { IServeMethod, IJson, IPromiseMayBe } from './common';
 
 export interface IHttpInfo {
   requestHeaders: IncomingHttpHeaders;
@@ -20,8 +20,11 @@ export interface ISenerOptions extends IServerOptions {
     middlewares?: (IMiddleWare|null)[];
 }
 
+export type IOnError = (err: {error: any, from: string}) => IPromiseMayBe<IMiddleWareResponseReturn>;
+
 export interface IServerOptions {
   port?: number;
+  onerror?: IOnError;
 }
 
 export interface IRouterReturn<TObject=any> {

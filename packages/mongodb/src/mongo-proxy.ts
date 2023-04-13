@@ -5,7 +5,7 @@
  */
 import { MongoClient, MongoClientOptions, Db } from 'mongodb';
 import { Instanceof } from 'sener-types';
-import {IModels} from './extend';
+import { IModels } from './extend';
 import { MongoCol } from './mongo-col';
 
 export interface IMongoProxyOptions<Models> {
@@ -22,6 +22,7 @@ export class MongoProxy<Models extends IModels = any> {
     db: Db;
     cols: {[key in keyof Models]: Instanceof<Models[key]>} = {} as any;
     models: Models = {} as any;
+    connected = false;
     constructor ({
         url, models, dbName, config,
     }: IMongoProxyOptions<Models>) {
@@ -34,8 +35,15 @@ export class MongoProxy<Models extends IModels = any> {
         this.dbName = dbName;
         this.db = this.client.db(dbName);
     }
-    connect () {return this.client.connect();}
-    close () {return this.client.close();}
+    async connect () {
+        const client = await this.client.connect();
+        this.connected = true;
+        return client;
+    }
+    close () {
+        this.connected = false;
+        return this.client.close();
+    }
     async execute (func: () => Promise<void>) {
         await this.connect();
         await func();
@@ -43,6 +51,7 @@ export class MongoProxy<Models extends IModels = any> {
     }
 
     col <Key extends keyof Models> (name: Key): Instanceof<Models[Key]> {
+        if (!this.connected) throw new Error('MongoDB is DISCONNECTED!');
         if (!this.cols[name]) {
             // @ts-ignore
             this.cols[name] = new (this.models[name as any] || MongoCol)(name, this);

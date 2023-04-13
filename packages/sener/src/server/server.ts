@@ -5,7 +5,7 @@
  */
 import http, { IncomingMessage } from 'http';
 import { MiddleWareManager } from '../middleware/middleware-manager';
-import { IHelperFunc, IMiddleWare, IMiddleWareRequestData, parseParam, praseUrl } from 'sener-types';
+import { IHelperFunc, IMiddleWare, IMiddleWareRequestData, IMiddleWareResponseReturn, IOnError, parseParam, praseUrl } from 'sener-types';
 import {
     IJson, IServerOptions,
     IServerSendData, IResponse, IServeMethod, IHttpInfo, IMiddleWareDataBase
@@ -23,10 +23,14 @@ export class Server {
 
     port = 9000;
 
+    onerror?: IOnError;
+
     constructor ({
         port,
+        onerror,
     }: IServerOptions) {
         if (port) this.port = port;
+        this.onerror = onerror;
         this.middleware = new MiddleWareManager();
         this.initServer();
     }
@@ -84,6 +88,14 @@ export class Server {
         });
     }
 
+    private async onError (error: any, from: string, response: IResponse): Promise<any> {
+        const data = (this.onerror) ?
+            await this.onerror({ error, from }) :
+            { data: { code: -1, msg: '服务器内部错误', error } };
+
+        this.sendData({ response, ...data });
+    }
+
     private initServer () {
         console.log(`Sener Runing Succeed On: http://localhost:${this.port}`);
         this.server = http.createServer(async (request, response) => {
@@ -107,26 +119,40 @@ export class Server {
                 ...httpInfo,
             };
 
-            if (!await this.middleware.applyEnter(middlewareBase)) return;
+            try {
+                if (!await this.middleware.applyEnter(middlewareBase)) return;
+            } catch (err) {
+                return this.onError(err, 'enter', response);
+            }
 
             // ! options请求返回200 当使用nginx配置跨域时此处需要有返回
             // ! 使用 cors 中间件时不会执行到这里
             if (request.method === 'OPTIONS') return sendHelper.sendResponse({ statusCode: 200 });
 
             // console.log('parseHttpInfo', httpInfo);
-            const requestData = await this.middleware.applyRequest({
-                ...httpInfo,
-                ...middlewareBase,
-            } as IMiddleWareRequestData); // todo fix
+            let requestData: IMiddleWareRequestData|null;
+            try {
+                requestData = await this.middleware.applyRequest({
+                    ...httpInfo,
+                    ...middlewareBase,
+                } as IMiddleWareRequestData); // todo fix
             // console.log('requestData', requestData);
+            } catch (err) {
+                return this.onError(err, 'request', response);
+            }
 
             if (!requestData) return;
 
-            const responseData = await this.middleware.applyResponse({
-                data: {},
-                statusCode: 200,
-                ...requestData,
-            });
+            let responseData: IMiddleWareResponseReturn|null;
+            try {
+                responseData = await this.middleware.applyResponse({
+                    data: {},
+                    statusCode: 200,
+                    ...requestData,
+                });
+            } catch (err) {
+                return this.onError(err, 'request', response);
+            }
 
             if (!responseData) return;
 
