@@ -89,9 +89,10 @@ export class Server {
     }
 
     private async onError (error: any, from: string, response: IResponse): Promise<any> {
+        console.log(error);
         const data = (this.onerror) ?
             await this.onerror({ error, from }) :
-            { data: { code: -1, msg: '服务器内部错误', error } };
+            { data: { code: -1, msg: `服务器内部错误:${error.toString()}`, error } };
 
         this.sendData({ response, ...data });
     }
