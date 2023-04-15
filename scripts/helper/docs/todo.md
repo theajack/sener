@@ -7,6 +7,9 @@
 - [x] mysql & mongodb middleware
 - [x] base-dir sener-data 支持传入
 - [x] sener rpc
+- [x] 增加session
+- [x] 增加cookie
+- [x] mongodb 优化
 - [ ] sener cli template and files：最佳实践
 - [ ] common service
 - [ ] sener docs
@@ -14,4 +17,5 @@
 - [ ] 支持验证码 svg-captcha https://blog.csdn.net/weixin_43422861/article/details/125387282
 - [ ] 验证码存放在md5存放在session里
 - [ ] 支持ip频繁访问拦截
-- [ ] client-sessions 增加session
+- [ ] cookie & session 增加过期时间
+- [ ] session文件删除规则

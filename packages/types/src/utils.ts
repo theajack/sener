@@ -10,6 +10,7 @@ import path from 'path';
 import { homedir } from 'os';
 import { IMiddleWareResponseReturn } from './middleware';
 import { IRouterReturn } from './sener';
+import crypto from 'crypto';
 
 export function parseUrlSearch (url = '') {
     url = decodeURIComponent(url);
@@ -176,4 +177,17 @@ export function success<T = any> (
     return {
         data: { code: 0, data, msg, extra }
     };
+}
+
+export function md5 (text: string) {
+    const hash = crypto.createHash('md5');
+    hash.update(text);
+    return hash.digest('hex');
+}
+
+export function pickAttrs (keys: string[], onvalue: (k: string)=>any) {
+    const map: any = {};
+    for (const k of keys)
+        map[k] = onvalue(k);
+    return map;
 }

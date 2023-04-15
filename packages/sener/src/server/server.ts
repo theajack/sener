@@ -11,7 +11,6 @@ import {
     IServerSendData, IResponse, IServeMethod, IHttpInfo, IMiddleWareDataBase
 } from 'sener-types';
 import { ISenerHelper } from 'sener-types-extend';
-import { Cookie } from './cookie';
 
 export class Server {
     server: http.Server;
@@ -89,7 +88,7 @@ export class Server {
     }
 
     private async onError (error: any, from: string, response: IResponse): Promise<any> {
-        console.log(error);
+        // console.log(error);
         const data = (this.onerror) ?
             await this.onerror({ error, from }) :
             { data: { code: -1, msg: `服务器内部错误:${error.toString()}`, error } };
@@ -112,8 +111,6 @@ export class Server {
             const middlewareBase: IMiddleWareDataBase = {
                 request,
                 response,
-                // @ts-ignore
-                cookie: new Cookie(request, response),
                 headers: {},
                 ...this.helper,
                 ...sendHelper,

@@ -11,7 +11,6 @@ import {
     IMiddleWareResponseData,
     IMiddleWareEnterData,
 } from 'sener-types';
-import { Cookie } from '../../server/cookie';
 
 export type IRouter = IJson<IRouterHandler|IRouterHandlerData>;
 
@@ -30,7 +29,6 @@ interface IRouterHelper {
     route(
         url: string, data?: Partial<IMiddleWareRequestData>,
     ): IPromiseMayBe<IMiddleWareResponseReturn|ICommonReturn>;
-    cookie: Cookie;
 }
 
 declare module 'sener-types-extend' {

@@ -6,3 +6,4 @@
 
 export * from './inner-middlewares/router';
 export * from './inner-middlewares/cors';
+export * from './inner-middlewares/session';

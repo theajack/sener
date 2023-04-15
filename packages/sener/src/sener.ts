@@ -5,6 +5,7 @@
  */
 import { IMiddleWare, ISenerOptions, senerBaseDir } from 'sener-types';
 import { Router } from './middleware/entry';
+import { Cookie } from './middleware/inner-middlewares/cookie';
 import { Server } from './server/server';
 
 
@@ -43,11 +44,14 @@ export class Sener {
         this.server = new Server({
             port,
         });
-        if(router) middlewares.push(router);
-        this.use(...middlewares);
+        this.use(
+            new Cookie(), // Cookie 中间件默认会带上 且位于第一个
+            ...middlewares,
+            router
+        );
     }
 
-    use (...middlewares: (IMiddleWare|null)[]) {
+    use (...middlewares: (IMiddleWare|null|undefined)[]) {
         for (const middleware of middlewares) {
             if (!middleware) continue;
             this.server.middleware.use(middleware);
