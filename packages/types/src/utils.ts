@@ -5,7 +5,6 @@
  */
 
 import { IJson } from './common';
-import fs from 'fs';
 import path from 'path';
 import { homedir } from 'os';
 import { IMiddleWareResponseReturn } from './middleware';
@@ -50,25 +49,6 @@ export function now () {
 export const IS_DEV = process.env.NODE_ENV === 'development';
 
 // console.log('process.env.NODE_ENV============', process.env.NODE_ENV);
-
-export function makedir (dirPath: string, chmod = '777') {
-
-    dirPath = '/' + dirPath.split('/').filter(n => !!n).join('/');
-
-    const next = () => {
-        dirPath = dirPath.substring(0, dirPath.lastIndexOf('/'));
-    };
-
-    const pathArr: string[] = [];
-    while (dirPath && !fs.existsSync(dirPath)) {
-        pathArr.unshift(dirPath);
-        next();
-    }
-    for (const dir of pathArr) {
-        fs.mkdirSync(dir, chmod);
-    }
-}
-
 
 export function uuid () {
     const s: string[] = [];
@@ -190,4 +170,36 @@ export function pickAttrs (keys: string[], onvalue: (k: string)=>any) {
     for (const k of keys)
         map[k] = onvalue(k);
     return map;
+}
+
+export function isExpired (expire?: number) {
+    if (!expire) return false;
+    return expire < Date.now();
+}
+let time = 1;
+const ExpireMap = {
+    s: time *= 1000,
+    m: time *= 60,
+    h: time *= 60,
+    d: time *= 24,
+    w: time * 7,
+    M: time * 30,
+    y: time * 365,
+};
+
+export function strToTime (value: string|number) {
+    if (typeof value === 'string') {
+        const unit = value[value.length - 1];
+        const num = parseInt(value);
+        if (Number.isNaN(num)) {
+            throw new Error(`Invalid Expire ${value}`);
+        }
+        // @ts-ignore
+        value = (unit in ExpireMap) ? ExpireMap[unit] * num : num;
+    }
+    return value as number;
+}
+
+export function countExpire (value: string|number) {
+    return now() + strToTime(value);
 }

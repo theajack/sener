@@ -18,7 +18,6 @@ export class Mongo<
 > extends MiddleWare {
     mongo: MongoProxy<Models>;
 
-
     constructor (options: IMongoProxyOptions<Models>) {
         super();
         this.mongo = new MongoProxy<Models>(options);

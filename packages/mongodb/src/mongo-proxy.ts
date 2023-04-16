@@ -15,7 +15,6 @@ export interface IMongoProxyOptions<Models> {
     config?: MongoClientOptions;
 }
 
-
 export class MongoProxy<Models extends IModels = any> {
     client: MongoClient;
     dbName: string;

@@ -40,15 +40,19 @@ export class Server {
     }
 
     private async parseHttpInfo (request: http.IncomingMessage): Promise<IHttpInfo> {
-
         const { headers, method } = request;
         const { url, query } = praseUrl(request.url);
-
+        const ip = request.headers['x-forwarded-for'] || // 判断是否有反向代理 IP
+            request.connection.remoteAddress || // 判断 connection 的远程 IP
+            request.socket.remoteAddress || // 判断后端的 socket 的 IP
+            // @ts-ignore
+            request.connection?.socket?.remoteAddress;
         return {
             requestHeaders: headers,
             method: method as IServeMethod,
             url,
             query,
+            ip,
             ...(await this.parseBody(request))
         };
     }
@@ -158,7 +162,7 @@ export class Server {
                 response,
                 ...responseData,
             });
-        }).listen(this.port);
+        }).listen(this.port, '0.0.0.0');
     }
 
     private sendHtml (response: IResponse, html: string) {

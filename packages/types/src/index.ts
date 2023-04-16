@@ -9,5 +9,5 @@ export * from './utils';
 export * from './sener.d';
 export * from './middleware';
 export * from './enum';
-
+export * from './fs';
 export default 'sener-types';

@@ -14,6 +14,7 @@ export interface IHttpInfo {
   query: IJson<string>;
   body: IJson<any>;
   buffer: Buffer|null;
+  ip: string;
 }
 
 export interface ISenerOptions extends IServerOptions {

@@ -3,9 +3,12 @@
  * @Date: 2023-02-20 17:23:29
  * @Description: Coding something
  */
-import fs from 'fs';
 import path from 'path';
-import { MiddleWare, ICommonReturn, IMiddleWareEnterData, IPromiseMayBe, buildSenerDir, makedir, uuid, md5, pickAttrs } from 'sener-types';
+import {
+    MiddleWare, ICommonReturn, IMiddleWareEnterData, IPromiseMayBe,
+    buildSenerDir, makedir, uuid, md5, pickAttrs, isExpired, countExpire,
+    strToTime, dateToString, removeDir, now, pureWriteFile, readFile, makeFileDir,
+} from 'sener-types';
 import { CookieClient } from './cookie';
 
 declare module 'sener-types-extend' {
@@ -14,11 +17,41 @@ declare module 'sener-types-extend' {
     }
 }
 
+interface ISessionValue {
+    value: any;
+    expire?: number;
+}
+
+const SessionExpired = Symbol('session_expired');
+
+interface ISessionClientOptions {
+    idGenerator?: ()=>string;
+    storeDays?: number;
+}
+
 export class SessionClient {
     static baseDir = '';
-    static idGenerator: () => string;
+    static idGenerator = generateSessionId;
+    static _timer: any = null;
+    static init ({ idGenerator, storeDays = 2 }: ISessionClientOptions) {
+        if (idGenerator) SessionClient.idGenerator = idGenerator;
+        SessionClient.baseDir = buildSenerDir('session');
+        makedir(SessionClient.baseDir);
+        if (SessionClient._timer) {
+            SessionClient._timer = setInterval(() => {
+                removeDir(path.resolve(
+                    SessionClient.baseDir,
+                    dateToString({
+                        date: new Date(now() - strToTime(`${storeDays}d`)),
+                        type: 'date'
+                    })
+                ));
+            }, strToTime('1d'));
+        }
+    }
     sessionId = '';
     filePath = '';
+    Expired = SessionExpired;
     constructor (cookie: CookieClient) {
         const KEY = '_SENER_SID';
         let sessionId = cookie.get(KEY);
@@ -27,32 +60,44 @@ export class SessionClient {
             cookie.set(KEY, sessionId);
         }
         this.sessionId = sessionId;
-        this.filePath = path.resolve(SessionClient.baseDir, sessionId);
+        this.filePath = path.resolve(SessionClient.baseDir, `./${dateToString({ type: 'date' })}/${sessionId}`);
+        makeFileDir(this.filePath);
     }
     get(key: string): any;
     get<T extends string[]>(key: T): {[prop in keyof T]: any};
     get (key: string|string[]): any {
         const isArr = key instanceof Array;
-        if (!fs.existsSync(this.filePath))
+        const content = readFile(this.filePath);
+        if (content === null)
             return isArr ? {} : undefined;
-        const content = fs.readFileSync(this.filePath, { encoding: 'utf-8' });
         const data = JSON.parse(content);
-        return isArr ? pickAttrs(key, k => data[k]) : data[key];
+        const single = (k: string) => {
+            const v = data[k];
+            if (typeof v === 'undefined') return undefined;
+            if (isExpired(v.expire)) return this.Expired;
+            return v.value;
+        };
+        return isArr ? pickAttrs(key, single) : single(key);
     }
-    set (key: string|Record<string, any>, value?: null|any) {
+    set (key: string|Record<string, null|any>, value?: null|any|number, expire?: number) {
         let data: any = {};
-        if (fs.existsSync(this.filePath)) {
-            const content = fs.readFileSync(this.filePath, 'utf-8');
-            data = JSON.parse(content);
-        }
-        const single = (k: string, v: any) => v === null ? (delete data[k]) : data[k] = v;
+        const content = readFile(this.filePath);
+        if (content) data = JSON.parse(content);
+        const single = (k: string, v: any) => {
+            if (v === null) return (delete data[k]);
+            const value: ISessionValue = { value: v };
+            if (typeof expire === 'number') value.expire = expire;
+            data[k] = value;
+        };
         if (typeof key === 'object') {
+            expire = value;
             for (const k in key) single(k, key[k]);
         } else {
             single(key, value);
         }
-        fs.writeFileSync(this.filePath, JSON.stringify(data), 'utf-8');
+        pureWriteFile(this.filePath, JSON.stringify(data));
     }
+    expire = countExpire;
 }
 
 function generateSessionId (): string {
@@ -61,15 +106,9 @@ function generateSessionId (): string {
 
 export class Session extends MiddleWare {
     session: SessionClient;
-    constructor ({
-        idGenerator = generateSessionId
-    }: {
-        idGenerator?: ()=>string
-    } = {}) {
+    constructor (options: ISessionClientOptions = {}) {
         super();
-        SessionClient.idGenerator = idGenerator;
-        SessionClient.baseDir = buildSenerDir('session');
-        makedir(SessionClient.baseDir);
+        SessionClient.init(options);
     }
     enter (data: IMiddleWareEnterData): IPromiseMayBe<ICommonReturn> {
         data.session = new SessionClient(data.cookie);

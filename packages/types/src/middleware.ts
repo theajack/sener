@@ -24,7 +24,7 @@ export interface IHelperFunc {
   sendHtml: (html: string) => void;
 }
 
-export interface IMiddleWareDataBase extends ISenerHelper, IHelperFunc {
+export interface IMiddleWareDataBase extends IHttpInfo, ISenerHelper, IHelperFunc {
   request: IncomingMessage;
   response: IResponse;
   headers: IJson<string>;
