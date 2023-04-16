@@ -125,6 +125,17 @@ export class CookieClient {
         removeKeys.forEach(k => {delete this._cookie[k];});
     }
 
+    remove (key: string|string[]) {
+        if (typeof key === 'string') {
+            this.set(key, null);
+        } else {
+            const map: any = {};
+            for (const k of key)
+                map[k] = null;
+            this.set(map);
+        }
+    }
+
     expire = countExpire;
 }
 

@@ -20,3 +20,4 @@
 - [ ] sener docs
 - [ ] 社区app 基于sener ikun
 - [ ] 验证码存放在md5存放在session里
+- [ ] 私有路由

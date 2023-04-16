@@ -97,6 +97,19 @@ export class SessionClient {
         }
         pureWriteFile(this.filePath, JSON.stringify(data));
     }
+    remove (key: string|string[]) {
+        if (typeof key === 'string') {
+            this.set(key, null);
+        } else {
+            const map: any = {};
+            for (const k of key)
+                map[k] = null;
+            this.set(map);
+        }
+    }
+    isExpired (value: any) {
+        return value === SessionExpired;
+    }
     expire = countExpire;
 }
 

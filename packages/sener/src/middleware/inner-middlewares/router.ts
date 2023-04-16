@@ -51,20 +51,22 @@ export class Router extends MiddleWare {
         return router;
     }
 
-    constructor (routers: IRouter) {
+    constructor (...routers: IRouter[]) {
         super();
-        for (const k in routers) {
-            const value = routers[k];
-            if (typeof value === 'function') {
-                const { meta, url } = this.extractMeta(k);
-                const key = this.fillUrl(url);
-                this.routers[key] = {
-                    exe: value,
-                    meta: meta
-                };
-            } else {
-                const key = this.fillUrl(k);
-                this.routers[key] = value;
+        for (const route of routers) {
+            for (const k in route) {
+                const value = route[k];
+                if (typeof value === 'function') {
+                    const { meta, url } = this.extractMeta(k);
+                    const key = this.fillUrl(url);
+                    this.routers[key] = {
+                        exe: value,
+                        meta: meta
+                    };
+                } else {
+                    const key = this.fillUrl(k);
+                    this.routers[key] = value;
+                }
             }
         }
         // console.log(this.routers);
