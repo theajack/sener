@@ -28,28 +28,19 @@ interface IRouterHelper {
     index: ()=>number;
     route(
         url: string, data?: Partial<IMiddleWareRequestData>,
-    ): IPromiseMayBe<IMiddleWareResponseReturn|ICommonReturn>;
+    ): IPromiseMayBe<IMiddleWareResponseReturn|ICommonReturn|any>;
 }
 
 declare module 'sener-types-extend' {
     interface ISenerHelper extends IRouterHelper {}
 }
 
-const REG = /^(post|get|put|delete):/;
+const REG = /^(post:|get:|put:|delete:|#)/;
 
 export class Router extends MiddleWare {
     routers: IJson<IRouterHandlerData> = {};
 
-    static _routers: IRouter = {};
-    static Add (routers: IRouter) {
-        Object.assign(this._routers, routers);
-    }
-    static Create (routers?: IRouter) {
-        if (routers) this.Add(routers);
-        const router = new Router(this._routers);
-        this._routers = {};
-        return router;
-    }
+    private _privateRouters: IJson<IRouterHandlerData> = {};
 
     constructor (...routers: IRouter[]) {
         super();
@@ -59,17 +50,21 @@ export class Router extends MiddleWare {
                 if (typeof value === 'function') {
                     const { meta, url } = this.extractMeta(k);
                     const key = this.fillUrl(url);
-                    this.routers[key] = {
+                    this._getMap(key)[key] = {
                         exe: value,
                         meta: meta
                     };
                 } else {
                     const key = this.fillUrl(k);
-                    this.routers[key] = value;
+                    this._getMap(key)[key] = value;
                 }
             }
         }
-        // console.log(this.routers);
+        // console.log(this.routers, this._privateRouters);
+    }
+
+    private _getMap (key: string) {
+        return (key.startsWith('#') ? this._privateRouters : this.routers);
     }
 
     private extractMeta (url: string) {
@@ -112,11 +107,11 @@ export class Router extends MiddleWare {
         res.meta = route?.meta || {};
         let index = 0; // 路由中加入一个自增index，可以用于生成错误码 id等
         res.index = () => index++;
-        res.route = (url, data) => this._route(url, data, res);
+        res.route = this._createRoute(res);
     }
 
-    private _route (url: string, data = {}, res: any) {
-        const route = this.routers[this.fillUrl(url)];
+    private _route (url: string, data = {}, res: any, map = this.routers) {
+        const route = map[this.fillUrl(url)];
         if (!route) {
             res.send404(`Route Dismiss: ${url}`);
             return MiddleWareReturn.Return;
@@ -144,7 +139,14 @@ export class Router extends MiddleWare {
             // res.sendHtml(`<h1>Page not found: ${res.url}<jh1>`);
             return MiddleWareReturn.Return;
         }
-        res.route = (url, data) => this._route(url, data, res);
+        res.route = this._createRoute(res);
         return route.exe(res);
+    }
+
+    private _createRoute (res: any): IRouterHelper['route'] {
+        return (url, data) => {
+            const map = url.startsWith('#') ? this._privateRouters : this.routers;
+            return this._route(url, data, res, map);
+        };
     }
 }

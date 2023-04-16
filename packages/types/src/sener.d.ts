@@ -33,4 +33,5 @@ export interface IRouterReturn<TObject=any> {
     data: TObject;
     extra?: any;
     msg?: string;
+    success?: boolean;
 }

@@ -155,7 +155,7 @@ export function success<T = any> (
     data: T = null as any, msg = 'success', extra = {}
 ): IMiddleWareResponseReturn<IRouterReturn<T>> {
     return {
-        data: { code: 0, data, msg, extra }
+        data: { code: 0, data, msg, extra, success: true }
     };
 }
 
