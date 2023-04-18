@@ -116,7 +116,7 @@ export class Server {
                 request,
                 response,
                 headers: {},
-                env: {},
+                env: {} as any,
                 ...this.helper,
                 ...sendHelper,
                 ...httpInfo,
