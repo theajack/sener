@@ -10,4 +10,8 @@ declare module 'sener-types-extend' {
   interface ISenerRequestData {
 
   }
+
+  interface ISenerEnv {
+
+  }
 }

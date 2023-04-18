@@ -8,3 +8,4 @@ export * from './inner-middlewares/router';
 export * from './inner-middlewares/cors';
 export * from './inner-middlewares/session';
 export * from './inner-middlewares/ip-monitor';
+export * from './inner-middlewares/env';

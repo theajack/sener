@@ -9,7 +9,7 @@ import {
 } from './common';
 import { IHttpInfo } from './sener.d';
 import { ServerResponse, IncomingMessage } from 'http';
-import { ISenerHelper, ISenerRequestData } from 'sener-types-extend';
+import { ISenerHelper, ISenerRequestData, ISenerEnv } from 'sener-types-extend';
 import { MiddleWareReturn } from './enum';
 
 export type IResponse = ServerResponse & {
@@ -28,6 +28,7 @@ export interface IMiddleWareDataBase extends IHttpInfo, ISenerHelper, IHelperFun
   request: IncomingMessage;
   response: IResponse;
   headers: IJson<string>;
+  env: ISenerEnv & IJson;
 }
 export type ICommonReturn = MiddleWareReturn|void|false;
 
