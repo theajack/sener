@@ -147,7 +147,7 @@ export function error<T = null> (
     msg = '请求失败', code = -1, data: T = null as any
 ): IMiddleWareResponseReturn<IRouterReturn<T>> {
     return {
-        data: { code, data, msg }
+        data: { code, data, msg },
     };
 }
 
@@ -155,7 +155,8 @@ export function success<T = any> (
     data: T = null as any, msg = 'success', extra = {}
 ): IMiddleWareResponseReturn<IRouterReturn<T>> {
     return {
-        data: { code: 0, data, msg, extra, success: true }
+        data: { code: 0, data, msg, extra, success: true },
+        success: true,
     };
 }
 

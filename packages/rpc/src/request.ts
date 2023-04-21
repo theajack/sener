@@ -35,7 +35,7 @@ export class Request {
     headers: IJson<string> = {};
     traceid: string = '';
     tk = '';
-    setToken(tk: string){ this.tk = tk; }
+    setToken (tk: string) { this.tk = tk; }
     constructor ({
         base,
         headers,
@@ -55,7 +55,7 @@ export class Request {
             msg,
             data,
             ...extra,
-        }: {
+        } : {
             success: code === 0,
             msg,
             ...extra,
@@ -119,7 +119,7 @@ export class Request {
             form,
             traceid: this.traceid,
         });
-        console.warn('==========relatime', data, extra);
+        console.warn(`【${url} 请求返回】`, data, extra);
 
         // console.log('request result', msg, suc, code);
 

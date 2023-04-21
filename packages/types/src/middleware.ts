@@ -38,6 +38,7 @@ export interface IMiddleWareResponseReturn<T = any> extends Partial<ISenerReques
   data: T,
   statusCode?: number,
   headers?: IJson<string>;
+  success?: boolean;
 }
 
 // @ts-ignore
