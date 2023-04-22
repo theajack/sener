@@ -24,10 +24,6 @@ export class Static extends MiddleWare {
         this.static = new StaticServer(this.dir);
     }
 
-    // enter (req: IMiddleWareEnterData): IPromiseMayBe<ICommonReturn> {
-    //     const url = req.request.url;
-    // }
-
     async request (res: IMiddleWareRequestData): Promise<IMiddleWareRequestData | ICommonReturn> {
         return new Promise(resolve => {
             this.static.serve(res.request, res.response).once('success', () => {

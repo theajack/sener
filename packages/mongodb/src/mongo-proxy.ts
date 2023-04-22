@@ -37,10 +37,12 @@ export class MongoProxy<Models extends IModels = any> {
     async connect () {
         const client = await this.client.connect();
         this.connected = true;
+        console.log('mongo connect');
         return client;
     }
     close () {
         this.connected = false;
+        console.log('mongo close');
         return this.client.close();
     }
     async execute (func: () => Promise<void>) {
@@ -50,6 +52,7 @@ export class MongoProxy<Models extends IModels = any> {
     }
 
     col <Key extends keyof Models> (name: Key): Instanceof<Models[Key]> {
+
         if (!this.connected) throw new Error('MongoDB is DISCONNECTED!');
         if (!this.cols[name]) {
             // @ts-ignore

@@ -5,7 +5,7 @@
  */
 import path from 'path';
 import {
-    MiddleWare, ICommonReturn, IMiddleWareEnterData, IPromiseMayBe,
+    MiddleWare, ICommonReturn, IMiddleWareRequestData, IPromiseMayBe,
     buildSenerDir, makedir, uuid, md5, pickAttrs, isExpired, countExpire,
     strToTime, dateToString, removeDir, now, pureWriteFile, readFile, makeFileDir,
 } from 'sener-types';
@@ -57,7 +57,7 @@ export class SessionClient {
         let sessionId = cookie.get(KEY);
         if (!sessionId) {
             sessionId = SessionClient.idGenerator();
-            cookie.set(KEY, sessionId);
+            cookie.set(KEY, sessionId, { expire: cookie.expire('1d'), path: '/' });
         }
         this.sessionId = sessionId;
         this.filePath = path.resolve(SessionClient.baseDir, `./${dateToString({ type: 'date' })}/${sessionId}`);
@@ -123,7 +123,7 @@ export class Session extends MiddleWare {
         super();
         SessionClient.init(options);
     }
-    enter (data: IMiddleWareEnterData): IPromiseMayBe<ICommonReturn> {
+    enter (data: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
         data.session = new SessionClient(data.cookie);
     }
 }

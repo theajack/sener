@@ -9,7 +9,6 @@ import {
     IMiddleWareRequestData,
     MiddleWareReturn,
     IMiddleWareResponseData,
-    IMiddleWareEnterData,
 } from 'sener-types';
 
 export type IRouter = IJson<IRouterHandler|IRouterHandlerData>;
@@ -99,12 +98,13 @@ export class Router extends MiddleWare {
         return `${(method || 'get').toLocaleLowerCase()}:${url}`;
     }
 
-    enter (res: IMiddleWareEnterData): IPromiseMayBe<ICommonReturn> {
+    enter (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
         const { url, method } = res;
         // console.log('enterenterenter', res,url, method)
         const key = this.buildRouteKey(url, method);
         const route = this.routers[key];
         res.meta = route?.meta || {};
+        // console.log('router enter', res.meta);
         let index = 0; // 路由中加入一个自增index，可以用于生成错误码 id等
         res.index = () => index++;
         res.route = this._createRoute(res);

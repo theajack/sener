@@ -17,11 +17,11 @@ export type IResponse = ServerResponse & {
 }
 
 export interface IHelperFunc {
+  send404: (errorMessage?: string, header?: IJson<string>) => void;
+  sendJson: (data: IJson, statusCode?: number, header?: IJson<string>) => void;
+  sendText: (text: string, statusCode?: number, header?: IJson<string>) => void;
+  sendHtml: (html: string, header?: IJson<string>) => void;
   sendResponse: (data: Partial<IMiddleWareResponseReturn>) => void;
-  sendJson: (data: IJson, statusCode?: number) => void;
-  send404: (errorMessage?: string) => void;
-  sendText: (text: string, statusCode?: number) => void;
-  sendHtml: (html: string) => void;
 }
 
 export interface IMiddleWareDataBase extends IHttpInfo, ISenerHelper, IHelperFunc {
@@ -31,8 +31,6 @@ export interface IMiddleWareDataBase extends IHttpInfo, ISenerHelper, IHelperFun
   env: ISenerEnv & IJson;
 }
 export type ICommonReturn = MiddleWareReturn|void|false;
-
-export interface IMiddleWareEnterData extends IMiddleWareDataBase, IJson {}
 
 export interface IMiddleWareResponseReturn<T = any> extends Partial<ISenerRequestData> {
   data: T,
@@ -45,10 +43,10 @@ export interface IMiddleWareResponseReturn<T = any> extends Partial<ISenerReques
 export interface IMiddleWareResponseData extends
   IMiddleWareDataBase,
   IMiddleWareResponseReturn,
-  IHttpInfo, IJson {
+  IJson {
 }
 
-export interface IMiddleWareRequestData extends IMiddleWareDataBase, IHttpInfo, ISenerRequestData, IJson {
+export interface IMiddleWareRequestData extends IMiddleWareDataBase, ISenerRequestData, IJson {
 }
 
 export type IMiddleWareRequest = (req: IMiddleWareRequestData) => IPromiseMayBe<ICommonReturn|Partial<IMiddleWareRequestData>>;
@@ -56,14 +54,13 @@ export type IMiddleWareResponse = (
   res: IMiddleWareResponseData,
 ) => IPromiseMayBe<ICommonReturn|IMiddleWareResponseReturn>;
 
-export type IMiddleWareEnter = (req: IMiddleWareEnterData) => IPromiseMayBe<ICommonReturn>;
-
 export interface IMiddleWare {
   name?: string;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  enter?: IMiddleWareEnter;
+  enter?: IMiddleWareRequest;
   request?: IMiddleWareRequest;
   response?: IMiddleWareResponse;
+  leave?: IMiddleWareResponse;
   helper?(): any;
 }
 
@@ -71,7 +68,7 @@ export class MiddleWare implements IMiddleWare {
     dir = '';
     name: string = '';
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
-    enter (req: IMiddleWareEnterData): IPromiseMayBe<ICommonReturn> {}
+    enter (req: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {}
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     request (req: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn|Partial<IMiddleWareRequestData>> {};
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function

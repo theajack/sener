@@ -46,8 +46,8 @@ export class Sener {
         });
         this.use(
             new Cookie(), // Cookie 中间件默认会带上 且位于第一个
+            router, // router要位于最前面 最先进入 最后出
             ...middlewares,
-            router
         );
     }
 

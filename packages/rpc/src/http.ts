@@ -39,6 +39,10 @@ export function request ({
 
     if (!form) headers = Object.assign({ 'Content-Type': 'application/json;charset=utf-8' }, headers || {});
 
+    for (const k in body) {
+        if (typeof body[k] === 'undefined') delete body[k];
+    }
+
     if (typeof window !== 'undefined') {
         return windowFetch({ url, method, headers, body, form });
     } else {
@@ -49,9 +53,11 @@ export function request ({
 async function windowFetch ({
     url, method, headers, body, form
 }: IBaseOptions): ICommenReturn {
-    const options: IJson = {
+    const options: RequestInit = {
         method,
         headers,
+        mode: 'cors',
+        credentials: 'include'
     };
     if (method !== 'get' && body) {
         options.body = form ? body : JSON.stringify(body);
@@ -113,7 +119,7 @@ export function nodeRequest ({
             });
         });
         if (body && method !== 'get') {
-            req.write(stringifyBody ? JSON.stringify(body): convertData(body, false));
+            req.write(stringifyBody ? JSON.stringify(body) : convertData(body, false));
         }
         req.end();
     });

@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import {
-    IMiddleWareEnterData, IMiddleWareRequestData,
+    IMiddleWareRequestData,
     IMiddleWareResponseData, IMiddleWareResponseReturn,
     IMiddleWare,
     MiddleWareReturn
@@ -27,19 +27,14 @@ export class MiddleWareManager {
         }
     }
 
-    async applyEnter (req: IMiddleWareEnterData) {
+    async applyEnter (req: IMiddleWareRequestData) {
         for (const middleware of this.middlewares) {
             if (!middleware.enter) continue;
             const result = await middleware.enter(req);
-            if (result === MiddleWareReturn.Return || result === false) {
-                return false;
-            } else if (!result || result === MiddleWareReturn.Continue) {
-                continue;
-            } else {
-                break;
+            if (result && typeof result === 'object') {
+                if (req !== result) Object.assign(req, result);
             }
         }
-        return true;
     }
 
     async applyRequest (req: IMiddleWareRequestData) {
@@ -50,7 +45,7 @@ export class MiddleWareManager {
             if (result === false) return null;
             if (!result || result === MiddleWareReturn.Continue) continue;
             if (typeof result === 'object') {
-                Object.assign(req, result);
+                if (req !== result) Object.assign(req, result);
             } else if (result === MiddleWareReturn.Return) {
                 return null;
             } else {
@@ -72,7 +67,7 @@ export class MiddleWareManager {
             if (result === false) return null;
             if (!result || result === MiddleWareReturn.Continue) continue;
             if (typeof result === 'object') {
-                Object.assign(res, result);
+                if (res !== result) Object.assign(res, result);
             } else if (result === MiddleWareReturn.Return) {
                 return null;
             } else {
@@ -80,5 +75,19 @@ export class MiddleWareManager {
             }
         }
         return res;
+    }
+
+    async applyLeave (
+        res: IMiddleWareResponseData
+    ) {
+        const ms = this.middlewares;
+        for (let i = ms.length - 1; i >= 0; i--) {
+            const middleware = ms[i];
+            if (!middleware.leave) continue;
+            const result = await middleware.leave(res);
+            if (result && typeof result === 'object') {
+                if (res !== result) Object.assign(res, result);
+            }
+        }
     }
 }

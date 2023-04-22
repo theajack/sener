@@ -8,12 +8,14 @@ import { IJson } from 'sener-types';
 export function convertData (data: IJson, isSearch = true) {
     let res = '';
     for (const key in data) {
-        if (typeof data[key] === 'object') {
-            res += (`${key}=${encodeURIComponent(JSON.stringify(data[key]))}&`);
+        const v = data[key];
+        if (typeof v === 'undefined') continue;
+        if (typeof v === 'object') {
+            res += (`${key}=${encodeURIComponent(JSON.stringify(v))}&`);
         } else {
-            res += (`${key}=${encodeURIComponent(data[key])}&`);
+            res += (`${key}=${encodeURIComponent(v)}&`);
         }
     }
-    res =  `${isSearch ? '?' : ''}${res.substring(0, res.length - 1)}`;
+    res = `${isSearch ? '?' : ''}${res.substring(0, res.length - 1)}`;
     return res;
 }

@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { IJson, MiddleWare, ICommonReturn, IMiddleWareEnterData, IPromiseMayBe } from 'sener-types';
+import { IJson, MiddleWare, ICommonReturn, IMiddleWareRequestData, IPromiseMayBe } from 'sener-types';
 import { Request } from './request';
 
 type IOptions = IJson<string> | ((traceid:string) => IJson<Request|any>);
@@ -17,7 +17,7 @@ export class RPC extends MiddleWare {
         this.config = config;
         this.rpc = this.create();
     }
-    enter (req: IMiddleWareEnterData): IPromiseMayBe<ICommonReturn> {
+    enter (req: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
         req.rpc = this.create(req.logger?.traceid || '');
     }
 

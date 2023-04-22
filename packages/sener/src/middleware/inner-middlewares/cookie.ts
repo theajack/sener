@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import { IncomingMessage } from 'http';
-import { MiddleWare, IJson, IResponse, ICommonReturn, IMiddleWareEnterData, IPromiseMayBe, pickAttrs, isExpired, countExpire } from 'sener-types';
+import { MiddleWare, IJson, IResponse, ICommonReturn, IMiddleWareRequestData, IPromiseMayBe, pickAttrs, isExpired, countExpire } from 'sener-types';
 
 declare module 'sener-types-extend' {
     interface ISenerHelper {
@@ -31,7 +31,7 @@ function cookieToString (key: string, cookie: ICookieOptions) {
             const date = value <= 0 ? new Date() : new Date(value);
             value = date.toUTCString();
         }
-        str += `${k}="${value};`;
+        str += `${k}=${value};`;
     }
     return str;
 }
@@ -48,6 +48,7 @@ function parseCookie (cookie: string) {
 export type ICookieSameSite = 'Lax' | 'Strict' | 'None';
 
 export type ICookiePriority = 'Low' | 'Medium' | 'High';
+export type ICookieValue = string | number | boolean | null | ICookieOptions;
 
 interface ICookieOptions {
     value?: any;
@@ -99,7 +100,7 @@ export class CookieClient {
         };
         return (key instanceof Array) ? pickAttrs(key, single) : single(key);
     }
-    set (key: string|Record<string, any|ICookieOptions>, value?: null|any|ICookieOptions, options?: ICookieOptions) {
+    set (key: string|Record<string, ICookieValue>, value?: ICookieValue, options?: ICookieOptions) {
         const removeKeys: string[] = [];
         const single = (k: string, v: any|ICookieOptions) => {
             if (v === null) {
@@ -122,6 +123,7 @@ export class CookieClient {
             single(key, value);
         }
         this.response.setHeader('Set-Cookie', concatCookie(this._cookie));
+        // console.log('Set-Cookie', concatCookie(this._cookie));
         removeKeys.forEach(k => {delete this._cookie[k];});
     }
 
@@ -140,7 +142,7 @@ export class CookieClient {
 }
 
 export class Cookie extends MiddleWare {
-    enter (data: IMiddleWareEnterData): IPromiseMayBe<ICommonReturn> {
+    enter (data: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
         data.cookie = new CookieClient(data.request, data.response);
     }
 }

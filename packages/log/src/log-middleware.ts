@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { ICommonReturn, IMiddleWareEnterData, IMiddleWareResponseData, IMiddleWareResponseReturn, IPromiseMayBe, MiddleWare } from 'sener-types';
+import { ICommonReturn, IMiddleWareRequestData, IMiddleWareResponseData, IMiddleWareResponseReturn, IPromiseMayBe, MiddleWare } from 'sener-types';
 import { ILoggerOptions, Logger } from './logger';
 import { IBaseInfo } from './type';
 
@@ -14,7 +14,7 @@ export class Log extends MiddleWare {
         super();
         this.loggerOptions = options;
     }
-    enter (req: IMiddleWareEnterData): IPromiseMayBe<ICommonReturn> {
+    enter (req: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
         // console.log(req.request.headers, req.request.headers.origin);
         const headers = req.request.headers;
 

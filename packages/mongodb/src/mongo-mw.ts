@@ -30,15 +30,18 @@ export class Mongo<
         };
     }
 
-    async request ({ meta }: IMiddleWareRequestData): Promise<ICommonReturn | Partial<IMiddleWareRequestData>> {
-        // console.log('mg request meta', meta);
+    async enter ({ meta }: IMiddleWareRequestData): Promise<ICommonReturn> {
+        console.log('mongo enter', meta?.db);
         if (meta?.db !== true) return;
         await this.mongo.connect();
+        console.log('mongo connect');
     }
 
-    async response ({ meta }: IMiddleWareResponseData): Promise<ICommonReturn | IMiddleWareResponseReturn<any>> {
+
+    async leave ({ meta }: IMiddleWareResponseData): Promise<ICommonReturn | IMiddleWareResponseReturn<any>> {
         // console.log('mg response meta', meta);
         if (meta?.db !== true) return;
         await this.mongo.close();
+        console.log('mongo close');
     }
 }
