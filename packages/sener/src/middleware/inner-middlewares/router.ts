@@ -100,9 +100,9 @@ export class Router extends MiddleWare {
 
     enter (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
         const { url, method } = res;
-        // console.log('enterenterenter', res,url, method)
         const key = this.buildRouteKey(url, method);
         const route = this.routers[key];
+        console.log('router enter', url, method, route.meta);
         res.meta = route?.meta || {};
         // console.log('router enter', res.meta);
         let index = 0; // 路由中加入一个自增index，可以用于生成错误码 id等
@@ -132,7 +132,7 @@ export class Router extends MiddleWare {
     }
     response (res: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
         const key = this.buildRouteKey(res.url, res.method);
-        // console.log('on response', key);
+        console.log('on response', key);
         const route = this.routers[key];
         if (!route) {
             res.send404(`Page not found: ${res.url}`);

@@ -23,6 +23,7 @@ export class Mongo<
         this.mongo = new MongoProxy<Models>(options);
     }
 
+
     helper (): IMongoHelper<Models> {
         return {
             mongo: this.mongo,
@@ -30,18 +31,18 @@ export class Mongo<
         };
     }
 
-    async enter ({ meta }: IMiddleWareRequestData): Promise<ICommonReturn> {
-        console.log('mongo enter', meta?.db);
+    async enter ({ meta, url, method }: IMiddleWareRequestData): Promise<ICommonReturn> {
+        console.log('mongo enter', url, method, meta?.db);
         if (meta?.db !== true) return;
         await this.mongo.connect();
-        console.log('mongo connect');
+        console.log('mongo connect', method);
     }
 
 
-    async leave ({ meta }: IMiddleWareResponseData): Promise<ICommonReturn | IMiddleWareResponseReturn<any>> {
-        // console.log('mg response meta', meta);
+    async leave ({ meta, method }: IMiddleWareResponseData): Promise<ICommonReturn | IMiddleWareResponseReturn<any>> {
+        console.log('mongo leave', meta);
         if (meta?.db !== true) return;
         await this.mongo.close();
-        console.log('mongo close');
+        console.log('mongo close', method);
     }
 }

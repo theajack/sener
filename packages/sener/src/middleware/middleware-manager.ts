@@ -29,6 +29,7 @@ export class MiddleWareManager {
 
     async applyEnter (req: IMiddleWareRequestData) {
         for (const middleware of this.middlewares) {
+            if (req.method === 'OPTIONS' && !middleware.acceptOptions) continue;
             if (!middleware.enter) continue;
             const result = await middleware.enter(req);
             if (result && typeof result === 'object') {
@@ -83,6 +84,7 @@ export class MiddleWareManager {
         const ms = this.middlewares;
         for (let i = ms.length - 1; i >= 0; i--) {
             const middleware = ms[i];
+            if (res.method === 'OPTIONS' && !middleware.acceptOptions) continue;
             if (!middleware.leave) continue;
             const result = await middleware.leave(res);
             if (result && typeof result === 'object') {

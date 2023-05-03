@@ -10,7 +10,7 @@ export interface IJson<T=any> {
 
 export type IMethod = 'get'|'post'|'delete'|'put';
 
-export type IServeMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+export type IServeMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS';
 
 export type IPromiseMayBe<T> = T|Promise<T>;
 

@@ -4,7 +4,8 @@
  * @Description: Coding something
  */
 import {
-    MiddleWare, IJson, MiddleWareReturn, ICommonReturn, IMiddleWareRequestData, IPromiseMayBe, IMiddleWareResponseData, IMiddleWareResponseReturn,
+    MiddleWare, IJson, ICommonReturn, IPromiseMayBe,
+    IMiddleWareResponseData, IMiddleWareResponseReturn,
 } from 'sener-types';
 
 const DefaultHeaders = {
@@ -20,6 +21,7 @@ type IHeaderKey = {
 
 export class Cors extends MiddleWare {
     headers: IHeaderKey;
+    acceptOptions = true;
 
     constructor (headers: IJson<string> & IHeaderKey = {}) {
         super();
@@ -27,16 +29,8 @@ export class Cors extends MiddleWare {
         // console.log('Cors', headers);
     }
 
-    request ({ request, headers, sendResponse }: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | Partial<IMiddleWareRequestData>> {
-        if (request.method === 'OPTIONS') {
-            // console.log('OPTIONS', 'return cors');
-            sendResponse({ statusCode: 200, headers: this.headers });
-            return MiddleWareReturn.Return;
-        }
-        Object.assign(headers, this.headers);
-    }
-
     leave ({ headers }: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
         Object.assign(headers, this.headers);
     }
+
 }

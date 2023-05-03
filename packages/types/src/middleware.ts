@@ -55,6 +55,7 @@ export type IMiddleWareResponse = (
 ) => IPromiseMayBe<ICommonReturn|IMiddleWareResponseReturn>;
 
 export interface IMiddleWare {
+  acceptOptions: boolean;
   name?: string;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   enter?: IMiddleWareRequest;
@@ -67,6 +68,7 @@ export interface IMiddleWare {
 export class MiddleWare implements IMiddleWare {
     dir = '';
     name: string = '';
+    acceptOptions: boolean = false;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     enter (req: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {}
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function

@@ -109,7 +109,7 @@ export class Server {
             sendJson: (data, statusCode = 200, header = {}) => {this.sendData({ response, data, statusCode, headers: mergeHeaders(header) });},
             sendText: (msg, statusCode, header = {}) => {this.sendText(response, msg, mergeHeaders(header), statusCode);},
             sendHtml: (html, header = {}) => {this.sendHtml(response, html, mergeHeaders(header));},
-            sendResponse: (data) => {this.sendData({ response, ...data, headers: mergeHeaders(data.headers) });},
+            sendResponse: (data) => { this.sendData({ response, ...data, headers: mergeHeaders(data.headers) }); },
         };
 
         return sendHelper;
@@ -142,7 +142,13 @@ export class Server {
             };
 
             const onLeave = async () => {
-                await this.middleware.applyLeave(responseData || {} as any); // todo
+
+                console.log('onLeave', responseData.meta);
+                try {
+                    await this.middleware.applyLeave(responseData || {} as any); // todo
+                } catch (err) {
+                    return await this.onError(err, 'leave', response, headers);
+                }
             };
 
             const onError = async (err: any, from: string) => {

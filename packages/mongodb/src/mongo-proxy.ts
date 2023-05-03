@@ -35,15 +35,14 @@ export class MongoProxy<Models extends IModels = any> {
         this.db = this.client.db(dbName);
     }
     async connect () {
-        const client = await this.client.connect();
+        if (this.connected) return;
         this.connected = true;
-        console.log('mongo connect');
-        return client;
+        await this.client.connect();
     }
-    close () {
+    async close () {
+        if (!this.connected) return;
         this.connected = false;
-        console.log('mongo close');
-        return this.client.close();
+        await this.client.close();
     }
     async execute (func: () => Promise<void>) {
         await this.connect();
