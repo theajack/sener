@@ -6,15 +6,14 @@
 import {
     IMiddleWareResponseReturn, MiddleWare,
     IPromiseMayBe, ICommonReturn, IJson,
-    IMiddleWareRequestData,
     MiddleWareReturn,
-    IMiddleWareResponseData,
+    IMiddleWareRequestData,
 } from 'sener-types';
 
 export type IRouter = IJson<IRouterHandler|IRouterHandlerData>;
 
 export type IRouterHandler = (
-    data: IMiddleWareResponseData,
+    data: IMiddleWareRequestData,
 ) => IPromiseMayBe<IMiddleWareResponseReturn|ICommonReturn>;
 
 export interface IRouterHandlerData {
@@ -102,7 +101,7 @@ export class Router extends MiddleWare {
         const { url, method } = res;
         const key = this.buildRouteKey(url, method);
         const route = this.routers[key];
-        console.log('router enter', url, method, route.meta);
+        // console.log('router enter', url, method, route?.meta);
         res.meta = route?.meta || {};
         // console.log('router enter', res.meta);
         let index = 0; // 路由中加入一个自增index，可以用于生成错误码 id等
@@ -130,7 +129,7 @@ export class Router extends MiddleWare {
         send404(`Page not found: ${url}`);
         return MiddleWareReturn.Return;
     }
-    response (res: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
+    response (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
         const key = this.buildRouteKey(res.url, res.method);
         console.log('on response', key);
         const route = this.routers[key];

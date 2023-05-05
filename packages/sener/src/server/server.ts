@@ -92,7 +92,7 @@ export class Server {
     }
 
     private async onError (error: any, from: string, response: IResponse, headers = {}): Promise<any> {
-        // console.log(error);
+        // console.error('onError', error.message);
         const data = (this.onerror) ?
             await this.onerror({ error, from }) :
             { data: { code: -1, msg: `服务器内部错误(${error.toString()})[from=${from}]`, error } };
@@ -126,26 +126,23 @@ export class Server {
 
             const sendHelper = this._createSendHelper(response, headers);
 
-            let requestData: IMiddleWareRequestData|null = {
+            const requestData: IMiddleWareRequestData|null = {
                 request,
                 response,
                 headers,
                 env,
+                data: {},
+                statusCode: 200,
+                success: true,
                 ...this.helper,
                 ...sendHelper,
                 ...httpInfo,
             };
-            let responseData: IMiddleWareResponseReturn|null = {
-                data: {},
-                statusCode: 200,
-                ...requestData,
-            };
 
             const onLeave = async () => {
-
-                console.log('onLeave', responseData.meta);
+                // console.log('onLeave', requestData?.meta);
                 try {
-                    await this.middleware.applyLeave(responseData || {} as any); // todo
+                    await this.middleware.applyLeave(requestData || {} as any); // todo
                 } catch (err) {
                     return await this.onError(err, 'leave', response, headers);
                 }
@@ -171,32 +168,42 @@ export class Server {
 
             // console.log('parseHttpInfo', httpInfo);
             try {
-                requestData = await this.middleware.applyRequest(requestData); // todo fix
-            // console.log('requestData', requestData);
+                const result = await this.middleware.applyRequest(requestData); // todo fix
+                if (!result) return await onLeave();
+                if (typeof result === 'object') {
+                    Object.assign(requestData, result);
+                }
             } catch (err) {
                 return await onError(err, 'request');
             }
 
-            if (!requestData) return await onLeave();
+            let responseReturn: IMiddleWareResponseReturn|null = { data: {} };
 
             try {
-                responseData = await this.middleware.applyResponse({
-                    data: {},
-                    statusCode: 200,
-                    ...requestData,
-                });
+                responseReturn = await this.middleware.applyResponse(requestData);
             } catch (err) {
                 return await onError(err, 'response');
             }
             // console.log('requestData', responseData?.headers);
 
-            if (!responseData) return await onLeave();
+            if (!responseReturn) return await onLeave();
 
+            await onLeave();
+            const { data, statusCode, headers: HEADERS } = responseReturn;
+
+            // console.log('response senddata', HEADERS);
             this.sendData({
                 response,
-                ...responseData,
+                data: {
+                    ...requestData.data,
+                    ...data,
+                },
+                statusCode: statusCode || requestData.statusCode,
+                headers: {
+                    ...requestData.headers,
+                    ...HEADERS,
+                }
             });
-            await onLeave();
         }).listen(this.port, '0.0.0.0');
     }
 
@@ -245,7 +252,7 @@ export class Server {
                 response.setHeader(k, headers[k]);
             }
         } catch (e) {
-            console.error('router中如果已经对请求做了返回处理，请return false', e);
+            console.error('router中如果已经对请求做了返回处理，请return false;', e);
             return;
         }
         // todo 数据类型判断

@@ -5,7 +5,7 @@
  */
 import {
     IMiddleWareRequestData,
-    IMiddleWareResponseData, IMiddleWareResponseReturn,
+    IMiddleWareResponseReturn,
     IMiddleWare,
     MiddleWareReturn
 } from 'sener-types';
@@ -58,7 +58,7 @@ export class MiddleWareManager {
 
     // 洋葱模型 entry=>request => response为倒序
     async applyResponse (
-        res: IMiddleWareResponseData
+        res: IMiddleWareRequestData
     ): Promise<IMiddleWareResponseReturn|null> {
         const ms = this.middlewares;
         for (let i = ms.length - 1; i >= 0; i--) {
@@ -79,8 +79,9 @@ export class MiddleWareManager {
     }
 
     async applyLeave (
-        res: IMiddleWareResponseData
+        res: IMiddleWareRequestData
     ) {
+        // console.log('applyLeave', res.headers);
         const ms = this.middlewares;
         for (let i = ms.length - 1; i >= 0; i--) {
             const middleware = ms[i];

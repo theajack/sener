@@ -32,26 +32,24 @@ export interface IMiddleWareDataBase extends IHttpInfo, ISenerHelper, IHelperFun
 }
 export type ICommonReturn = MiddleWareReturn|void|false;
 
-export interface IMiddleWareResponseReturn<T = any> extends Partial<ISenerRequestData> {
+export interface IMiddleWareResponseReturn<T = any> {
   data: T,
   statusCode?: number,
   headers?: IJson<string>;
   success?: boolean;
 }
 
-// @ts-ignore
-export interface IMiddleWareResponseData extends
+export interface IMiddleWareRequestData extends
+  Required<IMiddleWareResponseReturn>,
   IMiddleWareDataBase,
-  IMiddleWareResponseReturn,
-  IJson {
+  ISenerRequestData, IJson {
 }
 
-export interface IMiddleWareRequestData extends IMiddleWareDataBase, ISenerRequestData, IJson {
-}
-
-export type IMiddleWareRequest = (req: IMiddleWareRequestData) => IPromiseMayBe<ICommonReturn|Partial<IMiddleWareRequestData>>;
+export type IMiddleWareRequest = (
+  req: IMiddleWareRequestData
+) => IPromiseMayBe<ICommonReturn|Partial<IMiddleWareRequestData>>;
 export type IMiddleWareResponse = (
-  res: IMiddleWareResponseData,
+  res: IMiddleWareRequestData,
 ) => IPromiseMayBe<ICommonReturn|IMiddleWareResponseReturn>;
 
 export interface IMiddleWare {
@@ -74,9 +72,9 @@ export class MiddleWare implements IMiddleWare {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     request (req: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn|Partial<IMiddleWareRequestData>> {};
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
-    response (res: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn|IMiddleWareResponseReturn> {};
+    response (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn|IMiddleWareResponseReturn> {};
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
-    leave (res: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn|IMiddleWareResponseReturn> {};
+    leave (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn|IMiddleWareResponseReturn> {};
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     helper () {}
 }

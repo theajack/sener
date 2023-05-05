@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { ICommonReturn, IMiddleWareRequestData, IMiddleWareResponseData, IMiddleWareResponseReturn, IPromiseMayBe, MiddleWare } from 'sener-types';
+import { ICommonReturn, IMiddleWareRequestData, IMiddleWareResponseReturn, IPromiseMayBe, MiddleWare } from 'sener-types';
 import { ILoggerOptions, Logger } from './logger';
 import { IBaseInfo } from './type';
 
@@ -32,7 +32,7 @@ export class Log extends MiddleWare {
         req.logger = new Logger(this.loggerOptions, baseInfo);
     }
 
-    response ({ response, logger }: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
+    response ({ response, logger }: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
         response.setHeader('x-trace-id', logger.traceid);
     }
 }

@@ -5,7 +5,7 @@
  */
 import {
     MiddleWare, IJson, ICommonReturn, IPromiseMayBe,
-    IMiddleWareResponseData, IMiddleWareResponseReturn,
+    IMiddleWareRequestData, IMiddleWareResponseReturn,
 } from 'sener-types';
 
 const DefaultHeaders = {
@@ -29,7 +29,8 @@ export class Cors extends MiddleWare {
         // console.log('Cors', headers);
     }
 
-    leave ({ headers }: IMiddleWareResponseData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
+    leave ({ headers }: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
+        // console.log('cors leave', headers, this.headers);
         Object.assign(headers, this.headers);
     }
 

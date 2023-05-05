@@ -7,7 +7,7 @@
 
 import {
     IMiddleWare, MiddleWare, Sener,
-    IMiddleWareResponseData,
+    IMiddleWareRequestData,
 } from 'packages/sener';
 import { Json } from 'packages/json';
 import { Static } from 'packages/static';
@@ -26,7 +26,7 @@ const testMiddleware: IMiddleWare = {
 };
 
 class Test2Middle extends MiddleWare {
-    response (res: IMiddleWareResponseData) {
+    response (res: IMiddleWareRequestData) {
         res.data.middle2 = 'Test2Middle';
     }
 }
