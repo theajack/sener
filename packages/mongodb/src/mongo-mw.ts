@@ -32,16 +32,16 @@ export class Mongo<
         };
     }
 
-    async enter ({ meta }: IMiddleWareRequestData): Promise<ICommonReturn> {
-        // console.log('mongo enter', url, method, meta?.db);
+    async enter ({ meta, url, method }: IMiddleWareRequestData): Promise<ICommonReturn> {
+        console.log('mongo enter', meta?.db, url, method);
         if (meta?.db !== true) return;
         await this.mongo.connect();
         // console.log('mongo connect', method, this.mongo.connected);
     }
 
 
-    async leave ({ meta }: IMiddleWareRequestData): Promise<ICommonReturn | IMiddleWareResponseReturn<any>> {
-        // console.log('mongo leave', meta);
+    async leave ({ meta, url, method }: IMiddleWareRequestData): Promise<ICommonReturn | IMiddleWareResponseReturn<any>> {
+        console.log('mongo leave', meta?.db, url, method);
         if (meta?.db !== true) return;
         await this.mongo.close();
         // console.log('mongo close', method, this.mongo.connected);

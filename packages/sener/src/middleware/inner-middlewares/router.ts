@@ -98,6 +98,7 @@ export class Router extends MiddleWare {
     }
 
     enter (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
+        // console.log('router enter', res.url);
         const { url, method } = res;
         const key = this.buildRouteKey(url, method);
         const route = this.routers[key];
@@ -130,8 +131,9 @@ export class Router extends MiddleWare {
         return MiddleWareReturn.Return;
     }
     response (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
+        // console.log('router response', res.url);
         const key = this.buildRouteKey(res.url, res.method);
-        console.log('on response', key);
+        // console.log('on response', key);
         const route = this.routers[key];
         if (!route) {
             res.send404(`Page not found: ${res.url}`);
@@ -141,6 +143,10 @@ export class Router extends MiddleWare {
         res.route = this._createRoute(res);
         return route.exe(res);
     }
+
+    // leave (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
+    //     console.log('router leave', res.url);
+    // }
 
     private _createRoute (res: any): IRouterHelper['route'] {
         return (url, data) => {

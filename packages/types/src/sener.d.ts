@@ -11,7 +11,7 @@ export interface IHttpInfo {
   requestHeaders: IncomingHttpHeaders;
   url: string;
   method: IServeMethod;
-  query: IJson<string>;
+  query: IJson<any>;
   body: IJson<any>;
   buffer: Buffer|null;
   ip: string;

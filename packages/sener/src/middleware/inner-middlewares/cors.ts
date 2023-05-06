@@ -29,9 +29,12 @@ export class Cors extends MiddleWare {
         // console.log('Cors', headers);
     }
 
-    leave ({ headers }: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
-        // console.log('cors leave', headers, this.headers);
+    enter ({ headers }: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
         Object.assign(headers, this.headers);
     }
+
+    // leave ({ headers }: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
+    //     // console.log('cors leave', headers, this.headers);
+    // }
 
 }

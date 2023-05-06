@@ -50,16 +50,14 @@ export class Request {
         result: IMiddleWareResponseReturn<IRouterReturn<T>>
     ): IParsedData {
         const { data, code, msg, extra } = result.data;
-        return data instanceof Array ? {
-            success: code === 0,
-            msg,
-            data,
-            ...extra,
-        } : {
+
+        const spread = !!data && typeof data === 'object' && !(data instanceof Array);
+
+        return {
             success: code === 0,
             msg,
             ...extra,
-            ...data,
+            ...spread ? data : { data },
         };
     }
 

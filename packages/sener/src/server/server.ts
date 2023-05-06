@@ -270,6 +270,7 @@ export class Server {
             }
         }
         response.statusCode = statusCode;
+        // console.log('writedata', data);
         response.write(data);
         response.end();
     }

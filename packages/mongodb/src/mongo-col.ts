@@ -95,6 +95,8 @@ export class MongoCol<T extends any = IJson> {
         index: number,
         size?: number,
     }): Promise<T[]> {
+        if (typeof size === 'string') size = parseInt(size);
+        if (typeof index === 'string') index = parseInt(index);
         return this.col.find(filter).skip((index) * size).limit(size).toArray() as any;
     }
 
