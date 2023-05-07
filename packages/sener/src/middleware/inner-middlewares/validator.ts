@@ -20,16 +20,18 @@ interface IFormatMap {
 export type IValidFormat = keyof IFormatMap;
 export type IValidRule = 'required' | 'optional' | RegExp | ((v: any, formatValue: any) => boolean);
 
-type ITemplate = {
+export type IValidTemplate = {
     [prop in string]: IValidFormat | [IValidFormat, IValidRule];
 }
 
 type IValidFunc = <
-    D extends ITemplate = ITemplate
->(template: D) => {
+    D extends IValidTemplate = IValidTemplate
+>(template: D) => ({
     // @ts-ignore
     [prop in keyof D]: IFormatMap[(D[prop] extends string ? D[prop]: D[prop][0])];
-}
+} & {
+    [prop in string]: any;
+});
 
 interface IValidatorHelper {
     vquery: IValidFunc;
@@ -42,19 +44,23 @@ declare module 'sener-types-extend' {
 
 export class Validator extends MiddleWare {
 
-    private _validate (template: ITemplate, data: IJson<any>) {
+    private _validate (template: IValidTemplate, data: IJson<any>) {
 
-        const result: any = {};
+        const result: any = { ...data };
         for (const k in template) {
+
+            const value = result[k];
+            const type = typeof value;
+
+            if (type === 'undefined') {
+                continue;
+            }
 
             const v = template[k];
             const isArr = v instanceof Array;
             const format: IValidFormat = isArr ? v[0] : v;
             const rule: IValidRule = isArr ? v[1] : 'optional';
 
-            const value = data[k];
-            const type = typeof value;
-            result[k] = value;
             // console.log(k, format, value, type, parseFloat(value));
             if (format === 'string' ) {
                 if (type !== 'string') result[k] = value.toString();
@@ -86,10 +92,10 @@ export class Validator extends MiddleWare {
     enter (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
         const { query, body } = res;
         console.log('valudator enter', query, body);
-        res.vquery = (template: ITemplate) => {
+        res.vquery = (template: IValidTemplate) => {
             return this._validate(template, query);
         };
-        res.vbody = (template: ITemplate) => {
+        res.vbody = (template: IValidTemplate) => {
             console.log('vbody', query, body);
             return this._validate(template, body);
         };
