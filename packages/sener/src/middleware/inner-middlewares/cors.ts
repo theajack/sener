@@ -5,7 +5,7 @@
  */
 import {
     MiddleWare, IJson, ICommonReturn, IPromiseMayBe,
-    IMiddleWareRequestData, IMiddleWareResponseReturn,
+    IMiddleWareRequestData,
 } from 'sener-types';
 
 const DefaultHeaders = {

@@ -55,8 +55,10 @@ export class SessionClient {
     constructor (cookie: CookieClient) {
         const KEY = '_SENER_SID';
         let sessionId = cookie.get(KEY);
+        // console.log('_SENER_SID =', sessionId);
         if (!sessionId) {
             sessionId = SessionClient.idGenerator();
+            // console.log('SET _SENER_SID =', sessionId);
             cookie.set(KEY, sessionId, { expire: cookie.expire('1d'), path: '/' });
         }
         this.sessionId = sessionId;

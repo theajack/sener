@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import { IncomingMessage } from 'http';
-import { MiddleWare, IJson, IResponse, ICommonReturn, IMiddleWareRequestData, IPromiseMayBe, pickAttrs, isExpired, countExpire } from 'sener-types';
+import { MiddleWare, IJson, IResponse, ICommonReturn, IMiddleWareRequestData, IPromiseMayBe, pickAttrs, isExpired, countExpire, ICookieOptions } from 'sener-types';
 
 declare module 'sener-types-extend' {
     interface ISenerHelper {
@@ -44,34 +44,23 @@ function parseCookie (cookie: string) {
     }
     return json;
 }
-
-export type ICookieSameSite = 'Lax' | 'Strict' | 'None';
-
-export type ICookiePriority = 'Low' | 'Medium' | 'High';
 export type ICookieValue = string | number | boolean | null | ICookieOptions;
 
-interface ICookieOptions {
-    value?: any;
-    expire?: number;
-    path?: string;
-    domain?: string; // default: location.host
-    secure?: boolean; // default: false
-    sameSite?: ICookieSameSite; // default: Lax
-    priority?: ICookiePriority; // default: Medium
-    sameParty?: boolean; // default: false
-}
 
 export class CookieClient {
 
     private _cookie: IJson<ICookieOptions> = {};
     request: IncomingMessage;
     response: IResponse;
+    private _options: ICookieOptions;
     constructor (
         request: IncomingMessage,
         response: IResponse,
+        options: ICookieOptions = {}
     ) {
         this.request = request;
         this.response = response;
+        this._options = options;
     }
     get(key: string): string;
     get<T extends string[]>(key: T): {[prop in keyof T]: string};
@@ -109,7 +98,7 @@ export class CookieClient {
             } else if (typeof v !== 'object') {
                 v = { value: v };
             }
-            this._cookie[k] = v;
+            this._cookie[k] = Object.assign({}, this._options, v);
         };
         if (typeof key === 'object') {
             for (const k in key) single(k, key[k]);
@@ -142,7 +131,15 @@ export class CookieClient {
 }
 
 export class Cookie extends MiddleWare {
+
+    private _options: ICookieOptions;
+
+    constructor (options: ICookieOptions = {}) {
+        super();
+        this._options = options;
+    }
+
     enter (data: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
-        data.cookie = new CookieClient(data.request, data.response);
+        data.cookie = new CookieClient(data.request, data.response, this._options);
     }
 }

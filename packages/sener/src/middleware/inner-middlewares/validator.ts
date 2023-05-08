@@ -91,7 +91,7 @@ export class Validator extends MiddleWare {
 
     enter (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
         const { query, body } = res;
-        console.log('valudator enter', query, body);
+        // console.log('validator enter', query, body);
         res.vquery = (template: IValidTemplate) => {
             return this._validate(template, query);
         };

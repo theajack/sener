@@ -126,7 +126,7 @@ export class Server {
 
             const sendHelper = this._createSendHelper(response, headers);
 
-            const requestData: IMiddleWareRequestData|null = {
+            const requestData: IMiddleWareRequestData = {
                 request,
                 response,
                 headers,
@@ -137,7 +137,7 @@ export class Server {
                 ...this.helper,
                 ...sendHelper,
                 ...httpInfo,
-            };
+            } as any; // ! build 报错
 
             const onLeave = async () => {
                 // console.log('onLeave', requestData?.meta);
@@ -154,7 +154,7 @@ export class Server {
             };
 
             try {
-                await this.middleware.applyEnter(requestData);
+                await this.middleware.applyEnter(requestData as any);
             } catch (err) {
                 return onError(err, 'enter');
             }

@@ -7,7 +7,7 @@ import {
     IJson, IMethod, IMiddleWareResponseReturn,
     error, success, IRouterReturn
 } from 'sener-types';
-import { request } from './http';
+import { IHttpRequestOptions, IRPCResponse, request } from './http';
 import { IParsedData, IRequestReturn } from './type';
 
 interface ICommonRequestOptions {
@@ -30,12 +30,21 @@ export interface IRequestConsOptions extends ICommonRequestOptions {
     base: string,
 }
 
+export type IRPCRequestInterceptor = (data: IRequestOptions) => void|IRPCResponse;
+
+export type IRPCRequestOnResponse = (data: IRPCResponse) => void|IRPCResponse;
+
+
 export class Request {
     base: string;
     headers: IJson<string> = {};
     traceid: string = '';
     tk = '';
-    setToken (tk: string) { this.tk = tk; }
+    setToken (tk: string) { this.tk = tk; };
+
+    static Interceptor: IRPCRequestInterceptor;
+    static OnResponse: IRPCRequestOnResponse;
+
     constructor ({
         base,
         headers,
@@ -107,8 +116,7 @@ export class Request {
     }: IRequestOptions): IRequestReturn<T> {
         headers = Object.assign({}, this.headers, headers);
 
-        // console.log(body);
-        const { msg, data, success: suc, code = -1, err = null, extra } = await request({
+        const options: IHttpRequestOptions = {
             url: base + url,
             method, // get方式或post方式
             headers,
@@ -116,10 +124,25 @@ export class Request {
             query,
             form,
             traceid: this.traceid,
-        });
-        console.warn(`【${url} 请求返回】`, data, extra);
+        };
 
-        // console.log('request result', msg, suc, code);
+        let response: IRPCResponse|null = null;
+
+        if (Request.Interceptor) {
+            const result = Request.Interceptor(options);
+            if (result) response = result;
+        }
+
+        if (!response) {
+            response = await request(options);
+            if (Request.OnResponse) {
+                const result = Request.OnResponse(response);
+                if (result) response = result;
+            }
+        }
+
+        const { msg, data, success: suc, code = -1, err = null, extra } = response;
+        // console.warn(`【${url} 请求返回】`, code, data, extra);
 
         if (!suc) {
             return error(msg, code, err);

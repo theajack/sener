@@ -7,6 +7,21 @@ import { IncomingHttpHeaders } from 'http';
 import { IMiddleWare, IMiddleWareResponseReturn } from './middleware';
 import { IServeMethod, IJson, IPromiseMayBe } from './common';
 
+export type ICookieSameSite = 'Lax' | 'Strict' | 'None';
+
+export type ICookiePriority = 'Low' | 'Medium' | 'High';
+
+export interface ICookieOptions {
+    value?: any;
+    expire?: number;
+    path?: string;
+    domain?: string; // default: location.host
+    secure?: boolean; // default: false
+    sameSite?: ICookieSameSite; // default: Lax
+    priority?: ICookiePriority; // default: Medium
+    sameParty?: boolean; // default: false
+}
+
 export interface IHttpInfo {
   requestHeaders: IncomingHttpHeaders;
   url: string;
@@ -19,6 +34,7 @@ export interface IHttpInfo {
 
 export interface ISenerOptions extends IServerOptions {
     middlewares?: (IMiddleWare|null)[];
+    cookieOptions?: ICookieOptions;
 }
 
 export type IOnError = (err: {error: any, from: string}) => IPromiseMayBe<IMiddleWareResponseReturn>;

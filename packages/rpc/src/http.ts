@@ -19,22 +19,22 @@ interface IBaseOptions {
     stringifyBody?: boolean,
 }
 
-interface IRequestOptions extends IBaseOptions {
+export interface IHttpRequestOptions extends IBaseOptions {
     query?: any,
 }
 
-type ICommenReturn = Promise<{
+export interface IRPCResponse {
     success: boolean,
     data?: any,
     code?: number,
     msg: string,
     err?: any,
     [prop: string]: any,
-}>
+}
 
 export function request ({
     url, method, headers = {}, body, query, form, traceid
-}: IRequestOptions) {
+}: IHttpRequestOptions) {
     url = url + (query ? `${convertData(query)}` : '');
 
     if (!form) headers = Object.assign({ 'Content-Type': 'application/json;charset=utf-8' }, headers || {});
@@ -52,7 +52,7 @@ export function request ({
 
 async function windowFetch ({
     url, method, headers, body, form
-}: IBaseOptions): ICommenReturn {
+}: IBaseOptions): Promise<IRPCResponse> {
     const options: RequestInit = {
         method,
         headers,
@@ -74,7 +74,7 @@ async function windowFetch ({
 
 export function nodeRequest ({
     url, method, headers = {}, body, traceid, stringifyBody = true
-}: IBaseOptions): ICommenReturn {
+}: IBaseOptions): Promise<IRPCResponse> {
     // console.log('----host', host, path, method, headers, https, port, body);
     if (!_http) _http = require('http');
     if (!_https) _https = require('https');
