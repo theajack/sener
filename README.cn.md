@@ -45,17 +45,32 @@
 ## 1. 特性
 
 1. 简单高效的架构，全ts编写，高度友好的ts声明支持
-2. 支持高度自定义的中间件体系
-3. 内置router中间件
-4. json中间件：支持json文件用于数据存储
-5. cors中间件：支持跨域请求
-6. static中间件：支持静态文件目录
-7. form中间件：支持formdata解析和文件上传
-8. config中间件：支持高度灵活的参数配置和动态变更与监听
-9. log中间件：支持灵活的日志体系，支持日志级别控制
-10. mysql中间件：支持mysql连接
-11. mongodb中间件：支持mongodb连接
-12. rpc中间件：远程调用支持，支持客户端和服务端使用，支持注入请求的x-trace-id
+2. 支持高度自定义和高可扩展的中间件体系，采用洋葱模型，丰富的路由hooks
+
+内置中间件：
+
+内置中间件为sener包中自带的中间 但是使用时也需要手动引入
+
+1. router：简单高可扩展的路由规则
+2. cookie：用于cookie获取和注入
+3. session：用于session获取和注入（依赖cookie）
+4. env：用于注入和使用环境变量
+5. cors：支持跨域请求
+6. ip-monitor：用于对请求ip进行风控拦截
+7. validator：支持验证入参和参数类型定义
+
+独立中间件：
+
+使用独立中间需要安装对应的独立包
+
+1. json：支持json文件用于数据存储
+2. static：支持静态文件目录
+3. form：支持formdata解析和文件上传
+4. config：支持高度灵活的参数配置和动态变更与监听
+5. log：支持灵活的日志体系，支持日志级别控制
+6. mysql：支持mysql连接
+7. mongodb：支持mongodb连接，collocation的封装
+8. rpc：远程调用支持，支持客户端和服务端使用，支持注入请求的x-trace-id
 
 ## 2. 基础使用
 
@@ -120,9 +135,11 @@ const router = new Router({
     },
 });
 new Sener({
-  middlewares: [router],
+  // router 要位于中间件的第一个
+  middlewares: [router], 
 });
 ```
+
 
 ### 3.2 json
 

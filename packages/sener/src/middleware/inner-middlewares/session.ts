@@ -5,7 +5,7 @@
  */
 import path from 'path';
 import {
-    MiddleWare, ICommonReturn, IMiddleWareRequestData, IPromiseMayBe,
+    MiddleWare, IHookReturn, ISenerContext, IPromiseMayBe,
     buildSenerDir, makedir, uuid, md5, pickAttrs, isExpired, countExpire,
     strToTime, dateToString, removeDir, now, pureWriteFile, readFile, makeFileDir,
 } from 'sener-types';
@@ -53,6 +53,7 @@ export class SessionClient {
     filePath = '';
     Expired = SessionExpired;
     constructor (cookie: CookieClient) {
+        if (!cookie) throw new Error('Session: cookie middleware is required');
         const KEY = '_SENER_SID';
         let sessionId = cookie.get(KEY);
         // console.log('_SENER_SID =', sessionId);
@@ -125,7 +126,7 @@ export class Session extends MiddleWare {
         super();
         SessionClient.init(options);
     }
-    enter (data: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
+    enter (data: ISenerContext): IPromiseMayBe<IHookReturn> {
         data.session = new SessionClient(data.cookie);
     }
 }

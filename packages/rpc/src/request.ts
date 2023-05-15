@@ -4,7 +4,7 @@
  * @LastEditors: Please set LastEditors
  */
 import {
-    IJson, IMethod, IMiddleWareResponseReturn,
+    IJson, IMethod, ISenerResponse,
     error, success, IRouterReturn
 } from 'sener-types';
 import { IHttpRequestOptions, IRPCResponse, request } from './http';
@@ -56,7 +56,7 @@ export class Request {
     }
 
     parseResult<T = any> (
-        result: IMiddleWareResponseReturn<IRouterReturn<T>>
+        result: ISenerResponse<IRouterReturn<T>>
     ): IParsedData {
         const { data, code, msg, extra } = result.data;
 

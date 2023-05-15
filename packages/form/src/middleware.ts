@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import {
-    MiddleWare, ICommonReturn, IMiddleWareRequestData, IPromiseMayBe, makedir, MiddleWareReturn,
+    MiddleWare, IHookReturn, ISenerContext, IPromiseMayBe, makedir, MiddleWareReturn,
 } from 'sener-types';
 import formidable, { errors as formidableErrors } from 'formidable-fix';
 import path from 'path';
@@ -26,7 +26,7 @@ export class Form extends MiddleWare {
         return dir;
     }
 
-    request (req: IMiddleWareRequestData): IPromiseMayBe<Partial<IMiddleWareRequestData> | ICommonReturn> {
+    request (req: ISenerContext): IPromiseMayBe<Partial<ISenerContext> | IHookReturn> {
 
         const { request, requestHeaders, method, sendJson } = req;
 

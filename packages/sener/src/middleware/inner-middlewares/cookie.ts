@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import { IncomingMessage } from 'http';
-import { MiddleWare, IJson, IResponse, ICommonReturn, IMiddleWareRequestData, IPromiseMayBe, pickAttrs, isExpired, countExpire, ICookieOptions } from 'sener-types';
+import { MiddleWare, IJson, IResponse, IHookReturn, ISenerContext, IPromiseMayBe, pickAttrs, isExpired, countExpire, ICookieOptions } from 'sener-types';
 
 declare module 'sener-types-extend' {
     interface ISenerHelper {
@@ -89,6 +89,8 @@ export class CookieClient {
         };
         return (key instanceof Array) ? pickAttrs(key, single) : single(key);
     }
+    set (key: string, value?: ICookieValue, options?: ICookieOptions): void;
+    set (json: Record<string, ICookieValue>, options?: ICookieOptions): void;
     set (key: string|Record<string, ICookieValue>, value?: ICookieValue, options?: ICookieOptions) {
         const removeKeys: string[] = [];
         const single = (k: string, v: any|ICookieOptions) => {
@@ -139,7 +141,7 @@ export class Cookie extends MiddleWare {
         this._options = options;
     }
 
-    enter (data: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
+    enter (data: ISenerContext): IPromiseMayBe<IHookReturn> {
         data.cookie = new CookieClient(data.request, data.response, this._options);
     }
 }

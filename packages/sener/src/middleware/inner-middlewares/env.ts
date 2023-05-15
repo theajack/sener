@@ -4,21 +4,45 @@
  * @Description: Coding something
  */
 
-import { MiddleWare, ICommonReturn, IPromiseMayBe, IJson, IMiddleWareRequestData } from 'sener-types';
+import { MiddleWare, IHookReturn, IPromiseMayBe, IJson, ISenerContext } from 'sener-types';
+import { Sener } from 'src/sener';
+import { IRouter } from './router';
 
-export type IEnvOptions = IJson<(
-    data: IMiddleWareRequestData
-)=>any>;
+export type IEnvOptions = IJson<((
+    ctx: ISenerContext
+)=>any) | any>;
+
+export type IEnvMap<T extends IEnvOptions> = {
+    [prop in keyof T]: T[prop] extends Function ? ReturnType<T[prop]>: T[prop];
+}
 
 export class Env extends MiddleWare {
     map: IEnvOptions;
-    constructor (map: IEnvOptions) { // todo 有没有办法可以这个支持类型 env.xxx
+    constructor (map: IEnvOptions) {
         super();
         this.map = map;
     }
-    request (req: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | Partial<IMiddleWareRequestData>> {
+    request (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {
         for (const k in this.map) {
-            req.env[k] = this.map[k](req);
+            const v = this.map[k];
+            ctx.env[k] = typeof v === 'function' ? v(ctx) : v;
         }
+    }
+}
+
+
+const env = {
+    uid ({ cookie }: ISenerContext) {
+        try {
+            return cookie.get('xx');
+        } catch (e) {
+            return '';
+        }
+    },
+    a: 'ss',
+    b: 11,
+};
+declare module 'sener-types-extend' {
+    interface ISenerEnv extends IEnvMap<typeof env> {
     }
 }

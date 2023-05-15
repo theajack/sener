@@ -4,8 +4,8 @@
  * @Description: Coding something
  */
 import {
-    IMiddleWareRequestData,
-    IMiddleWareResponseReturn,
+    ISenerContext,
+    ISenerResponse,
     IMiddleWare,
     MiddleWareReturn
 } from 'sener-types';
@@ -27,7 +27,7 @@ export class MiddleWareManager {
         }
     }
 
-    async applyEnter (req: IMiddleWareRequestData) {
+    async applyEnter (req: ISenerContext) {
         for (const middleware of this.middlewares) {
             if (req.method === 'OPTIONS' && !middleware.acceptOptions) continue;
             if (!middleware.enter) continue;
@@ -38,7 +38,7 @@ export class MiddleWareManager {
         }
     }
 
-    async applyRequest (req: IMiddleWareRequestData) {
+    async applyRequest (req: ISenerContext) {
         for (const middleware of this.middlewares) {
             if (!middleware.request) continue;
             // console.log(middleware.name);
@@ -58,8 +58,8 @@ export class MiddleWareManager {
 
     // 洋葱模型 entry=>request => response为倒序
     async applyResponse (
-        res: IMiddleWareRequestData
-    ): Promise<IMiddleWareResponseReturn|null> {
+        res: ISenerContext
+    ): Promise<ISenerResponse|null> {
         const ms = this.middlewares;
         for (let i = ms.length - 1; i >= 0; i--) {
             const middleware = ms[i];
@@ -79,7 +79,7 @@ export class MiddleWareManager {
     }
 
     async applyLeave (
-        res: IMiddleWareRequestData
+        res: ISenerContext
     ) {
         // console.log('applyLeave', res.headers);
         const ms = this.middlewares;

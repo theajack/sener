@@ -4,8 +4,8 @@
  * @Description: Coding something
  */
 
-import {Instanceof} from 'sener-types';
-import {MongoCol} from './mongo-col';
+import { Instanceof } from 'sener-types';
+import { MongoCol } from './mongo-col';
 import type { MongoProxy } from './mongo-proxy';
 
 export interface IModels {

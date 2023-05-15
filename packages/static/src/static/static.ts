@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import path from 'path';
-import { ICommonReturn, IMiddleWareRequestData, MiddleWare, MiddleWareReturn } from 'sener-types';
+import { IHookReturn, ISenerContext, MiddleWare, MiddleWareReturn } from 'sener-types';
 import { StaticServer } from './static-server';
 
 export class Static extends MiddleWare {
@@ -24,7 +24,7 @@ export class Static extends MiddleWare {
         this.static = new StaticServer(this.dir);
     }
 
-    async request (res: IMiddleWareRequestData): Promise<IMiddleWareRequestData | ICommonReturn> {
+    async request (res: ISenerContext): Promise<ISenerContext | IHookReturn> {
         return new Promise(resolve => {
             this.static.serve(res.request, res.response).once('success', () => {
                 resolve(MiddleWareReturn.Return);

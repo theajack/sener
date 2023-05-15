@@ -4,9 +4,9 @@
  * @Description: Coding something
  */
 import {
-    ICommonReturn, IJson,
-    IMiddleWareRequestData,
-    IMiddleWareResponseReturn,
+    IHookReturn, IJson,
+    ISenerContext,
+    ISenerResponse,
     MiddleWare
 } from 'sener-types';
 import { IModels, IMongoHelper } from './extend.d';
@@ -32,7 +32,7 @@ export class Mongo<
         };
     }
 
-    async enter ({ meta, url, method }: IMiddleWareRequestData): Promise<ICommonReturn> {
+    async enter ({ meta, url, method }: ISenerContext): Promise<IHookReturn> {
         console.log('mongo enter', meta?.db, url, method);
         if (meta?.db !== true) return;
         await this.mongo.connect();
@@ -40,7 +40,7 @@ export class Mongo<
     }
 
 
-    async leave ({ meta, url, method }: IMiddleWareRequestData): Promise<ICommonReturn | IMiddleWareResponseReturn<any>> {
+    async leave ({ meta, url, method }: ISenerContext): Promise<IHookReturn | ISenerResponse<any>> {
         console.log('mongo leave', meta?.db, url, method);
         if (meta?.db !== true) return;
         await this.mongo.close();

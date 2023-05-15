@@ -7,7 +7,7 @@ import { Files } from 'formidable-fix';
 import { IJson } from 'sener-types';
 
 declare module 'sener-types-extend' {
-  interface ISenerRequestData {
+  interface ISenerHelper {
     files: Files;
     formData: IJson;
   }

@@ -7,9 +7,6 @@
 declare module 'sener-types-extend' {
   interface ISenerHelper {
   }
-  interface ISenerRequestData {
-
-  }
 
   interface ISenerEnv {
 

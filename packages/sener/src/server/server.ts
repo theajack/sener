@@ -5,9 +5,9 @@
  */
 import http, { IncomingMessage, ServerResponse } from 'http';
 import { MiddleWareManager } from '../middleware/middleware-manager';
-import { IHelperFunc, IMiddleWare, IMiddleWareRequestData, IMiddleWareResponseReturn, IOnError, parseParam, praseUrl } from 'sener-types';
+import { IHelperFunc, IMiddleWare, ISenerContext, IOnError, parseParam, praseUrl } from 'sener-types';
 import {
-    IJson, IServerOptions,
+    IJson, IServerOptions, IErrorFrom,
     IServerSendData, IResponse, IServeMethod, IHttpInfo,
 } from 'sener-types';
 import { ISenerHelper } from 'sener-types-extend';
@@ -91,12 +91,12 @@ export class Server {
         });
     }
 
-    private async onError (error: any, from: string, response: IResponse, headers = {}): Promise<any> {
+    private async onError (error: any, from: IErrorFrom, context: ISenerContext): Promise<any> {
         // console.error('onError', error.message);
         const data = (this.onerror) ?
-            await this.onerror({ error, from }) :
+            await this.onerror({ error, from, context }) :
             { data: { code: -1, msg: `服务器内部错误(${error.toString()})[from=${from}]`, error } };
-
+        const { response, headers } = context;
         this.sendData({ response, ...data, headers });
     }
 
@@ -105,11 +105,11 @@ export class Server {
         const mergeHeaders = (header: IJson<string> = {}) => Object.assign({}, headers, header);
 
         const sendHelper: IHelperFunc = {
-            send404: (msg, header = {}) => {this.send404(response, msg, mergeHeaders(header));},
-            sendJson: (data, statusCode = 200, header = {}) => {this.sendData({ response, data, statusCode, headers: mergeHeaders(header) });},
-            sendText: (msg, statusCode, header = {}) => {this.sendText(response, msg, mergeHeaders(header), statusCode);},
-            sendHtml: (html, header = {}) => {this.sendHtml(response, html, mergeHeaders(header));},
-            sendResponse: (data) => { this.sendData({ response, ...data, headers: mergeHeaders(data.headers) }); },
+            send404: (msg, header = {}) => this.send404(response, msg, mergeHeaders(header)),
+            sendJson: (data, statusCode = 200, header = {}) => this.sendData({ response, data, statusCode, headers: mergeHeaders(header) }),
+            sendText: (msg, statusCode, header = {}) => this.sendText(response, msg, mergeHeaders(header), statusCode),
+            sendHtml: (html, header = {}) => this.sendHtml(response, html, mergeHeaders(header)),
+            sendResponse: (data) => this.sendData({ response, ...data, headers: mergeHeaders(data.headers) }),
         };
 
         return sendHelper;
@@ -126,7 +126,7 @@ export class Server {
 
             const sendHelper = this._createSendHelper(response, headers);
 
-            const requestData: IMiddleWareRequestData = {
+            const context: ISenerContext = {
                 request,
                 response,
                 headers,
@@ -134,27 +134,27 @@ export class Server {
                 data: {},
                 statusCode: 200,
                 success: true,
-                ...this.helper,
                 ...sendHelper,
                 ...httpInfo,
+                ...this.helper,
             } as any; // ! build 报错
 
             const onLeave = async () => {
-                // console.log('onLeave', requestData?.meta);
+                // console.log('onLeave', context?.meta);
                 try {
-                    await this.middleware.applyLeave(requestData || {} as any); // todo
+                    await this.middleware.applyLeave(context || {} as any); // todo
                 } catch (err) {
-                    return await this.onError(err, 'leave', response, headers);
+                    return await this.onError(err, 'leave', context);
                 }
             };
 
-            const onError = async (err: any, from: string) => {
-                await onLeave();
-                return await this.onError(err, from, response, headers);
+            const onError = async (err: any, from: IErrorFrom) => {
+                return await onLeave() ||
+                    await this.onError(err, from, context);
             };
 
             try {
-                await this.middleware.applyEnter(requestData as any);
+                await this.middleware.applyEnter(context as any);
             } catch (err) {
                 return onError(err, 'enter');
             }
@@ -162,45 +162,49 @@ export class Server {
             // ! options请求返回200 当使用nginx配置跨域时此处需要有返回
             // ! 使用 cors 中间件时不会执行到这里
             if (request.method === 'OPTIONS') {
-                await onLeave();
-                return sendHelper.sendResponse({ statusCode: 200 });
+                return await onLeave() ||
+                    sendHelper.sendResponse({ statusCode: 200 });
             }
 
+            // ! requese hooks
             // console.log('parseHttpInfo', httpInfo);
             try {
-                const result = await this.middleware.applyRequest(requestData); // todo fix
-                if (!result) return await onLeave();
+                const result = await this.middleware.applyRequest(context);
+                if (!result) return await onLeave(); // ! 中间件返回false，表示中间件处理了服务返回，这里responseReturn=null 直接返回
                 if (typeof result === 'object') {
-                    Object.assign(requestData, result);
+                    Object.assign(context, result);
                 }
             } catch (err) {
                 return await onError(err, 'request');
             }
 
-            let responseReturn: IMiddleWareResponseReturn|null = { data: {} };
-
+            // ! response hooks
             try {
-                responseReturn = await this.middleware.applyResponse(requestData);
+                const result = await this.middleware.applyResponse(context);
+                if (!result) return await onLeave(); // ! 中间件返回false，表示中间件处理了服务返回，这里responseReturn=null 直接返回
+                if (typeof result === 'object') {
+                    Object.assign(context, result);
+                }
             } catch (err) {
                 return await onError(err, 'response');
             }
-            // console.log('requestData', responseData?.headers);
 
-            if (!responseReturn) return await onLeave();
+            // ! leave hooks
+            const err = await onLeave();
+            if (err) return err;
 
-            await onLeave();
-            const { data, statusCode, headers: HEADERS } = responseReturn;
+            const { data, statusCode, headers: HEADERS } = context;
 
             // console.log('response senddata', HEADERS);
             this.sendData({
                 response,
                 data: {
-                    ...requestData.data,
+                    ...context.data,
                     ...data,
                 },
-                statusCode: statusCode || requestData.statusCode,
+                statusCode: statusCode || context.statusCode,
                 headers: {
-                    ...requestData.headers,
+                    ...context.headers,
                     ...HEADERS,
                 }
             });
@@ -208,7 +212,7 @@ export class Server {
     }
 
     private sendHtml (response: IResponse, html: string, headers?: IJson<string>) {
-        this.sendData({
+        return this.sendData({
             response,
             data: html,
             statusCode: 200,
@@ -220,11 +224,11 @@ export class Server {
     }
 
     private send404 (response: IResponse, message = 'Page not found', headers?: IJson<string>) {
-        this.sendText(response, message, headers, 404);
+        return this.sendText(response, message, headers, 404);
     }
 
     private sendText (response: IResponse, str: string, headers: IJson<string> = {}, statusCode = 200) {
-        this.sendData({
+        return this.sendData({
             response,
             data: str,
             statusCode,
@@ -242,7 +246,7 @@ export class Server {
         data = '',
         statusCode = 200,
         headers = { 'Content-Type': 'application/json;charset=UTF-8' },
-    }: Partial<IServerSendData> & Pick<IServerSendData, 'response'>) {
+    }: Partial<IServerSendData> & Pick<IServerSendData, 'response'>): false {
         // console.log('sendData', data, headers);
         try {
             if (!headers['Content-Type']) {
@@ -253,7 +257,7 @@ export class Server {
             }
         } catch (e) {
             console.error('router中如果已经对请求做了返回处理，请return false;', e);
-            return;
+            return false;
         }
         // todo 数据类型判断
         if (typeof data !== 'string') {
@@ -266,12 +270,13 @@ export class Server {
                     success: false,
                 })); // todo 统一处理错误逻辑
                 response.end();
-                return;
+                return false;
             }
         }
         response.statusCode = statusCode;
         // console.log('writedata', data);
         response.write(data);
         response.end();
+        return false;
     }
 }

@@ -4,8 +4,8 @@
  * @Description: Coding something
  */
 import {
-    MiddleWare, IPromiseMayBe, ICommonReturn,
-    IMiddleWareRequestData,
+    MiddleWare, IPromiseMayBe, IHookReturn,
+    ISenerContext,
     IJson,
 } from 'sener-types';
 
@@ -89,7 +89,7 @@ export class Validator extends MiddleWare {
         return result;
     }
 
-    enter (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
+    enter (res: ISenerContext): IPromiseMayBe<IHookReturn> {
         const { query, body } = res;
         // console.log('validator enter', query, body);
         res.vquery = (template: IValidTemplate) => {

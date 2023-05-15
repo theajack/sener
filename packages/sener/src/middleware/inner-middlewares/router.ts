@@ -4,20 +4,20 @@
  * @Description: Coding something
  */
 import {
-    IMiddleWareResponseReturn, MiddleWare,
-    IPromiseMayBe, ICommonReturn, IJson,
+    ISenerResponse, MiddleWare,
+    IPromiseMayBe, IHookReturn, IJson,
     MiddleWareReturn,
-    IMiddleWareRequestData,
+    ISenerContext,
 } from 'sener-types';
 
 export type IRouter = IJson<IRouterHandler|IRouterHandlerData>;
 
 export type IRouterHandler = (
-    data: IMiddleWareRequestData,
-) => IPromiseMayBe<IMiddleWareResponseReturn|ICommonReturn>;
+    data: ISenerContext,
+) => IPromiseMayBe<IHookReturn>;
 
 export interface IRouterHandlerData {
-    exe: IRouterHandler;
+    handler: IRouterHandler;
     meta: IJson;
 }
 
@@ -25,8 +25,8 @@ interface IRouterHelper {
     meta: IJson;
     index: ()=>number;
     route(
-        url: string, data?: Partial<IMiddleWareRequestData>,
-    ): IPromiseMayBe<IMiddleWareResponseReturn|ICommonReturn|any>;
+        url: string, data?: Partial<ISenerContext>,
+    ): IPromiseMayBe<IHookReturn>;
 }
 
 declare module 'sener-types-extend' {
@@ -49,7 +49,7 @@ export class Router extends MiddleWare {
                     const { meta, url } = this.extractMeta(k);
                     const key = this.fillUrl(url);
                     this._getMap(key)[key] = {
-                        exe: value,
+                        handler: value,
                         meta: meta
                     };
                 } else {
@@ -97,7 +97,7 @@ export class Router extends MiddleWare {
         return `${(method || 'get').toLocaleLowerCase()}:${url}`;
     }
 
-    enter (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {
+    enter (res: ISenerContext): IPromiseMayBe<IHookReturn> {
         // console.log('router enter', res.url);
         const { url, method } = res;
         const key = this.buildRouteKey(url, method);
@@ -116,10 +116,9 @@ export class Router extends MiddleWare {
             res.send404(`Route Dismiss: ${url}`);
             return MiddleWareReturn.Return;
         }
-        return route.exe(Object.assign({}, res, data));
+        return route.handler(Object.assign({}, res, data));
     }
-
-    request (req: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | Partial<IMiddleWareRequestData>> {
+    request (req: ISenerContext): IPromiseMayBe<IHookReturn | Partial<ISenerContext>> {
         const { url, method, send404 } = req;
         const key = this.buildRouteKey(url, method);
         // console.log('on request', key);
@@ -130,7 +129,7 @@ export class Router extends MiddleWare {
         send404(`Page not found: ${url}`);
         return MiddleWareReturn.Return;
     }
-    response (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
+    response (res: ISenerContext): IPromiseMayBe<IHookReturn | ISenerResponse<any>> {
         // console.log('router response', res.url);
         const key = this.buildRouteKey(res.url, res.method);
         // console.log('on response', key);
@@ -141,10 +140,10 @@ export class Router extends MiddleWare {
             return MiddleWareReturn.Return;
         }
         res.route = this._createRoute(res);
-        return route.exe(res);
+        return route.handler(res);
     }
 
-    // leave (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | IMiddleWareResponseReturn<any>> {
+    // leave (res: ISenerContext): IPromiseMayBe<IHookReturn | ISenerResponse<any>> {
     //     console.log('router leave', res.url);
     // }
 

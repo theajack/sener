@@ -7,7 +7,7 @@
 import { IJson } from './common';
 import path from 'path';
 import { homedir } from 'os';
-import { IMiddleWareResponseReturn } from './middleware';
+import { ISenerResponse } from './middleware';
 import { IRouterReturn } from './sener';
 import crypto from 'crypto';
 
@@ -145,7 +145,7 @@ export function buildSenerDir (name: string, sub = '') {
 
 export function error<T = null> (
     msg = '请求失败', code = -1, data: T = null as any
-): IMiddleWareResponseReturn<IRouterReturn<T>> {
+): ISenerResponse<IRouterReturn<T>> {
     return {
         data: { code, data, msg },
     };
@@ -153,7 +153,7 @@ export function error<T = null> (
 
 export function success<T = any> (
     data: T = null as any, msg = 'success', extra = {}
-): IMiddleWareResponseReturn<IRouterReturn<T>> {
+): ISenerResponse<IRouterReturn<T>> {
     return {
         data: { code: 0, data, msg, extra, success: true },
         success: true,

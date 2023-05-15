@@ -9,7 +9,7 @@ import {
 } from './common';
 import { IHttpInfo } from './sener.d';
 import { ServerResponse, IncomingMessage } from 'http';
-import { ISenerHelper, ISenerRequestData, ISenerEnv } from 'sener-types-extend';
+import { ISenerHelper, ISenerEnv } from 'sener-types-extend';
 import { MiddleWareReturn } from './enum';
 
 export type IResponse = ServerResponse & {
@@ -17,68 +17,65 @@ export type IResponse = ServerResponse & {
 }
 
 export interface IHelperFunc {
-  send404: (errorMessage?: string, header?: IJson<string>) => void;
-  sendJson: (data: IJson, statusCode?: number, header?: IJson<string>) => void;
-  sendText: (text: string, statusCode?: number, header?: IJson<string>) => void;
-  sendHtml: (html: string, header?: IJson<string>) => void;
-  sendResponse: (data: Partial<IMiddleWareResponseReturn>) => void;
+  send404: (errorMessage?: string, header?: IJson<string>) => false;
+  sendJson: (data: IJson, statusCode?: number, header?: IJson<string>) => false;
+  sendText: (text: string, statusCode?: number, header?: IJson<string>) => false;
+  sendHtml: (html: string, header?: IJson<string>) => false;
+  sendResponse: (data: Partial<ISenerResponse>) => false;
 }
 
 export interface IMiddleWareDataBase extends IHttpInfo, ISenerHelper, IHelperFunc {
   request: IncomingMessage;
   response: IResponse;
-  headers: IJson<string>;
   env: ISenerEnv & IJson;
 }
-export type ICommonReturn = MiddleWareReturn|void|false;
+export type IHookReturn = Partial<ISenerContext>|MiddleWareReturn|void|false;
 
-export interface IMiddleWareResponseReturn<T = any> {
+export interface ISenerResponse<T = any> {
   data: T,
   statusCode?: number,
   headers?: IJson<string>;
   success?: boolean;
 }
 
-export interface IMiddleWareRequestData extends
-  Required<IMiddleWareResponseReturn>,
+export interface ISenerContext extends
+  Required<ISenerResponse>,
   IMiddleWareDataBase,
-  ISenerRequestData, IJson {
+  IJson {
 }
 
-export type IMiddleWareRequest = (
-  req: IMiddleWareRequestData
-) => IPromiseMayBe<ICommonReturn|Partial<IMiddleWareRequestData>>;
-export type IMiddleWareResponse = (
-  res: IMiddleWareRequestData,
-) => IPromiseMayBe<ICommonReturn|IMiddleWareResponseReturn>;
+export type IMiddleWareHook = (
+  ctx: ISenerContext
+) => IPromiseMayBe<IHookReturn>;
 
 export interface IMiddleWare {
+  dir?: string;
   acceptOptions: boolean;
   name?: string;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  enter?: IMiddleWareRequest;
-  request?: IMiddleWareRequest;
-  response?: IMiddleWareResponse;
-  leave?: IMiddleWareResponse;
-  helper?(): any;
+  enter?: IMiddleWareHook;
+  request?: IMiddleWareHook;
+  response?: IMiddleWareHook;
+  leave?: IMiddleWareHook;
+  helper?(): Record<string, any>;
 }
 
 export class MiddleWare implements IMiddleWare {
-    dir = '';
+    dir?: string;
     name: string = '';
     acceptOptions: boolean = false;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
-    enter (req: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn> {}
+    enter (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
-    request (req: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn|Partial<IMiddleWareRequestData>> {};
+    request (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
-    response (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn|IMiddleWareResponseReturn> {};
+    response (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
-    leave (res: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn|IMiddleWareResponseReturn> {};
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    helper () {}
+    leave (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
+    // @ts-ignore
+    helper (): Record<string, any>|void {}
 }
 
-export interface IServerSendData extends IMiddleWareResponseReturn {
+export interface IServerSendData extends ISenerResponse {
   response: IResponse,
 }

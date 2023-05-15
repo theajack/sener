@@ -4,8 +4,6 @@
  * @Description: Coding something
  */
 import { IMiddleWare, ISenerOptions, senerBaseDir } from 'sener-types';
-import { Router } from './middleware/entry';
-import { Cookie } from './middleware/inner-middlewares/cookie';
 import { Server } from './server/server';
 
 
@@ -38,16 +36,15 @@ export class Sener {
 
     constructor ({
         port,
-        router,
         middlewares = [],
-        cookieOptions = {},
-    }: ISenerOptions & {router?: Router} = {}) {
+        onerror,
+    }: ISenerOptions = {}) {
         this.server = new Server({
             port,
+            onerror,
         });
         this.use(
-            new Cookie(cookieOptions), // Cookie 中间件默认会带上 且位于第一个
-            router, // router要位于最前面 最先进入 最后出
+            // router要位于最前面 最先进入 最后出
             ...middlewares,
         );
     }

@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { MiddleWare, ICommonReturn, IPromiseMayBe, IJson, IMiddleWareRequestData } from 'sener-types';
+import { MiddleWare, IHookReturn, IPromiseMayBe, IJson, ISenerContext } from 'sener-types';
 
 export interface IIpMonitorOptions {
     range?: number;
@@ -46,7 +46,7 @@ export class IpMonitor extends MiddleWare {
         this.client = new IpMonitorClient(options);
     }
 
-    request ({ ip, send404 }: IMiddleWareRequestData): IPromiseMayBe<ICommonReturn | Partial<IMiddleWareRequestData>> {
+    request ({ ip, send404 }: ISenerContext): IPromiseMayBe<IHookReturn | Partial<ISenerContext>> {
         if (!this.client.check(ip)) {
             send404();
             return false;
