@@ -13,7 +13,7 @@ export interface IJsonHelper {
   readMap: <Model=any>(key: string) => IJson<Model>;
 }
 
-declare module 'sener-types-extend' {
+declare module 'sener' {
   interface ISenerHelper extends IJsonHelper {
 
   }

@@ -5,15 +5,12 @@
  */
 
 import { MiddleWare, IHookReturn, IPromiseMayBe, IJson, ISenerContext } from 'sener-types';
-import { Sener } from 'src/sener';
-import { IRouter } from './router';
+// import { IRouter } from './router';
 
-export type IEnvOptions = IJson<((
-    ctx: ISenerContext
-)=>any) | any>;
+export type IEnvOptions = IJson<((ctx: ISenerContext)=>any)>;
 
-export type IEnvMap<T extends IEnvOptions> = {
-    [prop in keyof T]: T[prop] extends Function ? ReturnType<T[prop]>: T[prop];
+export type IEnvMap<T extends IJson<((ctx: ISenerContext)=>any)>> = {
+    [prop in keyof T]: ReturnType<T[prop]>;
 }
 
 export class Env extends MiddleWare {
@@ -30,19 +27,28 @@ export class Env extends MiddleWare {
     }
 }
 
+// const env = {
+//     uid () {
+//         return '11';
+//     },
+// };
 
-const env = {
-    uid ({ cookie }: ISenerContext) {
-        try {
-            return cookie.get('xx');
-        } catch (e) {
-            return '';
-        }
-    },
-    a: 'ss',
-    b: 11,
-};
-declare module 'sener-types-extend' {
-    interface ISenerEnv extends IEnvMap<typeof env> {
-    }
-}
+// const data: IEnvMap<typeof env> = {};
+
+// data.uid
+
+// declare module 'sener' {
+//     interface ISenerHelper {
+//         env: IEnvMap<typeof env>
+//     }
+//   }
+
+
+// const envMap: IEnvMap<typeof env> = {};
+
+
+// const d: IRouter = {
+//     'xx': ({ env }) => {
+//         env;
+//     }
+// };

@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-declare module 'sener-types-extend' {
+declare module 'sener' {
   interface ISenerHelper {
   }
 

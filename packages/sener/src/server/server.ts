@@ -10,7 +10,7 @@ import {
     IJson, IServerOptions, IErrorFrom,
     IServerSendData, IResponse, IServeMethod, IHttpInfo,
 } from 'sener-types';
-import { ISenerHelper } from 'sener-types-extend';
+import { ISenerHelper } from 'sener';
 
 export class Server {
     server: http.Server;

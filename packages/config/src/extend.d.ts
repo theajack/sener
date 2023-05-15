@@ -20,7 +20,7 @@ export interface IConfigHelper {
   onConfigChange(callback: IConfigChange): void;
 }
 
-declare module 'sener-types-extend' {
+declare module 'sener' {
   interface ISenerHelper extends IConfigHelper {
 
   }

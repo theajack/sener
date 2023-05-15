@@ -29,7 +29,7 @@ interface IRouterHelper {
     ): IPromiseMayBe<IHookReturn>;
 }
 
-declare module 'sener-types-extend' {
+declare module 'sener' {
     interface ISenerHelper extends IRouterHelper {}
 }
 

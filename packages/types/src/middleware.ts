@@ -9,7 +9,7 @@ import {
 } from './common';
 import { IHttpInfo } from './sener.d';
 import { ServerResponse, IncomingMessage } from 'http';
-import { ISenerHelper, ISenerEnv } from 'sener-types-extend';
+import { ISenerHelper, ISenerEnv } from 'sener';
 import { MiddleWareReturn } from './enum';
 
 export type IResponse = ServerResponse & {

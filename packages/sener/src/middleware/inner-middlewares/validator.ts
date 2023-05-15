@@ -38,7 +38,7 @@ interface IValidatorHelper {
     vbody: IValidFunc;
 }
 
-declare module 'sener-types-extend' {
+declare module 'sener' {
     interface ISenerHelper extends IValidatorHelper {}
 }
 
