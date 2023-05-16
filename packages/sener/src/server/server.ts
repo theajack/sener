@@ -194,19 +194,12 @@ export class Server {
             if (err) return err;
 
             const { data, statusCode, headers: HEADERS } = context;
-
             // console.log('response senddata', HEADERS);
             this.sendData({
                 response,
-                data: {
-                    ...context.data,
-                    ...data,
-                },
-                statusCode: statusCode || context.statusCode,
-                headers: {
-                    ...context.headers,
-                    ...HEADERS,
-                }
+                data,
+                statusCode,
+                headers: HEADERS
             });
         }).listen(this.port, '0.0.0.0');
     }

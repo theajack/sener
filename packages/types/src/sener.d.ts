@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import { IncomingHttpHeaders } from 'http';
-import { IMiddleWare, ISenerContext, ISenerResponse } from './middleware';
+import { IMiddleWare, ISenerContext, ISenerResponse, MiddleWare } from './middleware';
 import { IServeMethod, IJson, IPromiseMayBe } from './common';
 
 export type ICookieSameSite = 'Lax' | 'Strict' | 'None';
@@ -33,7 +33,7 @@ export interface IHttpInfo {
 }
 
 export interface ISenerOptions extends IServerOptions {
-    middlewares?: (IMiddleWare|null)[];
+    middlewares?: (IMiddleWare|MiddleWare|null)[];
     cookieOptions?: ICookieOptions;
 }
 
@@ -50,10 +50,14 @@ export interface IServerOptions {
   onerror?: IOnError;
 }
 
-export interface IRouterReturn<TObject=any> {
+export interface IRouterData<T=any> {
     code: number;
-    data: TObject;
+    data: T;
     extra?: any;
     msg?: string;
     success?: boolean;
 }
+
+export type IRouterReturn<T=any> = ISenerResponse<IRouterData<T>>;
+
+export type IRouterReturnPromise<T=any> = Promise<IRouterReturn<T>>

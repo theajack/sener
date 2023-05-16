@@ -24,9 +24,9 @@ export interface IRouterHandlerData {
 interface IRouterHelper {
     meta: IJson;
     index: ()=>number;
-    route(
+    route<T extends IHookReturn = IHookReturn>(
         url: string, data?: Partial<ISenerContext>,
-    ): IPromiseMayBe<IHookReturn>;
+    ): IPromiseMayBe<T>;
 }
 
 declare module 'sener' {
@@ -150,7 +150,7 @@ export class Router extends MiddleWare {
     private _createRoute (res: any): IRouterHelper['route'] {
         return (url, data) => {
             const map = url.startsWith('#') ? this._privateRouters : this.routers;
-            return this._route(url, data, res, map);
+            return this._route(url, data, res, map) as any;
         };
     }
 }
