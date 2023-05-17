@@ -5,7 +5,7 @@
  */
 import http, { IncomingMessage, ServerResponse } from 'http';
 import { MiddleWareManager } from '../middleware/middleware-manager';
-import { IHelperFunc, IMiddleWare, ISenerContext, IOnError, parseParam, praseUrl } from 'sener-types';
+import { IHelperFunc, IMiddleWare, ISenerContext, IOnError, parseParam, praseUrl, IHookReturn, ISenerResponse } from 'sener-types';
 import {
     IJson, IServerOptions, IErrorFrom,
     IServerSendData, IResponse, IServeMethod, IHttpInfo,
@@ -132,32 +132,17 @@ export class Server {
                 headers,
                 env,
                 data: {},
-                statusCode: 200,
+                statusCode: -1,
                 success: true,
                 ...sendHelper,
                 ...httpInfo,
                 ...this.helper,
             } as any; // ! build 报错
 
-            const onLeave = async () => {
-                // console.log('onLeave', context?.meta);
-                try {
-                    await this.middleware.applyLeave(context || {} as any); // todo
-                } catch (err) {
-                    return await this.onError(err, 'leave', context);
-                }
-            };
 
             const onError = async (err: any, from: IErrorFrom) => {
-                return await onLeave() ||
-                    await this.onError(err, from, context);
+                return this.onError(err, from, context);
             };
-
-            try {
-                await this.middleware.applyEnter(context as any);
-            } catch (err) {
-                return onError(err, 'enter');
-            }
 
             // ! options请求返回200 当使用nginx配置跨域时此处需要有返回
             // ! 使用 cors 中间件时不会执行到这里
@@ -170,7 +155,6 @@ export class Server {
             // console.log('parseHttpInfo', httpInfo);
             try {
                 const result = await this.middleware.applyRequest(context);
-                if (!result) return await onLeave(); // ! 中间件返回false，表示中间件处理了服务返回，这里responseReturn=null 直接返回
                 if (typeof result === 'object') {
                     Object.assign(context, result);
                 }
@@ -181,7 +165,6 @@ export class Server {
             // ! response hooks
             try {
                 const result = await this.middleware.applyResponse(context);
-                if (!result) return await onLeave(); // ! 中间件返回false，表示中间件处理了服务返回，这里responseReturn=null 直接返回
                 if (typeof result === 'object') {
                     Object.assign(context, result);
                 }
@@ -189,9 +172,7 @@ export class Server {
                 return await onError(err, 'response');
             }
 
-            // ! leave hooks
-            const err = await onLeave();
-            if (err) return err;
+            if(context.statusCode === -1) context.statusCode = 200;
 
             const { data, statusCode, headers: HEADERS } = context;
             // console.log('response senddata', HEADERS);
@@ -204,16 +185,15 @@ export class Server {
         }).listen(this.port, '0.0.0.0');
     }
 
-    private sendHtml (response: IResponse, html: string, headers?: IJson<string>) {
-        return this.sendData({
-            response,
+    private sendHtml (html: string, headers?: IJson<string>) {
+        return {
             data: html,
             statusCode: 200,
             headers: Object.assign(
                 { 'Content-Type': 'text/html; charset=utf-8' },
                 headers,
             )
-        });
+        };
     }
 
     private send404 (response: IResponse, message = 'Page not found', headers?: IJson<string>) {
@@ -221,8 +201,7 @@ export class Server {
     }
 
     private sendText (response: IResponse, str: string, headers: IJson<string> = {}, statusCode = 200) {
-        return this.sendData({
-            response,
+        return this.returnData({
             data: str,
             statusCode,
             headers: Object.assign(
@@ -234,23 +213,34 @@ export class Server {
             // multipart/form-data
         });
     }
-    private sendData ({
-        response,
+
+    private returnData ({
         data = '',
         statusCode = 200,
         headers = { 'Content-Type': 'application/json;charset=UTF-8' },
-    }: Partial<IServerSendData> & Pick<IServerSendData, 'response'>): false {
+        success = true,
+    }: ISenerResponse): ISenerResponse {
+        if (!headers['Content-Type']) {
+            headers['Content-Type'] = 'application/json;charset=UTF-8';
+        }
+        return {
+            data, statusCode, headers, success
+        }
+    }
+
+    private sendData (response: IResponse, {
+        data = '',
+        statusCode = 200,
+        headers = { 'Content-Type': 'application/json;charset=UTF-8' },
+    }: ISenerResponse): void {
         // console.log('sendData', data, headers);
         try {
-            if (!headers['Content-Type']) {
-                headers['Content-Type'] = 'application/json;charset=UTF-8';
-            }
             for (const k in headers) {
                 response.setHeader(k, headers[k]);
             }
         } catch (e) {
-            console.error('router中如果已经对请求做了返回处理，请return false;', e);
-            return false;
+            console.error('router中如果已经对请求做了返回处理，请返回 {responded: true};', e);
+            return;
         }
         // todo 数据类型判断
         if (typeof data !== 'string') {
@@ -263,13 +253,12 @@ export class Server {
                     success: false,
                 })); // todo 统一处理错误逻辑
                 response.end();
-                return false;
+                return;
             }
         }
         response.statusCode = statusCode;
         // console.log('writedata', data);
         response.write(data);
         response.end();
-        return false;
     }
 }
