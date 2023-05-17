@@ -24,15 +24,16 @@ export class Static extends MiddleWare {
         this.static = new StaticServer(this.dir);
     }
 
-    async request (res: ISenerContext): Promise<ISenerContext | IHookReturn> {
+    request (ctx: ISenerContext): Promise<IHookReturn> {
         return new Promise(resolve => {
-            this.static.serve(res.request, res.response).once('success', () => {
+            this.static.serve(ctx.request, ctx.response).once('success', () => {
                 resolve(MiddleWareReturn.Return);
             }).on('error', data => {
                 if (data.status === 404) {
+                    // console.log('static request data', data)
                     resolve(MiddleWareReturn.Continue);
                 } else {
-                    res.sendResponse({
+                    ctx.sendResponse({
                         data: data,
                         statusCode: data.status,
                         'headers': data.headers,

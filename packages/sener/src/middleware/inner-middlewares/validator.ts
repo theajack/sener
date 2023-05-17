@@ -15,6 +15,7 @@ interface IFormatMap {
     'number': number;
     'string': string;
     'boolean': boolean;
+    'any': any;
 }
 
 export type IValidFormat = keyof IFormatMap;

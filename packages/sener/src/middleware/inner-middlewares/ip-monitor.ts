@@ -9,33 +9,32 @@ import { MiddleWare, IHookReturn, IPromiseMayBe, IJson, ISenerContext } from 'se
 export interface IIpMonitorOptions {
     range?: number;
     times?: number;
-    oncheck?: ()=>boolean;
+    oncheck?: (ctx: ISenerContext) => boolean;
+    handler?: (ctx: ISenerContext) => IHookReturn;
 }
 
 export class IpMonitorClient {
     private _store: IJson<number> = {};
-    private _check: (ip: string) => boolean;
+    check: (ctx: ISenerContext) => boolean;
+    handler?: (ctx: ISenerContext) => any;
     // 默认策略：10s 内访问 30 次被认为高频访问
-    constructor ({ times = 30, range = 10, oncheck }: IIpMonitorOptions = {}) {
+    constructor ({ times = 30, range = 10, oncheck, handler }: IIpMonitorOptions = {}) {
+        this.handler = handler;
         if (oncheck) {
-            this._check = oncheck;
+            this.check = oncheck;
         } else {
             setInterval(() => {
                 this._store = {};
             }, range * 1000);
-            this._check = (ip) => {
+            this.check = ({ip}: ISenerContext) => {
                 if (!this._store[ip]) {
                     this._store[ip] = 1;
                 } else {
                     this._store[ip]++;
                 }
-                // console.log('ipStore=', this._store);
                 return this._store[ip] < times;
             };
         }
-    }
-    check (ip: string): boolean {
-        return this._check(ip);
     }
 }
 
@@ -46,10 +45,10 @@ export class IpMonitor extends MiddleWare {
         this.client = new IpMonitorClient(options);
     }
 
-    request ({ ip, send404 }: ISenerContext): IPromiseMayBe<IHookReturn | Partial<ISenerContext>> {
-        if (!this.client.check(ip)) {
-            send404();
-            return false;
+    request (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {
+        if (!this.client.check(ctx)) {
+            const h = this.client.handler;
+            return h ? h(ctx): ctx.send404();
         }
     }
 }

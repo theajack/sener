@@ -64,6 +64,7 @@ export class MiddleWare implements IMiddleWare {
     dir?: string;
     name: string = '';
     acceptOptions: boolean = false;
+    // accept404: boolean = false;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     enter (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
