@@ -5,9 +5,7 @@
  */
 import {
     ISenerContext,
-    ISenerResponse,
     IMiddleWare,
-    MiddleWareReturn
 } from 'sener-types';
 
 export class MiddleWareManager {
@@ -27,70 +25,39 @@ export class MiddleWareManager {
         }
     }
 
-    async applyEnter (req: ISenerContext) {
+    async request (ctx: ISenerContext) {
+        if (ctx.returned) return;
         for (const middleware of this.middlewares) {
-            if (req.method === 'OPTIONS' && !middleware.acceptOptions) continue;
-            if (!middleware.enter) continue;
-            const result = await middleware.enter(req);
-            if (result && typeof result === 'object') {
-                if (req !== result) Object.assign(req, result);
-            }
+            await this.onSingeHook(middleware, 'request', ctx);
         }
     }
 
-    async applyRequest (req: ISenerContext) {
-        for (const middleware of this.middlewares) {
-            if (!middleware.request) continue;
-            // console.log(middleware.name);
-            const result = await middleware.request(req);
-            if (result === false) return null;
-            if (!result || result === MiddleWareReturn.Continue) continue;
-            if (typeof result === 'object') {
-                if (req !== result) Object.assign(req, result);
-            } else if (result === MiddleWareReturn.Return) {
-                return null;
-            } else {
-                break;
-            }
-        }
-        return req;
-    }
-
-    // 洋葱模型 entry=>request => response为倒序
-    async applyResponse (
-        res: ISenerContext
-    ): Promise<ISenerResponse|null> {
+    // 洋葱模型 request => response为倒序
+    async response (ctx: ISenerContext) {
+        if (ctx.returned) return;
         const ms = this.middlewares;
         for (let i = ms.length - 1; i >= 0; i--) {
-            const middleware = ms[i];
-            if (!middleware.response) continue;
-            const result = await middleware.response(res);
-            if (result === false) return null;
-            if (!result || result === MiddleWareReturn.Continue) continue;
-            if (typeof result === 'object') {
-                if (res !== result) Object.assign(res, result);
-            } else if (result === MiddleWareReturn.Return) {
-                return null;
-            } else {
-                break;
-            }
+            await this.onSingeHook(ms[i], 'response', ctx);
         }
-        return res;
     }
 
-    async applyLeave (
-        res: ISenerContext
-    ) {
-        // console.log('applyLeave', res.headers);
-        const ms = this.middlewares;
-        for (let i = ms.length - 1; i >= 0; i--) {
-            const middleware = ms[i];
-            if (res.method === 'OPTIONS' && !middleware.acceptOptions) continue;
-            if (!middleware.leave) continue;
-            const result = await middleware.leave(res);
-            if (result && typeof result === 'object') {
-                if (res !== result) Object.assign(res, result);
-            }
+    async enter (ctx: ISenerContext) {
+        if (ctx.returned) return;
+        for (const middleware of this.middlewares) {
+            await this.onSingeHook(middleware, 'enter', ctx);
+        }
+    }
+
+    private async onSingeHook (middleware: IMiddleWare, name: 'response'|'request'|'enter', ctx: ISenerContext) {
+        const hook = middleware[name];
+        if (!hook || ctx.returned) return;
+        if (
+            (ctx.isOptions && !middleware.acceptOptions) ||
+            (ctx.responded && !middleware.acceptResponded)
+        ) return;
+        const result = await hook(ctx);
+        if (result && typeof result === 'object' && ctx !== result) {
+            Object.assign(ctx, result);
         }
     }
 }

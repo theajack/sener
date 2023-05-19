@@ -4,9 +4,7 @@
  * @Description: Coding something
  */
 import {
-    ISenerResponse, MiddleWare,
-    IPromiseMayBe, IHookReturn, IJson,
-    MiddleWareReturn,
+    MiddleWare, IPromiseMayBe, IHookReturn, IJson,
     ISenerContext,
 } from 'sener-types';
 
@@ -97,57 +95,33 @@ export class Router extends MiddleWare {
         return `${(method || 'get').toLocaleLowerCase()}:${url}`;
     }
 
-    enter (res: ISenerContext): IPromiseMayBe<IHookReturn> {
-        // console.log('router enter', res.url);
-        const { url, method } = res;
+    enter (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {
+        // console.log('router enter', ctx.url);
+        const { url, method, response404 } = ctx;
         const key = this.buildRouteKey(url, method);
         const route = this.routers[key];
         // console.log('router enter', url, method, route?.meta);
-        res.meta = route?.meta || {};
-        // console.log('router enter', res.meta);
+        ctx.meta = route?.meta || {};
+        // console.log('router enter', ctx.meta);
         let index = 0; // 路由中加入一个自增index，可以用于生成错误码 id等
-        res.index = () => index++;
-        res.route = this._createRoute(res);
+        ctx.index = () => index++;
+        ctx.route = this._createRoute(ctx);
+
+        if (!route) {
+            response404(`Page not found: ${url}`);
+        }
     }
 
-    private _route (url: string, data = {}, res: any, map = this.routers) {
+    private _route (url: string, data = {}, res: ISenerContext, map = this.routers) {
         const route = map[this.fillUrl(url)];
         if (!route) {
-            res.send404(`Route Dismiss: ${url}`);
-            return MiddleWareReturn.Return;
+            res.response404(`Route Dismiss: ${url}`);
+            return;
         }
         return route.handler(Object.assign({}, res, data));
     }
-    request (req: ISenerContext): IPromiseMayBe<IHookReturn | Partial<ISenerContext>> {
-        const { url, method, send404 } = req;
-        const key = this.buildRouteKey(url, method);
-        // console.log('on request', key);
-        const route = this.routers[key];
-        if (!!route) {
-            return MiddleWareReturn.Continue;
-        }
-        send404(`Page not found: ${url}`);
-        return MiddleWareReturn.Return;
-    }
-    response (res: ISenerContext): IPromiseMayBe<IHookReturn | ISenerResponse<any>> {
-        // console.log('router response', res.url);
-        const key = this.buildRouteKey(res.url, res.method);
-        // console.log('on response', key);
-        const route = this.routers[key];
-        if (!route) {
-            res.send404(`Page not found: ${res.url}`);
-            // res.sendHtml(`<h1>Page not found: ${res.url}<jh1>`);
-            return MiddleWareReturn.Return;
-        }
-        res.route = this._createRoute(res);
-        return route.handler(res);
-    }
 
-    // leave (res: ISenerContext): IPromiseMayBe<IHookReturn | ISenerResponse<any>> {
-    //     console.log('router leave', res.url);
-    // }
-
-    private _createRoute (res: any): IRouterHelper['route'] {
+    private _createRoute (res: ISenerContext): IRouterHelper['route'] {
         return (url, data) => {
             const map = url.startsWith('#') ? this._privateRouters : this.routers;
             return this._route(url, data, res, map) as any;

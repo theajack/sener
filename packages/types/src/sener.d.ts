@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import { IncomingHttpHeaders } from 'http';
-import { IMiddleWare, ISenerContext, ISenerResponse, MiddleWare } from './middleware';
+import { IMiddleHookNames, IMiddleWare, ISenerContext, ISenerResponse, MiddleWare } from './middleware';
 import { IServeMethod, IJson, IPromiseMayBe } from './common';
 
 export type ICookieSameSite = 'Lax' | 'Strict' | 'None';
@@ -37,7 +37,7 @@ export interface ISenerOptions extends IServerOptions {
     cookieOptions?: ICookieOptions;
 }
 
-export type IErrorFrom = 'enter' | 'request' | 'response' | 'leave';
+export type IErrorFrom = IMiddleHookNames | 'unknown';
 
 export type IOnError = (err: {
   error: any,

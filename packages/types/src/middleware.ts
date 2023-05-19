@@ -10,18 +10,18 @@ import {
 import { IHttpInfo } from './sener.d';
 import { ServerResponse, IncomingMessage } from 'http';
 import { ISenerHelper, ISenerEnv } from 'sener';
-import { MiddleWareReturn } from './enum';
 
 export type IResponse = ServerResponse & {
   req: IncomingMessage;
 }
 
 export interface IHelperFunc {
-  create404: (errorMessage?: string, header?: IJson<string>) => ISenerResponse;
-  createJson: (data: IJson, statusCode?: number, header?: IJson<string>) => ISenerResponse;
-  createText: (text: string, statusCode?: number, header?: IJson<string>) => ISenerResponse;
-  createHtml: (html: string, header?: IJson<string>) => ISenerResponse;
-  createResponse: (data: Partial<ISenerResponse>) => ISenerResponse;
+  response404: (errorMessage?: string, header?: IJson<string>) => ISenerResponse;
+  responseJson: (data: IJson, statusCode?: number, header?: IJson<string>) => ISenerResponse;
+  responseTexxt: (text: string, statusCode?: number, header?: IJson<string>) => ISenerResponse;
+  responseHtml: (html: string, header?: IJson<string>) => ISenerResponse;
+  responseData: (data: Partial<ISenerResponse>) => ISenerResponse;
+  markReturned: () => void;
 }
 
 export interface IMiddleWareDataBase extends IHttpInfo, ISenerHelper, IHelperFunc {
@@ -29,8 +29,10 @@ export interface IMiddleWareDataBase extends IHttpInfo, ISenerHelper, IHelperFun
   response: IResponse;
   env: ISenerEnv & IJson;
   responded: boolean;
+  isOptions: boolean; // 是否是 options method
+  returned: boolean;
 }
-export type IHookReturn = Partial<ISenerContext>|MiddleWareReturn|void|false;
+export type IHookReturn = Partial<ISenerContext>|void;
 
 export interface ISenerResponse<T = any> {
   data: T,
@@ -49,16 +51,17 @@ export type IMiddleWareHook = (
   ctx: ISenerContext
 ) => IPromiseMayBe<IHookReturn>;
 
+export type IMiddleHookNames = 'enter' | 'request'| 'response';
+
 export interface IMiddleWare {
   dir?: string;
   name?: string;
   acceptOptions?: boolean;
   acceptResponded?: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  acceptReturned?: boolean;
   enter?: IMiddleWareHook;
   request?: IMiddleWareHook;
   response?: IMiddleWareHook;
-  leave?: IMiddleWareHook;
   helper?(): Record<string, any>;
 }
 
@@ -73,8 +76,6 @@ export class MiddleWare implements IMiddleWare {
     request (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     response (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
-    leave (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
     // @ts-ignore
     helper (): Record<string, any>|void {}
 }

@@ -3,14 +3,14 @@
  * @Date: 2023-02-19 08:11:43
  * @Description: Coding something
  */
-import http, { IncomingMessage, ServerResponse } from 'http';
+import http from 'http';
 import { MiddleWareManager } from '../middleware/middleware-manager';
-import { IHelperFunc, IMiddleWare, ISenerContext, IOnError, parseParam, praseUrl, IHookReturn, ISenerResponse } from 'sener-types';
+import { IMiddleWare, ISenerContext, IOnError, ISenerResponse, IMiddleHookNames } from 'sener-types';
 import {
-    IJson, IServerOptions, IErrorFrom,
-    IServerSendData, IResponse, IServeMethod, IHttpInfo,
+    IJson, IServerOptions, IErrorFrom, IResponse
 } from 'sener-types';
 import { ISenerHelper } from 'sener';
+import { createSenerHelper, parseHttpInfo } from './sener-helper';
 
 export class Server {
     server: http.Server;
@@ -39,96 +39,25 @@ export class Server {
             this.helper = Object.assign(this.helper, middleware.helper());
     }
 
-    private async parseHttpInfo (request: http.IncomingMessage): Promise<IHttpInfo> {
-        const { headers, method } = request;
-        const { url, query } = praseUrl(request.url);
-        const ip = request.headers['x-forwarded-for'] || // 判断是否有反向代理 IP
-            request.connection.remoteAddress || // 判断 connection 的远程 IP
-            request.socket.remoteAddress || // 判断后端的 socket 的 IP
-            // @ts-ignore
-            request.connection?.socket?.remoteAddress;
-        return {
-            requestHeaders: headers,
-            method: method as IServeMethod,
-            url,
-            query,
-            ip,
-            ...(await this.parseBody(request))
-        };
-    }
-
-    private parseBody (request: IncomingMessage) {
-        return new Promise<{body: IJson, buffer: Buffer|null}>((resolve) => {
-            const chunks: any[] = [];
-            const contentType = request.headers['content-type'] || '';
-            // console.log('contentType', contentType);
-            if (contentType.includes('multipart/form-data')) {
-                resolve({ body: {}, buffer: null });
-                return;
-            }
-            request.on('error', (err) => {
-                console.error(err);
-            }).on('data', (chunk) => {
-                chunks.push(chunk);
-            }).on('end', () => {
-                const buffer = Buffer.concat(chunks);
-                let body: IJson<string> = {};
-
-                if (request.headers['content-type']?.includes('application/json')) {
-                    const bodyStr = buffer.toString();
-                    // todo 根据 header 判断
-                    try {
-                        body = JSON.parse(bodyStr);
-                    } catch (e) {
-                        body = parseParam(bodyStr);
-                    }
-                }
-                resolve({
-                    body,
-                    buffer,
-                });
-            });
-        });
-    }
-
     private async onError (error: any, from: IErrorFrom, context: ISenerContext): Promise<any> {
         // console.error('onError', error.message);
         const data = (this.onerror) ?
             await this.onerror({ error, from, context }) :
             { data: { code: -1, msg: `服务器内部错误(${error.toString()})[from=${from}]`, error } };
         const { headers } = context;
-        return this.createResponse({ ...data, headers });
-    }
-
-    private _createSendHelper (headers: IJson<string>): IHelperFunc {
-
-        const mergeHeaders = (header: IJson<string> = {}) => Object.assign({}, headers, header);
-
-        const sendHelper: IHelperFunc = {
-            create404: (msg, header = {}) => this.create404(msg, mergeHeaders(header)),
-            createJson: (data, statusCode = 200, header = {}) => this.createResponse({data, statusCode, headers: mergeHeaders(header) }),
-            createText: (msg, statusCode, header = {}) => this.createText(msg, mergeHeaders(header), statusCode),
-            createHtml: (html, header = {}) => this.createHtml(html, mergeHeaders(header)),
-            createResponse: (data: ISenerResponse) => this.createResponse({ ...data, headers: mergeHeaders(data.headers) }),
-        };
-
-        return sendHelper;
+        return context.responseData({ ...data, headers });
     }
 
     private initServer () {
         console.log(`Sener Runing Succeed On: http://localhost:${this.port}`);
         this.server = http.createServer(async (request, response) => {
 
-            const httpInfo = await this.parseHttpInfo(request);
+            const httpInfo = await parseHttpInfo(request);
 
             const headers: IJson<string> = {};
             const env: IJson<string> = {};
 
-            let context: ISenerContext;
-
-            const sendHelper = this._createSendHelper(headers, ()=>{context.responded = true});
-
-            context = {
+            const context: ISenerContext = {
                 request,
                 response,
                 headers,
@@ -137,43 +66,41 @@ export class Server {
                 statusCode: -1,
                 success: true,
                 responded: false,
-                ...sendHelper,
+                returned: false,
+                isOptions: false,
                 ...httpInfo,
                 ...this.helper,
             } as any; // ! build 报错
 
-            const onError = async (err: any, from: IErrorFrom) => {
-                return this.onError(err, from, context);
+            const assignContext = (ctx: Partial<ISenerContext>|any) => {
+                if (typeof ctx === 'object')
+                    Object.assign(context, ctx);
             };
+
+            assignContext(createSenerHelper(headers, (key: 'responded'|'returned' = 'responded') => {
+                context[key] = true;
+            }));
 
             // ! options请求返回200 当使用nginx配置跨域时此处需要有返回
             // ! 使用 cors 中间件时不会执行到这里
             if (request.method === 'OPTIONS') {
-                return sendHelper.createResponse({ statusCode: 200 });
+                context.isOptions = true;
+                assignContext(context.responseData({ statusCode: 200 }));
             }
 
-            // ! requese hooks
-            // console.log('parseHttpInfo', httpInfo);
-            try {
-                const result = await this.middleware.applyRequest(context);
-                if (typeof result === 'object') {
-                    Object.assign(context, result);
+            const applyHook = async (name: IMiddleHookNames) => {
+                try {
+                    await this.middleware[name](context);
+                } catch (err) {
+                    assignContext(await this.onError(err, name, context));
                 }
-            } catch (err) {
-                return await onError(err, 'request');
-            }
+            };
 
-            // ! response hooks
-            try {
-                const result = await this.middleware.applyResponse(context);
-                if (typeof result === 'object') {
-                    Object.assign(context, result);
-                }
-            } catch (err) {
-                return await onError(err, 'response');
-            }
+            await applyHook('enter');
 
-            if(context.statusCode === -1) context.statusCode = 200;
+            await applyHook('request');
+
+            await applyHook('response');
 
             const { data, statusCode, headers: HEADERS } = context;
             // console.log('response senddata', HEADERS);
@@ -185,48 +112,6 @@ export class Server {
         }).listen(this.port, '0.0.0.0');
     }
 
-    private createHtml (html: string, headers?: IJson<string>) {
-        return this.createResponse({
-            data: html,
-            statusCode: 200,
-            headers: Object.assign(
-                { 'Content-Type': 'text/html; charset=utf-8' },
-                headers,
-            )
-        });
-    }
-
-    private create404 (message = 'Page not found', headers?: IJson<string>) {
-        return this.createText(message, headers, 404);
-    }
-
-    private createText (str: string, headers: IJson<string> = {}, statusCode = 200) {
-        return this.createResponse({
-            data: str,
-            statusCode,
-            headers: Object.assign(
-                { 'Content-Type': 'text/plain; charset=utf-8' },
-                headers,
-            )
-            // text/html; charset=utf-8
-            // application/x-www-form-urlencoded
-            // multipart/form-data
-        });
-    }
-
-    private createResponse ({
-        data = '',
-        statusCode = 200,
-        headers = { 'Content-Type': 'application/json;charset=UTF-8' },
-        success = true,
-    }: ISenerResponse): ISenerResponse {
-        if (!headers['Content-Type']) {
-            headers['Content-Type'] = 'application/json;charset=UTF-8';
-        }
-        return {
-            data, statusCode, headers, success
-        }
-    }
 
     private sendData (response: IResponse, {
         data = '',
@@ -234,6 +119,7 @@ export class Server {
         headers = { 'Content-Type': 'application/json;charset=UTF-8' },
     }: ISenerResponse): void {
         // console.log('sendData', data, headers);
+        if (statusCode === -1) statusCode = 200;
         try {
             for (const k in headers) {
                 response.setHeader(k, headers[k]);

@@ -32,7 +32,7 @@ export class Log extends MiddleWare {
         req.logger = new Logger(this.loggerOptions, baseInfo);
     }
 
-    response ({ response, logger }: ISenerContext): IPromiseMayBe<IHookReturn | ISenerResponse<any>> {
-        response.setHeader('x-trace-id', logger.traceid);
+    response ({ headers, logger }: ISenerContext): IPromiseMayBe<IHookReturn | ISenerResponse<any>> {
+        headers['x-trace-id'] = logger.traceid;
     }
 }

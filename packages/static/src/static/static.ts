@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import path from 'path';
-import { IHookReturn, ISenerContext, MiddleWare, MiddleWareReturn } from 'sener-types';
+import { IHookReturn, ISenerContext, MiddleWare } from 'sener-types';
 import { StaticServer } from './static-server';
 
 export class Static extends MiddleWare {
@@ -27,18 +27,18 @@ export class Static extends MiddleWare {
     request (ctx: ISenerContext): Promise<IHookReturn> {
         return new Promise(resolve => {
             this.static.serve(ctx.request, ctx.response).once('success', () => {
-                resolve(MiddleWareReturn.Return);
+                ctx.markReturned();
+                resolve();
             }).on('error', data => {
                 if (data.status === 404) {
                     // console.log('static request data', data)
-                    resolve(MiddleWareReturn.Continue);
+                    resolve();
                 } else {
-                    ctx.sendResponse({
+                    resolve(ctx.responseData({
                         data: data,
                         statusCode: data.status,
                         'headers': data.headers,
-                    });
-                    resolve(MiddleWareReturn.Return);
+                    }));
                 }
             });
         });
