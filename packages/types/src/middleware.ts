@@ -17,17 +17,18 @@ export type IResponse = ServerResponse & {
 }
 
 export interface IHelperFunc {
-  send404: (errorMessage?: string, header?: IJson<string>) => false;
-  sendJson: (data: IJson, statusCode?: number, header?: IJson<string>) => false;
-  sendText: (text: string, statusCode?: number, header?: IJson<string>) => false;
-  sendHtml: (html: string, header?: IJson<string>) => false;
-  sendResponse: (data: Partial<ISenerResponse>) => false;
+  create404: (errorMessage?: string, header?: IJson<string>) => ISenerResponse;
+  createJson: (data: IJson, statusCode?: number, header?: IJson<string>) => ISenerResponse;
+  createText: (text: string, statusCode?: number, header?: IJson<string>) => ISenerResponse;
+  createHtml: (html: string, header?: IJson<string>) => ISenerResponse;
+  createResponse: (data: Partial<ISenerResponse>) => ISenerResponse;
 }
 
 export interface IMiddleWareDataBase extends IHttpInfo, ISenerHelper, IHelperFunc {
   request: IncomingMessage;
   response: IResponse;
   env: ISenerEnv & IJson;
+  responded: boolean;
 }
 export type IHookReturn = Partial<ISenerContext>|MiddleWareReturn|void|false;
 
@@ -50,8 +51,9 @@ export type IMiddleWareHook = (
 
 export interface IMiddleWare {
   dir?: string;
-  acceptOptions: boolean;
   name?: string;
+  acceptOptions?: boolean;
+  acceptResponded?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   enter?: IMiddleWareHook;
   request?: IMiddleWareHook;
@@ -64,7 +66,7 @@ export class MiddleWare implements IMiddleWare {
     dir?: string;
     name: string = '';
     acceptOptions: boolean = false;
-    accept404: boolean = false;
+    acceptResponded: boolean = false;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     enter (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function

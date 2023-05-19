@@ -96,20 +96,20 @@ export class Server {
         const data = (this.onerror) ?
             await this.onerror({ error, from, context }) :
             { data: { code: -1, msg: `服务器内部错误(${error.toString()})[from=${from}]`, error } };
-        const { response, headers } = context;
-        this.sendData({ response, ...data, headers });
+        const { headers } = context;
+        return this.createResponse({ ...data, headers });
     }
 
-    private _createSendHelper (response: ServerResponse, headers: IJson<string>): IHelperFunc {
+    private _createSendHelper (headers: IJson<string>): IHelperFunc {
 
         const mergeHeaders = (header: IJson<string> = {}) => Object.assign({}, headers, header);
 
         const sendHelper: IHelperFunc = {
-            send404: (msg, header = {}) => this.send404(response, msg, mergeHeaders(header)),
-            sendJson: (data, statusCode = 200, header = {}) => this.sendData({ response, data, statusCode, headers: mergeHeaders(header) }),
-            sendText: (msg, statusCode, header = {}) => this.sendText(response, msg, mergeHeaders(header), statusCode),
-            sendHtml: (html, header = {}) => this.sendHtml(response, html, mergeHeaders(header)),
-            sendResponse: (data) => this.sendData({ response, ...data, headers: mergeHeaders(data.headers) }),
+            create404: (msg, header = {}) => this.create404(msg, mergeHeaders(header)),
+            createJson: (data, statusCode = 200, header = {}) => this.createResponse({data, statusCode, headers: mergeHeaders(header) }),
+            createText: (msg, statusCode, header = {}) => this.createText(msg, mergeHeaders(header), statusCode),
+            createHtml: (html, header = {}) => this.createHtml(html, mergeHeaders(header)),
+            createResponse: (data: ISenerResponse) => this.createResponse({ ...data, headers: mergeHeaders(data.headers) }),
         };
 
         return sendHelper;
@@ -124,9 +124,11 @@ export class Server {
             const headers: IJson<string> = {};
             const env: IJson<string> = {};
 
-            const sendHelper = this._createSendHelper(response, headers);
+            let context: ISenerContext;
 
-            const context: ISenerContext = {
+            const sendHelper = this._createSendHelper(headers, ()=>{context.responded = true});
+
+            context = {
                 request,
                 response,
                 headers,
@@ -134,11 +136,11 @@ export class Server {
                 data: {},
                 statusCode: -1,
                 success: true,
+                responded: false,
                 ...sendHelper,
                 ...httpInfo,
                 ...this.helper,
             } as any; // ! build 报错
-
 
             const onError = async (err: any, from: IErrorFrom) => {
                 return this.onError(err, from, context);
@@ -147,8 +149,7 @@ export class Server {
             // ! options请求返回200 当使用nginx配置跨域时此处需要有返回
             // ! 使用 cors 中间件时不会执行到这里
             if (request.method === 'OPTIONS') {
-                return await onLeave() ||
-                    sendHelper.sendResponse({ statusCode: 200 });
+                return sendHelper.createResponse({ statusCode: 200 });
             }
 
             // ! requese hooks
@@ -176,8 +177,7 @@ export class Server {
 
             const { data, statusCode, headers: HEADERS } = context;
             // console.log('response senddata', HEADERS);
-            this.sendData({
-                response,
+            this.sendData(response, {
                 data,
                 statusCode,
                 headers: HEADERS
@@ -185,23 +185,23 @@ export class Server {
         }).listen(this.port, '0.0.0.0');
     }
 
-    private sendHtml (html: string, headers?: IJson<string>) {
-        return {
+    private createHtml (html: string, headers?: IJson<string>) {
+        return this.createResponse({
             data: html,
             statusCode: 200,
             headers: Object.assign(
                 { 'Content-Type': 'text/html; charset=utf-8' },
                 headers,
             )
-        };
+        });
     }
 
-    private send404 (response: IResponse, message = 'Page not found', headers?: IJson<string>) {
-        return this.sendText(response, message, headers, 404);
+    private create404 (message = 'Page not found', headers?: IJson<string>) {
+        return this.createText(message, headers, 404);
     }
 
-    private sendText (response: IResponse, str: string, headers: IJson<string> = {}, statusCode = 200) {
-        return this.returnData({
+    private createText (str: string, headers: IJson<string> = {}, statusCode = 200) {
+        return this.createResponse({
             data: str,
             statusCode,
             headers: Object.assign(
@@ -214,7 +214,7 @@ export class Server {
         });
     }
 
-    private returnData ({
+    private createResponse ({
         data = '',
         statusCode = 200,
         headers = { 'Content-Type': 'application/json;charset=UTF-8' },

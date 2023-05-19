@@ -30,7 +30,6 @@ export interface IHttpInfo {
   body: IJson<any>;
   buffer: Buffer|null;
   ip: string;
-  responded: boolean;
 }
 
 export interface ISenerOptions extends IServerOptions {
