@@ -6,6 +6,7 @@
 import {
     ISenerContext,
     IMiddleWare,
+    IMiddleHookNames,
 } from 'sener-types';
 
 export class MiddleWareManager {
@@ -41,21 +42,22 @@ export class MiddleWareManager {
         }
     }
 
-    async enter (ctx: ISenerContext) {
-        if (ctx.returned) return;
-        for (const middleware of this.middlewares) {
-            await this.onSingeHook(middleware, 'enter', ctx);
-        }
-    }
+    // async enter (ctx: ISenerContext) {
+    //     if (ctx.returned) return;
+    //     for (const middleware of this.middlewares) {
+    //         await this.onSingeHook(middleware, 'enter', ctx);
+    //     }
+    // }
 
-    private async onSingeHook (middleware: IMiddleWare, name: 'response'|'request'|'enter', ctx: ISenerContext) {
-        const hook = middleware[name];
-        if (!hook || ctx.returned) return;
+    private async onSingeHook (middleware: IMiddleWare, name: IMiddleHookNames, ctx: ISenerContext) {
+        if (!middleware[name]) return;
         if (
             (ctx.isOptions && !middleware.acceptOptions) ||
-            (ctx.responded && !middleware.acceptResponded)
+            (ctx.responded && !middleware.acceptResponded) ||
+            (ctx.returned && !middleware.acceptReturned)
         ) return;
-        const result = await hook(ctx);
+        // @ts-ignore
+        const result = await middleware[name](ctx);
         if (result && typeof result === 'object' && ctx !== result) {
             Object.assign(ctx, result);
         }

@@ -6,7 +6,6 @@
 import {
     IHookReturn, IJson,
     ISenerContext,
-    ISenerResponse,
     MiddleWare
 } from 'sener-types';
 import { IModels, IMongoHelper } from './extend.d';
@@ -22,6 +21,7 @@ export class Mongo<
     constructor (options: IMongoProxyOptions<Models>) {
         super();
         this.mongo = new MongoProxy<Models>(options);
+        this.acceptResponded = this.acceptReturned = true;
     }
 
 
@@ -32,15 +32,14 @@ export class Mongo<
         };
     }
 
-    async enter ({ meta, url, method }: ISenerContext): Promise<IHookReturn> {
+    async request ({ meta, url, method }: ISenerContext): Promise<IHookReturn> {
         console.log('mongo enter', meta?.db, url, method);
         if (meta?.db !== true) return;
         await this.mongo.connect();
         // console.log('mongo connect', method, this.mongo.connected);
     }
 
-
-    async leave ({ meta, url, method }: ISenerContext): Promise<IHookReturn | ISenerResponse<any>> {
+    async response ({ meta, url, method }: ISenerContext): Promise<IHookReturn> {
         console.log('mongo leave', meta?.db, url, method);
         if (meta?.db !== true) return;
         await this.mongo.close();

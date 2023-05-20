@@ -18,7 +18,7 @@ export type IResponse = ServerResponse & {
 export interface IHelperFunc {
   response404: (errorMessage?: string, header?: IJson<string>) => ISenerResponse;
   responseJson: (data: IJson, statusCode?: number, header?: IJson<string>) => ISenerResponse;
-  responseTexxt: (text: string, statusCode?: number, header?: IJson<string>) => ISenerResponse;
+  responseText: (text: string, statusCode?: number, header?: IJson<string>) => ISenerResponse;
   responseHtml: (html: string, header?: IJson<string>) => ISenerResponse;
   responseData: (data: Partial<ISenerResponse>) => ISenerResponse;
   markReturned: () => void;
@@ -51,7 +51,7 @@ export type IMiddleWareHook = (
   ctx: ISenerContext
 ) => IPromiseMayBe<IHookReturn>;
 
-export type IMiddleHookNames = 'enter' | 'request'| 'response';
+export type IMiddleHookNames = 'request'| 'response';
 
 export interface IMiddleWare {
   dir?: string;
@@ -59,7 +59,7 @@ export interface IMiddleWare {
   acceptOptions?: boolean;
   acceptResponded?: boolean;
   acceptReturned?: boolean;
-  enter?: IMiddleWareHook;
+  // enter?: IMiddleWareHook;
   request?: IMiddleWareHook;
   response?: IMiddleWareHook;
   helper?(): Record<string, any>;
@@ -70,8 +70,9 @@ export class MiddleWare implements IMiddleWare {
     name: string = '';
     acceptOptions: boolean = false;
     acceptResponded: boolean = false;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
-    enter (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
+    acceptReturned: boolean = false;
+    // // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
+    // enter (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     request (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function

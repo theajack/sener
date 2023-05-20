@@ -22,10 +22,10 @@ function responseHtml (html: string, headers?: IJson<string>) {
 }
 
 function response404 (message = 'Page not found', headers?: IJson<string>) {
-    return responseTexxt(message, headers, 404);
+    return responseText(message, headers, 404);
 }
 
-function responseTexxt (str: string, headers: IJson<string> = {}, statusCode = 200) {
+function responseText (str: string, headers: IJson<string> = {}, statusCode = 200) {
     return responseData({
         data: str,
         statusCode,
@@ -43,10 +43,13 @@ function responseData ({
     data = '',
     statusCode = 200,
     headers = { 'Content-Type': 'application/json;charset=UTF-8' },
-    success = true,
+    success,
 }: ISenerResponse): ISenerResponse {
     if (!headers['Content-Type']) {
         headers['Content-Type'] = 'application/json;charset=UTF-8';
+    }
+    if (typeof success === 'undefined') {
+        success = (statusCode < 400 && statusCode >= 200);
     }
     return {
         data, statusCode, headers, success
@@ -59,7 +62,7 @@ export function createSenerHelper (headers: IJson<string>, mr: (key?: string)=>v
     const sendHelper: IHelperFunc = {
         response404: (msg, header = {}) => (mr(), response404(msg, mergeHeaders(header))),
         responseJson: (data, statusCode = 200, header = {}) => (mr(), responseData({ data, statusCode, headers: mergeHeaders(header) })),
-        responseTexxt: (msg, statusCode, header = {}) => (mr(), responseTexxt(msg, mergeHeaders(header), statusCode)),
+        responseText: (msg, statusCode, header = {}) => (mr(), responseText(msg, mergeHeaders(header), statusCode)),
         responseHtml: (html, header = {}) => (mr(), responseHtml(html, mergeHeaders(header))),
         responseData: (data: ISenerResponse) => (mr(), responseData({ ...data, headers: mergeHeaders(data.headers) })),
         markReturned: () => {mr('returned');}

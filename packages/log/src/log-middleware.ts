@@ -14,7 +14,7 @@ export class Log extends MiddleWare {
         super();
         this.loggerOptions = options;
     }
-    enter (req: ISenerContext): IPromiseMayBe<IHookReturn> {
+    request (req: ISenerContext): IPromiseMayBe<IHookReturn> {
         // console.log(req.request.headers, req.request.headers.origin);
         const headers = req.request.headers;
 

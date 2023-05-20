@@ -141,7 +141,7 @@ export class Cookie extends MiddleWare {
         this._options = options;
     }
 
-    enter (data: ISenerContext): IPromiseMayBe<IHookReturn> {
+    request (data: ISenerContext): IPromiseMayBe<IHookReturn> {
         data.cookie = new CookieClient(data.request, data.response, this._options);
     }
 }

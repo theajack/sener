@@ -126,7 +126,7 @@ export class Session extends MiddleWare {
         super();
         SessionClient.init(options);
     }
-    enter (data: ISenerContext): IPromiseMayBe<IHookReturn> {
+    request (data: ISenerContext): IPromiseMayBe<IHookReturn> {
         data.session = new SessionClient(data.cookie);
     }
 }

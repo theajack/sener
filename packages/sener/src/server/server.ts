@@ -96,7 +96,7 @@ export class Server {
                 }
             };
 
-            await applyHook('enter');
+            // await applyHook('enter');
 
             await applyHook('request');
 

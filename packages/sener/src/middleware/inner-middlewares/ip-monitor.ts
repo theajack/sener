@@ -26,7 +26,7 @@ export class IpMonitorClient {
             setInterval(() => {
                 this._store = {};
             }, range * 1000);
-            this.check = ({ip}: ISenerContext) => {
+            this.check = ({ ip }: ISenerContext) => {
                 if (!this._store[ip]) {
                     this._store[ip] = 1;
                 } else {
@@ -48,7 +48,7 @@ export class IpMonitor extends MiddleWare {
     request (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {
         if (!this.client.check(ctx)) {
             const h = this.client.handler;
-            return h ? h(ctx): ctx.send404();
+            return h ? h(ctx) : ctx.response404();
         }
     }
 }

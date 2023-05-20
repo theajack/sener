@@ -95,7 +95,7 @@ export class Router extends MiddleWare {
         return `${(method || 'get').toLocaleLowerCase()}:${url}`;
     }
 
-    enter (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {
+    request (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {
         // console.log('router enter', ctx.url);
         const { url, method, response404 } = ctx;
         const key = this.buildRouteKey(url, method);
@@ -108,15 +108,24 @@ export class Router extends MiddleWare {
         ctx.route = this._createRoute(ctx);
 
         if (!route) {
-            response404(`Page not found: ${url}`);
+            return response404(`Page not found: ${url}`);
+        }
+    }
+    response (res: ISenerContext): IPromiseMayBe<IHookReturn> {
+        // console.log('router response', res.url);
+        const key = this.buildRouteKey(res.url, res.method);
+        // console.log('on response', key);
+        const route = this.routers[key];
+        if (route) {
+            res.route = this._createRoute(res);
+            return route.handler(res);
         }
     }
 
     private _route (url: string, data = {}, res: ISenerContext, map = this.routers) {
         const route = map[this.fillUrl(url)];
         if (!route) {
-            res.response404(`Route Dismiss: ${url}`);
-            return;
+            return res.response404(`Route Dismiss: ${url}`);
         }
         return route.handler(Object.assign({}, res, data));
     }

@@ -53,6 +53,8 @@ type IHeaderKey = {
 export class Cors extends MiddleWare {
     headers: IHeaderKey;
     acceptOptions = true;
+    acceptResponded = true;
+    acceptReturned = true;
 
     constructor (options: ICorsOptions = {}) {
         super();
@@ -68,12 +70,8 @@ export class Cors extends MiddleWare {
         this.headers = Object.assign({}, DefaultHeaders, headers);
     }
 
-    enter ({ headers }: ISenerContext): IPromiseMayBe<IHookReturn> {
+    request ({ headers }: ISenerContext): IPromiseMayBe<IHookReturn> {
         Object.assign(headers, this.headers);
     }
-
-    // leave ({ headers }: ISenerContext): IPromiseMayBe<IHookReturn | ISenerResponse<any>> {
-    //     // console.log('cors leave', headers, this.headers);
-    // }
 
 }

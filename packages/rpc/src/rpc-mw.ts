@@ -17,7 +17,7 @@ export class RPC extends MiddleWare {
         this.config = config;
         this.rpc = this.create();
     }
-    enter (req: ISenerContext): IPromiseMayBe<IHookReturn> {
+    request (req: ISenerContext): IPromiseMayBe<IHookReturn> {
         req.rpc = this.create(req.logger?.traceid || '');
     }
 
