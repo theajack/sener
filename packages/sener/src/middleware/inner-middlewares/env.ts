@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { MiddleWare, IHookReturn, IPromiseMayBe, IJson, ISenerContext } from 'sener-types';
+import { MiddleWare, IJson, ISenerContext } from 'sener-types';
 // import { IRouter } from './router';
 
 export type IEnvOptions = IJson<((ctx: ISenerContext)=>any)>;
@@ -19,7 +19,7 @@ export class Env extends MiddleWare {
         super();
         this.map = map;
     }
-    request (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {
+    init (ctx: ISenerContext) {
         for (const k in this.map) {
             const v = this.map[k];
             ctx.env[k] = typeof v === 'function' ? v(ctx) : v;

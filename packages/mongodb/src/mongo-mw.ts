@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import {
-    IHookReturn, IJson,
+    IJson,
     ISenerContext,
     MiddleWare
 } from 'sener-types';
@@ -24,22 +24,20 @@ export class Mongo<
         this.acceptResponded = this.acceptReturned = true;
     }
 
-
     helper (): IMongoHelper<Models> {
         return {
             mongo: this.mongo,
             col: (name) => this.mongo.col(name)
         };
     }
-
-    async request ({ meta, url, method }: ISenerContext): Promise<IHookReturn> {
+    async enter ({ meta, url, method }: ISenerContext) {
         console.log('mongo enter', meta?.db, url, method);
         if (meta?.db !== true) return;
         await this.mongo.connect();
         // console.log('mongo connect', method, this.mongo.connected);
     }
 
-    async response ({ meta, url, method }: ISenerContext): Promise<IHookReturn> {
+    async leave ({ meta, url, method }: ISenerContext) {
         console.log('mongo leave', meta?.db, url, method);
         if (meta?.db !== true) return;
         await this.mongo.close();

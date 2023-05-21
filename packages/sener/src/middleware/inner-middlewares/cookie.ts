@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import { IncomingMessage } from 'http';
-import { MiddleWare, IJson, IResponse, IHookReturn, ISenerContext, IPromiseMayBe, pickAttrs, isExpired, countExpire, ICookieOptions } from 'sener-types';
+import { MiddleWare, IJson, IResponse, ISenerContext, pickAttrs, isExpired, countExpire, ICookieOptions } from 'sener-types';
 
 declare module 'sener' {
     interface ISenerHelper {
@@ -141,7 +141,7 @@ export class Cookie extends MiddleWare {
         this._options = options;
     }
 
-    request (data: ISenerContext): IPromiseMayBe<IHookReturn> {
-        data.cookie = new CookieClient(data.request, data.response, this._options);
+    init (ctx: ISenerContext) {
+        ctx.cookie = new CookieClient(ctx.request, ctx.response, this._options);
     }
 }

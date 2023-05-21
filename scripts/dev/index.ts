@@ -8,6 +8,7 @@
 import {
     IMiddleWare, MiddleWare, Sener,
     ISenerContext,
+    Cors,
 } from 'packages/sener';
 import { Json } from 'packages/json';
 import { Static } from 'packages/static';
@@ -16,7 +17,7 @@ import { Log } from 'packages/log/src';
 // console.log('--------', Router);
 
 const testMiddleware: IMiddleWare = {
-    async response (response) {
+    async enter (response) {
         // await delay(1000);
         // console.log('testMiddleware', response.data);
         response.data.middle = 'testMiddleware33211';
@@ -26,7 +27,7 @@ const testMiddleware: IMiddleWare = {
 };
 
 class Test2Middle extends MiddleWare {
-    response (res: ISenerContext) {
+    enter (res: ISenerContext) {
         res.data.middle2 = 'Test2Middle';
     }
 }
@@ -39,6 +40,7 @@ function delay (time = 1000) {
 
 const sener = new Sener({
     middlewares: [
+        new Cors(),
         new Log(),
         new Static(),
         router,

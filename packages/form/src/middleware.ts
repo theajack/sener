@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import {
-    MiddleWare, IHookReturn, ISenerContext, IPromiseMayBe, makedir,
+    MiddleWare, ISenerContext, makedir, IMiddleWareEnterReturn,
 } from 'sener-types';
 import formidable, { errors as formidableErrors } from 'formidable-fix';
 import path from 'path';
@@ -26,9 +26,8 @@ export class Form extends MiddleWare {
         return dir;
     }
 
-    request (req: ISenerContext): IPromiseMayBe<Partial<ISenerContext> | IHookReturn> {
-
-        const { request, requestHeaders, method, responseJson } = req;
+    enter (ctx: ISenerContext): IMiddleWareEnterReturn {
+        const { request, requestHeaders, method, responseJson } = ctx;
 
         if (!requestHeaders['content-type']?.includes('multipart/form-data') || method !== 'POST') return;
         return new Promise(resolve => {
@@ -47,5 +46,4 @@ export class Form extends MiddleWare {
             });
         });
     }
-
 }

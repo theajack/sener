@@ -51,7 +51,13 @@ export type IMiddleWareHook = (
   ctx: ISenerContext
 ) => IPromiseMayBe<IHookReturn>;
 
-export type IMiddleHookNames = 'request'| 'response';
+export type IMiddleHookNames = 'init' | 'enter' | 'leave';
+
+export type IMiddleWareEnterReturn = IPromiseMayBe<IHookReturn>;
+export type IMiddleWareInitReturn = IPromiseMayBe<IHookReturn>;
+
+export type IMiddleWareResponseReturn = IPromiseMayBe<Partial<ISenerResponse>|void>;
+
 
 export interface IMiddleWare {
   dir?: string;
@@ -60,8 +66,9 @@ export interface IMiddleWare {
   acceptResponded?: boolean;
   acceptReturned?: boolean;
   // enter?: IMiddleWareHook;
-  request?: IMiddleWareHook;
-  response?: IMiddleWareHook;
+  init?: (ctx: ISenerContext) => IMiddleWareInitReturn;
+  enter?: (ctx: ISenerContext) => IMiddleWareEnterReturn;
+  leave?: (ctx: ISenerContext) => IPromiseMayBe<void>;
   helper?(): Record<string, any>;
 }
 
@@ -73,10 +80,13 @@ export class MiddleWare implements IMiddleWare {
     acceptReturned: boolean = false;
     // // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     // enter (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
-    request (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
-    response (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
+
+    // eslint-disable-next-line
+    init (ctx: ISenerContext): IMiddleWareInitReturn {};
+    // eslint-disable-next-line
+    enter (ctx: ISenerContext): IMiddleWareEnterReturn {};
+    // eslint-disable-next-line
+    leave (ctx: ISenerContext): IPromiseMayBe<void> {};
     // @ts-ignore
     helper (): Record<string, any>|void {}
 }

@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import path from 'path';
-import { IHookReturn, ISenerContext, MiddleWare } from 'sener-types';
+import { IMiddleWareEnterReturn, ISenerContext, MiddleWare } from 'sener-types';
 import { StaticServer } from './static-server';
 
 export class Static extends MiddleWare {
@@ -22,9 +22,10 @@ export class Static extends MiddleWare {
         super();
         this.dir = path.resolve(process.cwd(), dir);
         this.static = new StaticServer(this.dir);
+        this.acceptResponded = true;
     }
 
-    request (ctx: ISenerContext): Promise<IHookReturn> {
+    enter (ctx: ISenerContext): IMiddleWareEnterReturn {
         return new Promise(resolve => {
             this.static.serve(ctx.request, ctx.response).once('success', () => {
                 ctx.markReturned();
@@ -43,6 +44,4 @@ export class Static extends MiddleWare {
             });
         });
     }
-
-
 }

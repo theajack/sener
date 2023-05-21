@@ -6,6 +6,7 @@
 import {
     MiddleWare, IPromiseMayBe, IHookReturn, IJson,
     ISenerContext,
+    IMiddleWareEnterReturn,
 } from 'sener-types';
 
 export type IRouter = IJson<IRouterHandler|IRouterHandlerData>;
@@ -94,32 +95,31 @@ export class Router extends MiddleWare {
         if (!url.endsWith('/')) url = `${url}/`;
         return `${(method || 'get').toLocaleLowerCase()}:${url}`;
     }
-
-    request (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {
+    init (ctx: ISenerContext) {
         // console.log('router enter', ctx.url);
-        const { url, method, response404 } = ctx;
-        const key = this.buildRouteKey(url, method);
-        const route = this.routers[key];
+        const route = this.getRoute(ctx);
         // console.log('router enter', url, method, route?.meta);
         ctx.meta = route?.meta || {};
         // console.log('router enter', ctx.meta);
         let index = 0; // 路由中加入一个自增index，可以用于生成错误码 id等
         ctx.index = () => index++;
         ctx.route = this._createRoute(ctx);
+    }
 
+    enter (ctx: ISenerContext): IMiddleWareEnterReturn {
+        const { url, response404 } = ctx;
+        const route = this.getRoute(ctx);
         if (!route) {
             return response404(`Page not found: ${url}`);
+        } else {
+            return route.handler(ctx);
         }
     }
-    response (res: ISenerContext): IPromiseMayBe<IHookReturn> {
-        // console.log('router response', res.url);
-        const key = this.buildRouteKey(res.url, res.method);
-        // console.log('on response', key);
-        const route = this.routers[key];
-        if (route) {
-            res.route = this._createRoute(res);
-            return route.handler(res);
-        }
+
+    private getRoute (ctx: ISenerContext) {
+        const { url, method } = ctx;
+        const key = this.buildRouteKey(url, method);
+        return this.routers[key];
     }
 
     private _route (url: string, data = {}, res: ISenerContext, map = this.routers) {

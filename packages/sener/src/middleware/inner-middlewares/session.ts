@@ -5,8 +5,7 @@
  */
 import path from 'path';
 import {
-    MiddleWare, IHookReturn, ISenerContext, IPromiseMayBe,
-    buildSenerDir, makedir, uuid, md5, pickAttrs, isExpired, countExpire,
+    MiddleWare,  ISenerContext, buildSenerDir, makedir, uuid, md5, pickAttrs, isExpired, countExpire,
     strToTime, dateToString, removeDir, now, pureWriteFile, readFile, makeFileDir,
 } from 'sener-types';
 import { CookieClient } from './cookie';
@@ -126,7 +125,7 @@ export class Session extends MiddleWare {
         super();
         SessionClient.init(options);
     }
-    request (data: ISenerContext): IPromiseMayBe<IHookReturn> {
-        data.session = new SessionClient(data.cookie);
+    init (ctx: ISenerContext) {
+        ctx.session = new SessionClient(ctx.cookie);
     }
 }

@@ -33,7 +33,7 @@ export interface IHttpInfo {
 }
 
 export interface ISenerOptions extends IServerOptions {
-    middlewares?: (IMiddleWare|MiddleWare|null)[];
+    middlewares?: (IMiddleWare|MiddleWare|null|undefined)[];
     cookieOptions?: ICookieOptions;
 }
 

@@ -7,12 +7,13 @@ import {
     ISenerContext,
     IMiddleWare,
     IMiddleHookNames,
+    MiddleWare,
 } from 'sener-types';
 
 export class MiddleWareManager {
-    middlewares: IMiddleWare[] = [];
+    middlewares: (IMiddleWare|MiddleWare)[] = [];
 
-    use (middleware: IMiddleWare) {
+    use (middleware: IMiddleWare|MiddleWare) {
         if (this.middlewares.includes(middleware)) {
             return console.log(`middleware ${middleware.name} is used`);
         }
@@ -26,19 +27,23 @@ export class MiddleWareManager {
         }
     }
 
-    async request (ctx: ISenerContext) {
-        if (ctx.returned) return;
+    async init (ctx: ISenerContext) {
         for (const middleware of this.middlewares) {
-            await this.onSingeHook(middleware, 'request', ctx);
+            await this.onSingeHook(middleware, 'init', ctx);
         }
     }
 
-    // 洋葱模型 request => response为倒序
-    async response (ctx: ISenerContext) {
-        if (ctx.returned) return;
+    async enter (ctx: ISenerContext) {
+        for (const middleware of this.middlewares) {
+            await this.onSingeHook(middleware, 'enter', ctx);
+        }
+    }
+
+    // 洋葱模型 enter => leave 为倒序
+    async leave (ctx: ISenerContext) {
         const ms = this.middlewares;
         for (let i = ms.length - 1; i >= 0; i--) {
-            await this.onSingeHook(ms[i], 'response', ctx);
+            await this.onSingeHook(ms[i], 'leave', ctx);
         }
     }
 
@@ -49,7 +54,7 @@ export class MiddleWareManager {
     //     }
     // }
 
-    private async onSingeHook (middleware: IMiddleWare, name: IMiddleHookNames, ctx: ISenerContext) {
+    private async onSingeHook (middleware: IMiddleWare|MiddleWare, name: IMiddleHookNames, ctx: ISenerContext) {
         if (!middleware[name]) return;
         if (
             (ctx.isOptions && !middleware.acceptOptions) ||

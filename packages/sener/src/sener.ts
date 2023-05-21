@@ -3,7 +3,7 @@
  * @Date: 2023-02-18 15:28:21
  * @Description: Coding something
  */
-import { IMiddleWare, ISenerOptions, senerBaseDir } from 'sener-types';
+import { IMiddleWare, ISenerOptions, MiddleWare, senerBaseDir } from 'sener-types';
 import { Server } from './server/server';
 
 
@@ -49,7 +49,7 @@ export class Sener {
         );
     }
 
-    use (...middlewares: (IMiddleWare|null|undefined)[]) {
+    use (...middlewares: (MiddleWare|IMiddleWare|null|undefined)[]) {
         for (const middleware of middlewares) {
             if (!middleware) continue;
             this.server.middleware.use(middleware);

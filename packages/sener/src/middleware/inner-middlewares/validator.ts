@@ -4,9 +4,7 @@
  * @Description: Coding something
  */
 import {
-    MiddleWare, IPromiseMayBe, IHookReturn,
-    ISenerContext,
-    IJson,
+    MiddleWare, ISenerContext, IJson,
 } from 'sener-types';
 
 // todo 增加内置正则和过滤器
@@ -90,7 +88,7 @@ export class Validator extends MiddleWare {
         return result;
     }
 
-    request (res: ISenerContext): IPromiseMayBe<IHookReturn> {
+    init (res: ISenerContext) {
         const { query, body } = res;
         // console.log('validator enter', query, body);
         res.vquery = (template: IValidTemplate) => {

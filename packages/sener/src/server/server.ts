@@ -5,7 +5,7 @@
  */
 import http from 'http';
 import { MiddleWareManager } from '../middleware/middleware-manager';
-import { IMiddleWare, ISenerContext, IOnError, ISenerResponse, IMiddleHookNames } from 'sener-types';
+import { IMiddleWare, ISenerContext, IOnError, ISenerResponse, IMiddleHookNames, MiddleWare } from 'sener-types';
 import {
     IJson, IServerOptions, IErrorFrom, IResponse
 } from 'sener-types';
@@ -34,7 +34,7 @@ export class Server {
         this.initServer();
     }
 
-    injectMiddleWare (middleware: IMiddleWare) {
+    injectMiddleWare (middleware: IMiddleWare|MiddleWare) {
         if (middleware.helper)
             this.helper = Object.assign(this.helper, middleware.helper());
     }
@@ -73,7 +73,7 @@ export class Server {
             } as any; // ! build 报错
 
             const assignContext = (ctx: Partial<ISenerContext>|any) => {
-                if (typeof ctx === 'object')
+                if (ctx && typeof ctx === 'object')
                     Object.assign(context, ctx);
             };
 
@@ -90,25 +90,25 @@ export class Server {
 
             const applyHook = async (name: IMiddleHookNames) => {
                 try {
-                    await this.middleware[name](context);
+                    assignContext(await this.middleware[name](context));
                 } catch (err) {
                     assignContext(await this.onError(err, name, context));
                 }
             };
+            await applyHook('init');
 
-            // await applyHook('enter');
+            await applyHook('enter');
 
-            await applyHook('request');
+            if (!context.returned) {
+                const { data, statusCode, headers: HEADERS } = context;
+                this.sendData(response, {
+                    data,
+                    statusCode,
+                    headers: HEADERS
+                });
+            }
 
-            await applyHook('response');
-
-            const { data, statusCode, headers: HEADERS } = context;
-            // console.log('response senddata', HEADERS);
-            this.sendData(response, {
-                data,
-                statusCode,
-                headers: HEADERS
-            });
+            await applyHook('leave');
         }).listen(this.port, '0.0.0.0');
     }
 
@@ -116,10 +116,11 @@ export class Server {
     private sendData (response: IResponse, {
         data = '',
         statusCode = 200,
-        headers = { 'Content-Type': 'application/json;charset=UTF-8' },
+        headers = {},
     }: ISenerResponse): void {
         // console.log('sendData', data, headers);
         if (statusCode === -1) statusCode = 200;
+        if (!headers['Content-Type']) headers['Content-Type'] = 'application/json;charset=UTF-8';
         try {
             for (const k in headers) {
                 response.setHeader(k, headers[k]);

@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { IJson, MiddleWare, IHookReturn, ISenerContext, IPromiseMayBe } from 'sener-types';
+import { IJson, MiddleWare, ISenerContext } from 'sener-types';
 import { Request } from './request';
 
 type IOptions = IJson<string> | ((traceid:string) => IJson<Request|any>);
@@ -17,7 +17,7 @@ export class RPC extends MiddleWare {
         this.config = config;
         this.rpc = this.create();
     }
-    request (req: ISenerContext): IPromiseMayBe<IHookReturn> {
+    init (req: ISenerContext) {
         req.rpc = this.create(req.logger?.traceid || '');
     }
 

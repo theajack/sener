@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { IHookReturn, ISenerContext, ISenerResponse, IPromiseMayBe, MiddleWare } from 'sener-types';
+import { ISenerContext, MiddleWare } from 'sener-types';
 import { ILoggerOptions, Logger } from './logger';
 import { IBaseInfo } from './type';
 
@@ -14,9 +14,9 @@ export class Log extends MiddleWare {
         super();
         this.loggerOptions = options;
     }
-    request (req: ISenerContext): IPromiseMayBe<IHookReturn> {
+    init (ctx: ISenerContext) {
         // console.log(req.request.headers, req.request.headers.origin);
-        const headers = req.request.headers;
+        const headers = ctx.request.headers;
 
         // console.log('headers.referer', headers);
 
@@ -29,10 +29,7 @@ export class Log extends MiddleWare {
         const tid = headers['x-trace-id']; // 请求的traceid
         if (tid) baseInfo.traceid = tid as string;
 
-        req.logger = new Logger(this.loggerOptions, baseInfo);
-    }
-
-    response ({ headers, logger }: ISenerContext): IPromiseMayBe<IHookReturn | ISenerResponse<any>> {
-        headers['x-trace-id'] = logger.traceid;
+        ctx.logger = new Logger(this.loggerOptions, baseInfo);
+        ctx.headers['x-trace-id'] = ctx.logger.traceid;
     }
 }
