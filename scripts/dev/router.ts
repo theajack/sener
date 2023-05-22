@@ -124,4 +124,11 @@ export const router = new Router({
         save();
         return { data: body };
     },
+    '/testconfig': ({ config }) => {
+        console.log(config.level);
+        config.level ++;
+        console.log(config.age);
+        config.age ++;
+        return { data: { level: config.level, age: config.age } };
+    }
 });

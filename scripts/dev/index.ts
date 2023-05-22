@@ -14,6 +14,7 @@ import { Json } from 'packages/json';
 import { Static } from 'packages/static';
 import { router } from './router';
 import { Log } from 'packages/log/src';
+import { Config } from 'packages/config/src';
 // console.log('--------', Router);
 
 const testMiddleware: IMiddleWare = {
@@ -46,6 +47,22 @@ const sener = new Sener({
         router,
         testMiddleware,
         // new Test2Middle(),
+        new Config({
+            initial: [ {
+                filename: 'json',
+                data: {
+                    level: 1,
+                }
+            }, {
+                filename: 'user',
+                data: {
+                    age: 12
+                }
+            } ],
+            onchange: (({ key, value, prev }) => {
+                console.log('onConfigChange', key, value, prev);
+            })
+        }),
         new Json(),
     ]
 });

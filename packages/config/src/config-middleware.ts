@@ -4,21 +4,15 @@
  * @Description: Coding something
  */
 
-import { IS_DEV, MiddleWare } from 'sener-types';
-import { ConfigBase } from './config';
+import { MiddleWare } from 'sener-types';
+import { ConfigBase, IConfigOptions } from './config';
 import { IConfigChange, IConfigHelper } from './extend';
 
 export class Config extends MiddleWare {
 
-    constructor ({
-        dir = '', file = 'default', format = IS_DEV,
-    }: {dir?: string, file?: string|string[], format?: boolean} = {}) {
+    constructor (options: IConfigOptions = {}) {
         super();
-        this.config = new ConfigBase({
-            dir,
-            files: typeof file === 'string' ? [ file ] : file,
-            format,
-        });
+        this.config = new ConfigBase(options);
     }
 
     private config: ConfigBase;
@@ -27,7 +21,7 @@ export class Config extends MiddleWare {
         return this.config.dataProxy;
     }
     onConfigChange (callback: IConfigChange) {
-        this.config.event.on('change', callback);
+        this.config.onConfigChange(callback);
     }
 
     writeConfig (key: string, v: any): boolean {

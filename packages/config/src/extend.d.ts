@@ -5,10 +5,7 @@
  */
 import { IJson } from 'sener-types';
 
-export type IConfig = IJson<{
-  <T=any>(): T;
-  <T=any>(value: T): void;
-}>
+export type IConfig = IJson<any>;
 
 export type IConfigChange = (data:{
   key: string, value: any, prev: any
