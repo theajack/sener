@@ -7,19 +7,21 @@
 import { MiddleWare } from 'sener-types';
 import { ConfigBase, IConfigOptions } from './config';
 import { IConfigChange, IConfigHelper } from './extend';
+import { IConfigData } from 'sener';
 
-export class Config extends MiddleWare {
+export class Config<T = IConfigData> extends MiddleWare {
 
     constructor (options: IConfigOptions = {}) {
         super();
-        this.config = new ConfigBase(options);
+        this.config = new ConfigBase<T>(options);
     }
 
-    private config: ConfigBase;
+    private config: ConfigBase<T>;
 
     get data () {
         return this.config.dataProxy;
     }
+
     onConfigChange (callback: IConfigChange) {
         this.config.onConfigChange(callback);
     }
@@ -31,10 +33,6 @@ export class Config extends MiddleWare {
     helper (): IConfigHelper {
         return {
             config: this.config.dataProxy,
-            writeConfig: (key, v) => this.writeConfig(key, v),
-            onConfigChange: (callback) => {
-                this.onConfigChange(callback);
-            }
         };
     }
 }

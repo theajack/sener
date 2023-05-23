@@ -10,9 +10,11 @@ import { IBaseInfo } from './type';
 
 export class Log extends MiddleWare {
     loggerOptions: ILoggerOptions;
+    logger: Logger;
     constructor (options: ILoggerOptions = {}) {
         super();
         this.loggerOptions = options;
+        this.logger = new Logger(options);
     }
     init (ctx: ISenerContext) {
         // console.log(req.request.headers, req.request.headers.origin);
@@ -27,9 +29,15 @@ export class Log extends MiddleWare {
         };
 
         const tid = headers['x-trace-id']; // 请求的traceid
-        if (tid) baseInfo.traceid = tid as string;
+        if (tid) {
+            baseInfo.traceid = tid as string;
+            this.logger.refreshDurationStart();
+        } else {
+            this.logger.refreshTraceId();
+        }
 
-        ctx.logger = new Logger(this.loggerOptions, baseInfo);
-        ctx.headers['x-trace-id'] = ctx.logger.traceid;
+        this.logger.setBaseInfo(baseInfo);
+        ctx.logger = this.logger;
+        ctx.headers['x-trace-id'] = this.logger.traceid;
     }
 }

@@ -21,13 +21,13 @@ export interface IConfigOptions {
     onchange?: IConfigChange;
 }
 
-export class ConfigBase {
+export class ConfigBase<T = IJson<any>> {
     data: IJson<any> = {};
     baseDir = '';
 
     event: Event;
 
-    dataProxy: IConfig = {};
+    dataProxy: IConfig<T>;
 
     fileMap: IJson<string> = {};
 
@@ -36,6 +36,9 @@ export class ConfigBase {
     constructor ({
         dir = '', format = true, initial = [ { filename: '_default', data: {} } ], onchange
     }: IConfigOptions) {
+
+        // @ts-ignore
+        this.dataProxy = { $onChange: (callback) => {this.onConfigChange(callback);} };
 
         this.format = format;
         this.event = new Event();
@@ -55,7 +58,6 @@ export class ConfigBase {
     }
 
     private initFiles (initial: IInitialConfigData[]) {
-
 
         initial.forEach(({ filename, data }) => {
 
@@ -121,6 +123,7 @@ export class ConfigBase {
         }
         return changed;
     }
+
     private readConfigFile (file: string, initialData: any = null) {
         const filePath = this.fileNameToPath(file);
 

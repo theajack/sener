@@ -9,12 +9,14 @@ import { IBaseInfo, IMessageData, TLogType } from './type';
 import { Saver } from './saver';
 import { dataToLogString } from './log-utils';
 import { TLog } from './t-log';
+import { IJson } from 'sener-types';
 
 export interface ILoggerOptions {
     dir?: string;
     useConsole?: boolean;
     maxRecords?: number;
     level?: (()=>number)|number;
+    interval?: number;
 }
 
 export class Logger {
@@ -29,12 +31,33 @@ export class Logger {
         useConsole = false,
         maxRecords,
         level = -1,
-    }: ILoggerOptions, baseInfo?: Partial<IBaseInfo>) {
+        interval,
+    }: ILoggerOptions, baseInfo?: Partial<IBaseInfo> & IJson) {
         if (!Logger.saver) {
-            Logger.saver = new Saver({ dir, maxRecords, level });
+            Logger.saver = new Saver({ dir, maxRecords, level, interval });
         }
         this.useConsole = useConsole;
         this.base = new BaseInfo(baseInfo);
+    }
+
+    setBaseInfo (data: Partial<IBaseInfo> & IJson) {
+        this.base.injectBaseInfo(data);
+    }
+
+    setLogLevel (l: number) {
+        Logger.saver.level = () => l;
+    }
+
+    save () {
+        Logger.saver.save();
+    }
+
+    newLogFile () {
+        Logger.saver.refreshFileName();
+    }
+
+    count () {
+        return Logger.saver.countLines();
     }
 
     get traceid () {

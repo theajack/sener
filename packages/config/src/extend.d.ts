@@ -5,20 +5,24 @@
  */
 import { IJson } from 'sener-types';
 
-export type IConfig = IJson<any>;
+export type IConfig<T = IJson<any>> = {
+  $onChange(callback: IConfigChange): void
+} & T;
 
 export type IConfigChange = (data:{
   key: string, value: any, prev: any
 }) => void;
 
-export interface IConfigHelper {
-  config: IConfig;
-  writeConfig(key: string, v: any): boolean
-  onConfigChange(callback: IConfigChange): void;
+export interface IConfigHelper<T = IJson<any>> {
+  config: IConfig<T>;
 }
 
 declare module 'sener' {
-  interface ISenerHelper extends IConfigHelper {
+
+  interface IConfigData extends IJson {
+
+  }
+  interface ISenerHelper extends IConfigHelper<IConfigData> {
 
   }
 }
