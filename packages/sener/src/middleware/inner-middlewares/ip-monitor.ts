@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { MiddleWare, IHookReturn, IJson, ISenerContext, IMiddleWareEnterReturn } from 'sener-types';
+import { MiddleWare, IHookReturn, IJson, ISenerContext, IHookReturn } from 'sener-types';
 
 export interface IIpMonitorOptions {
     range?: number;
@@ -45,7 +45,7 @@ export class IpMonitor extends MiddleWare {
         this.client = new IpMonitorClient(options);
     }
 
-    enter (ctx: ISenerContext): IMiddleWareEnterReturn {
+    enter (ctx: ISenerContext): IHookReturn {
         if (!this.client.check(ctx)) {
             const h = this.client.handler;
             return h ? h(ctx) : ctx.response404();

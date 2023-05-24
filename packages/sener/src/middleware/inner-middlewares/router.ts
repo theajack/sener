@@ -6,7 +6,6 @@
 import {
     MiddleWare, IPromiseMayBe, IHookReturn, IJson,
     ISenerContext,
-    IMiddleWareEnterReturn,
 } from 'sener-types';
 
 export type IRouter = IJson<IRouterHandler|IRouterHandlerData>;
@@ -106,7 +105,7 @@ export class Router extends MiddleWare {
         ctx.route = this._createRoute(ctx);
     }
 
-    enter (ctx: ISenerContext): IMiddleWareEnterReturn {
+    enter (ctx: ISenerContext): IHookReturn {
         const { url, response404 } = ctx;
         const route = this.getRoute(ctx);
         if (!route) {

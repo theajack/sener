@@ -90,7 +90,7 @@ export class Server {
 
             const applyHook = async (name: IMiddleHookNames) => {
                 try {
-                    assignContext(await this.middleware[name](context));
+                    await this.middleware[name](context);
                 } catch (err) {
                     assignContext(await this.onError(err, name, context));
                 }

@@ -69,7 +69,7 @@ export class Cors extends MiddleWare {
     }
 
     init ({ headers }: ISenerContext): IPromiseMayBe<IHookReturn> {
-        console.log('cors init', this.headers);
+        // console.log('cors init', this.headers);
         Object.assign(headers, this.headers);
     }
 

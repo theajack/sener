@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import {
-    MiddleWare, ISenerContext, makedir, IMiddleWareEnterReturn,
+    MiddleWare, ISenerContext, makedir, IHookReturn,
 } from 'sener-types';
 import formidable, { errors as formidableErrors } from 'formidable-fix';
 import path from 'path';
@@ -26,7 +26,8 @@ export class Form extends MiddleWare {
         return dir;
     }
 
-    enter (ctx: ISenerContext): IMiddleWareEnterReturn {
+    init (ctx: ISenerContext): IHookReturn {
+        console.log('Form enter', ctx.requestHeaders['content-type']);
         const { request, requestHeaders, method, responseJson } = ctx;
 
         if (!requestHeaders['content-type']?.includes('multipart/form-data') || method !== 'POST') return;
@@ -34,6 +35,7 @@ export class Form extends MiddleWare {
             const dir = this.getUploadDir();
             const form = formidable({ uploadDir: dir });
             form.parse(request, (err, formData, files) => {
+                console.log('Form parsed:', dir, formData, files);
                 if (err) {
                     // example to check for a very specific error
                     const data = (err.code === formidableErrors.maxFieldsExceeded) ?

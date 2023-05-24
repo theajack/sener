@@ -16,12 +16,12 @@ export type IResponse = ServerResponse & {
 }
 
 export interface IHelperFunc {
-  response404: (errorMessage?: string, header?: IJson<string>) => ISenerResponse;
-  responseJson: (data: IJson, statusCode?: number, header?: IJson<string>) => ISenerResponse;
-  responseText: (text: string, statusCode?: number, header?: IJson<string>) => ISenerResponse;
-  responseHtml: (html: string, header?: IJson<string>) => ISenerResponse;
-  responseData: (data: Partial<ISenerResponse>) => ISenerResponse;
-  markReturned: () => void;
+  response404: (errorMessage?: string, header?: IJson<string>) => ISenerResponse; // 构造404响应
+  responseJson: (data: IJson, statusCode?: number, header?: IJson<string>) => ISenerResponse; // 构造json响应
+  responseText: (text: string, statusCode?: number, header?: IJson<string>) => ISenerResponse; // 构造文本响应
+  responseHtml: (html: string, header?: IJson<string>) => ISenerResponse; // 构造html响应
+  responseData: (data: Partial<ISenerResponse>) => ISenerResponse; // 构造通用响应
+  markReturned: () => void; // 标记为已提前返回响应
 }
 
 export interface IMiddleWareDataBase extends IHttpInfo, ISenerHelper, IHelperFunc {
@@ -53,9 +53,6 @@ export type IMiddleWareHook = (
 
 export type IMiddleHookNames = 'init' | 'enter' | 'leave';
 
-export type IMiddleWareEnterReturn = IPromiseMayBe<IHookReturn>;
-export type IMiddleWareInitReturn = IPromiseMayBe<IHookReturn>;
-
 export type IMiddleWareResponseReturn = IPromiseMayBe<Partial<ISenerResponse>|void>;
 
 
@@ -66,8 +63,8 @@ export interface IMiddleWare {
   acceptResponded?: boolean;
   acceptReturned?: boolean;
   // enter?: IMiddleWareHook;
-  init?: (ctx: ISenerContext) => IMiddleWareInitReturn;
-  enter?: (ctx: ISenerContext) => IMiddleWareEnterReturn;
+  init?: IMiddleWareHook;
+  enter?: IMiddleWareHook;
   leave?: (ctx: ISenerContext) => IPromiseMayBe<void>;
   helper?(): Record<string, any>;
 }
@@ -82,9 +79,9 @@ export class MiddleWare implements IMiddleWare {
     // enter (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
 
     // eslint-disable-next-line
-    init (ctx: ISenerContext): IMiddleWareInitReturn {};
+    init (ctx: ISenerContext): IHookReturn {};
     // eslint-disable-next-line
-    enter (ctx: ISenerContext): IMiddleWareEnterReturn {};
+    enter (ctx: ISenerContext): IHookReturn {};
     // eslint-disable-next-line
     leave (ctx: ISenerContext): IPromiseMayBe<void> {};
     // @ts-ignore

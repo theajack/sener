@@ -46,14 +46,7 @@ export class MiddleWareManager {
             await this.onSingeHook(ms[i], 'leave', ctx);
         }
     }
-
-    // async enter (ctx: ISenerContext) {
-    //     if (ctx.returned) return;
-    //     for (const middleware of this.middlewares) {
-    //         await this.onSingeHook(middleware, 'enter', ctx);
-    //     }
-    // }
-
+    
     private async onSingeHook (middleware: IMiddleWare|MiddleWare, name: IMiddleHookNames, ctx: ISenerContext) {
         if (!middleware[name]) return;
         if (

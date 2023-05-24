@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import path from 'path';
-import { IMiddleWareEnterReturn, ISenerContext, MiddleWare } from 'sener-types';
+import { IHookReturn, ISenerContext, MiddleWare } from 'sener-types';
 import { StaticServer } from './static-server';
 
 export class Static extends MiddleWare {
@@ -25,7 +25,7 @@ export class Static extends MiddleWare {
         this.acceptResponded = true;
     }
 
-    enter (ctx: ISenerContext): IMiddleWareEnterReturn {
+    enter (ctx: ISenerContext): IHookReturn {
         return new Promise(resolve => {
             this.static.serve(ctx.request, ctx.response).once('success', () => {
                 ctx.markReturned();
