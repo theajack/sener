@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-node-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: Npm Install pnpm
-        run: npm install -g pnpm
+        run: npm install -g pnpm@7.9.3
 
       - name: pnpm Install
         run: pnpm i --no-frozen-lockfile
