@@ -1,6 +1,6 @@
 {
     "name": "sener",
-    "version": "0.0.14",
+    "version": "0.0.15",
     "description": "Easy-to-use And Powerful nodejs http server",
     "main": "dist/sener.cjs.js",
     "typings": "dist/sener.d.ts",
@@ -11,7 +11,7 @@
     },
     "license": "MIT",
     "dependencies": {
-        "sener-types": "^0.0.14",
+        "sener-types": "^0.0.15",
         "undefined": "^0.1.0"
     },
     "publishConfig": {

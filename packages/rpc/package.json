@@ -1,11 +1,11 @@
 {
     "name": "sener-rpc",
-    "version": "0.0.14",
+    "version": "0.0.15",
     "scripts": {
         "build": "node ../../scripts/build/build.js rpc"
     },
     "dependencies": {
-        "sener-types": "^0.0.14"
+        "sener-types": "^0.0.15"
     },
     "main": "dist/sener-rpc.cjs.js",
     "typings": "dist/sener-rpc.d.ts",

@@ -1,6 +1,6 @@
 {
     "name": "sener-types",
-    "version": "0.0.14",
+    "version": "0.0.15",
     "description": "Easy-to-use And Powerful nodejs http server",
     "main": "dist/sener-types.cjs.js",
     "typings": "dist/sener-types.d.ts",
