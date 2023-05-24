@@ -10,6 +10,7 @@
 3. bugfix
 4. 调整hook逻辑
 5. 优化声明
+6. 优化 config 中间件 config使用逻辑
 
 ## 0.0.14
 

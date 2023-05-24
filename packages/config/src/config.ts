@@ -4,33 +4,41 @@
  * @Description: Coding something
  */
 
-import { buildSenerDir, formatJson, IJson, makedir, parseJson } from 'sener-types';
+import { buildSenerDir, deepAssign, formatJson, IJson, makedir, parseJson } from 'sener-types';
 import path from 'path';
 import fs from 'fs';
-import { IConfig } from './extend';
+import { IConfig, IConfigChange } from './extend';
 import Event from 'events';
 
+export interface IInitialConfigData {
+    filename: string;
+    data: Record<string, any>;
+}
+export interface IConfigOptions {
+    dir?: string,
+    format?: boolean,
+    initial?: IInitialConfigData[],
+    onchange?: IConfigChange;
+}
 
-export class ConfigBase {
+export class ConfigBase<T = IJson<any>> {
     data: IJson<any> = {};
     baseDir = '';
 
     event: Event;
 
-    dataProxy: IConfig = {};
+    dataProxy: IConfig<T>;
 
-    fileMap: string | IJson<string> = '';
-
-    get isSingle () {
-        return typeof this.fileMap === 'string';
-    }
+    fileMap: IJson<string> = {};
 
     format = false;
 
     constructor ({
-        dir, files, format
-    }: {dir: string, files: string[], format: boolean}) {
+        dir = '', format = true, initial = [ { filename: '_default', data: {} } ], onchange
+    }: IConfigOptions) {
 
+        // @ts-ignore
+        this.dataProxy = { $onChange: (callback) => {this.onConfigChange(callback);} };
 
         this.format = format;
         this.event = new Event();
@@ -38,13 +46,10 @@ export class ConfigBase {
 
         makedir(this.baseDir);
 
-        const defaultFile = this.fileNameToPath('default');
-
-        if (!fs.existsSync(defaultFile)) {
-            fs.writeFileSync(defaultFile, '{}', 'utf-8');
+        this.initFiles(initial);
+        if (onchange) {
+            this.onConfigChange(onchange);
         }
-
-        this.initFiles(files);
     }
 
     private fileNameToPath (file: string) {
@@ -52,40 +57,47 @@ export class ConfigBase {
         return path.join(this.baseDir, file + '.json');
     }
 
-    private initFiles (files: string[]) {
+    private initFiles (initial: IInitialConfigData[]) {
 
-        this.fileMap = files.length === 1 ? files[0] : {};
+        initial.forEach(({ filename, data }) => {
 
-        files.forEach(file => {
+            const json = this.readConfigFile(filename, data);
 
-            const json = this.readConfigFile(file, true);
 
-            if (!json) {throw new Error(`Invalid JSON File ${file}`);}
+            if (!json) {throw new Error(`Invalid JSON File ${filename}`);}
 
             const keys = Object.keys(json);
 
+            const properties: IJson = {};
             for (const key of keys) {
                 if (key in this.data) {
-                    throw new Error(`JSON 中不允许存在重名的配置名: ${file}.json key=${key}`);
+                    throw new Error(`JSON 中不允许存在重名的配置名: ${filename}.json key=${key}`);
                 }
-                if (!this.isSingle) (this.fileMap as any)[key] = file;
+                this.fileMap[key] = filename;
                 this.data[key] = json[key];
-                this.dataProxy[key] = (v?: any) => {
-                    if (typeof v === 'undefined') {
+                properties[key] = {
+                    get: () => {
                         return this.data[key];
+                    },
+                    set: (v: any) => {
+                        this.writeConfig(key, v);
                     }
-                    this.writeConfig(key, v);
                 };
             }
+            Object.defineProperties(this.dataProxy, properties as any);
             // console.log(this.fileNameToPath(file));
-            watchFileChange(this.fileNameToPath(file), () => {
+            watchFileChange(this.fileNameToPath(filename), () => {
                 // console.log('watchFileChange');
-                const json = this.readConfigFile(file);
+                const json = this.readConfigFile(filename);
                 for (const key of keys) {
                     this.onNewValue(key, json[key]);
                 }
             });
         });
+    }
+
+    onConfigChange (callback: IConfigChange) {
+        this.event.on('change', callback);
     }
 
     private onNewValue (key: string, nv: any) {
@@ -102,30 +114,35 @@ export class ConfigBase {
         // console.log('writeConfigChanged', changed);
         if (changed) {
             // console.log('this.fileMap = ', this.isSingle, this.fileMap);
-            const file: string = this.isSingle ? this.fileMap : (this.fileMap as any)[key];
+            const file = this.fileMap[key];
             if (typeof file !== 'string') throw new Error(`Can not find config file: key=${key}`);
-            let data: any = null;
-            if (this.isSingle) {
-                data = this.data;
-            } else {
-                data = this.readConfigFile(file);
-                data[key] = v;
-            }
+            const data = this.readConfigFile(file);
+            data[key] = v;
             const str = formatJson(data, this.format);
             fs.writeFileSync(this.fileNameToPath(file), str, 'utf-8');
         }
         return changed;
     }
-    private readConfigFile (file: string, checkExist = false) {
+
+    private readConfigFile (file: string, initialData: any = null) {
         const filePath = this.fileNameToPath(file);
 
-        if (checkExist && !fs.existsSync(filePath)) {
-            throw new Error(`配置文件不存在: ${filePath}`);
+        if (!fs.existsSync(filePath)) {
+            if (!initialData) initialData = {};
+            fs.writeFileSync(filePath, formatJson(initialData, this.format), 'utf-8');
+            return initialData;
         }
 
         const content = fs.readFileSync(filePath, 'utf-8');
         const json = parseJson(content);
         if (!json) {throw new Error(`Invalid JSON File ${file}`);}
+        if (initialData) {
+            deepAssign(json, initialData);
+            const str = formatJson(json, this.format);
+            if (str !== content) {
+                fs.writeFileSync(filePath, formatJson(initialData, this.format), 'utf-8');
+            }
+        }
         return json;
     }
 }

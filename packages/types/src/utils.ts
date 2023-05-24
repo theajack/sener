@@ -203,3 +203,19 @@ export function strToTime (value: string|number) {
 export function countExpire (value: string|number) {
     return now() + strToTime(value);
 }
+
+export function deepAssign (target: any, data: any) {
+    for (const key in data) {
+        const origin = target[key];
+        const d = data[key];
+
+        if (d && origin && typeof origin === 'object' && typeof d === 'object') {
+            target[key] = deepAssign(origin, d);
+        } else {
+            if (typeof origin === 'undefined') {
+                target[key] = d;
+            }
+        }
+    }
+    return target;
+}
