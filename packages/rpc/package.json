@@ -7,8 +7,8 @@
     "dependencies": {
         "sener-types": "^0.0.15"
     },
-    "main": "dist/sener-rpc.cjs.js",
-    "typings": "dist/sener-rpc.d.ts",
+    "main": "src/index.ts",
+    "typings": "src/index.ts",
     "description": "Easy-to-use And Powerful nodejs http server",
     "author": "tackchen <theajack@qq.com>",
     "repository": "git@github.com:theajack/sener.git",
@@ -16,7 +16,7 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "dist/sener-rpc.esm.js",
+    "module": "src/index.ts",
     "unpkg": "dist/web.iife.js",
     "jsdelivr": "dist/web.iife.js"
 }
