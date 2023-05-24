@@ -3,9 +3,11 @@
  * @Date: 2023-02-13 17:02:26
  * @Description: Coding something
 -->
-# [Sener](https://github.com/theajack/sener)
+<p align="center">
+    <img src='https://shiyix.cn/images/sener.png' width='120px'/>
+</p> 
 
-<p align="left">
+<p align="center">
     <a href="https://www.github.com/theajack/sener/stargazers" target="_black">
         <img src="https://img.shields.io/github/stars/theajack/sener?logo=github" alt="stars" />
     </a>
@@ -23,7 +25,7 @@
     </a>
 </p>
 
-<p align="left">
+<p align="center">
     <a href="https://github.com/theajack" target="_black">
         <img src="https://img.shields.io/badge/Author-%20theajack%20-7289da.svg?&logo=github" alt="author" />
     </a>
