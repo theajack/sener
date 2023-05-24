@@ -50,7 +50,7 @@ export class MongoCol<T extends any = IJson> {
     }
 
     // 查
-    find (filter = {}): Promise<T[]> {
+    find (filter: IJson = {}): Promise<T[]> {
         return this.col.find(filter).toArray() as any;
     }
 
@@ -85,7 +85,6 @@ export class MongoCol<T extends any = IJson> {
         };
     }
 
-    // 分片
     async slice ({
         index,
         filter = {},
@@ -103,7 +102,7 @@ export class MongoCol<T extends any = IJson> {
     // this.col.aggregate([{$group : {_id : "$by_user", num_tutorial : {$sum : 1}}}])
 
     // 计数
-    count (filter = {}): Promise<number> {
+    count (filter: IJson = {}): Promise<number> {
         return this.col.countDocuments(filter);
     }
 }
