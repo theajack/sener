@@ -38,9 +38,9 @@
 
 <h3>🚀 Easy-to-use And Powerful nodejs http server</h3>
 
-**[中文](https://github.com/theajack/sener/blob/master/README.cn.md) | [Update log](https://github.com/theajack/sener/blob/master/scripts/version.md) | [Feedback](https://github.com/theajack/sener/issues/new) | [Gitee](https://gitee.com/theajack/sener) | [Message Board](https://theajack.github.io/message-board/?app=sener)**
+**[Document](https://theajack.github.io/sener/) | [中文](https://github.com/theajack/sener/blob/master/README.cn.md) | [Update log](https://github.com/theajack/sener/blob/master/scripts/version.md) | [Feedback](https://github.com/theajack/sener/issues/new) | [Gitee](https://gitee.com/theajack/sener) | [Message Board](https://theajack.github.io/message-board/?app=sener)**
 
-Documentation will continue to be improved
+
 
 ## 1. Features
 

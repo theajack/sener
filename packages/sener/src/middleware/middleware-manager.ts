@@ -46,7 +46,6 @@ export class MiddleWareManager {
             await this.onSingeHook(ms[i], 'leave', ctx);
         }
     }
-    
     private async onSingeHook (middleware: IMiddleWare|MiddleWare, name: IMiddleHookNames, ctx: ISenerContext) {
         if (!middleware[name]) return;
         if (

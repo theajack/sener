@@ -38,9 +38,8 @@
 
 <h3>🚀 简单易用、功能强大、高可扩展的nodejs http服务器</h3>
 
-**[English](https://github.com/theajack/sener) | [更新日志](https://github.com/theajack/cnchar/blob/master/scripts/version.cn.md) | [反馈](https://github.com/theajack/sener/issues/new) | [Gitee](https://gitee.com/theajack/sener) | [留言板](https://theajack.github.io/message-board/?app=sener)**
+**[在线文档](https://theajack.github.io/sener/) | [English](https://github.com/theajack/sener) | [更新日志](https://github.com/theajack/cnchar/blob/master/scripts/version.cn.md) | [反馈](https://github.com/theajack/sener/issues/new) | [Gitee](https://gitee.com/theajack/sener) | [留言板](https://theajack.github.io/message-board/?app=sener)**
 
-文档持续完善中
 
 ## 1. 特性
 

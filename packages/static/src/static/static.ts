@@ -29,11 +29,11 @@ export class Static extends MiddleWare {
         return new Promise(resolve => {
             this.static.serve(ctx.request, ctx.response).once('success', () => {
                 ctx.markReturned();
-                resolve();
+                resolve(void 0);
             }).on('error', data => {
                 if (data.status === 404) {
                     // console.log('static request data', data)
-                    resolve();
+                    resolve(void 0);
                 } else {
                     resolve(ctx.responseData({
                         data: data,

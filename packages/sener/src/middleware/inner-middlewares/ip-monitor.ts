@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { MiddleWare, IHookReturn, IJson, ISenerContext, IHookReturn } from 'sener-types';
+import { MiddleWare, IJson, ISenerContext, IHookReturn } from 'sener-types';
 
 export interface IIpMonitorOptions {
     range?: number;
