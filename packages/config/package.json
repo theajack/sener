@@ -1,14 +1,14 @@
 {
     "name": "sener-config",
-    "version": "0.0.14",
+    "version": "0.0.15",
     "scripts": {
         "build": "node ../../scripts/build/build.js config"
     },
     "dependencies": {
-        "sener-types": "^0.0.14"
+        "sener-types": "^0.0.15"
     },
-    "main": "dist/sener-config.cjs.js",
-    "typings": "dist/sener-config.d.ts",
+    "main": "src/index.ts",
+    "typings": "src/index.ts",
     "description": "Easy-to-use And Powerful nodejs http server",
     "author": "tackchen <theajack@qq.com>",
     "repository": "git@github.com:theajack/sener.git",
@@ -16,5 +16,5 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "dist/sener-config.esm.js"
+    "module": "src/index.ts"
 }
