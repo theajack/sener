@@ -39,6 +39,11 @@ module.exports = {
                     bundleName: 'web.umd.js',
                 }),
                 create({
+                    format: 'esm',
+                    input,
+                    bundleName: 'web.esm.js',
+                }),
+                create({
                     format: 'iife',
                     input,
                     bundleName: 'web.iife.js',

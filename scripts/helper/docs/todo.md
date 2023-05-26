@@ -17,7 +17,8 @@
 - [x] 支持ip频繁访问拦截
 - [x] 支持验证码 svg-captcha https://blog.csdn.net/weixin_43422861/article/details/125387282
 - [x] 验证码存放在md5存放在session里
-- [ ] 私有路由
+- [x] 私有路由
+- [x] sener docs
 - [ ] common service
-- [ ] sener docs
 - [ ] 社区app 基于sener ikun
+- [ ] rpc web esm
