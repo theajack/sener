@@ -51,8 +51,10 @@ type IHeaderKey = {
 }
 
 export class Cors extends MiddleWare {
+    name = 'cors';
     headers: IHeaderKey;
     acceptOptions = true;
+    acceptResponded = true
 
     constructor (options: ICorsOptions = {}) {
         super();
@@ -69,8 +71,8 @@ export class Cors extends MiddleWare {
     }
 
     init ({ headers }: ISenerContext): IPromiseMayBe<IHookReturn> {
-        // console.log('cors init', this.headers);
         Object.assign(headers, this.headers);
+        // console.log('cors init', !!headers['Access-Control-Allow-Origin'])
     }
 
 }

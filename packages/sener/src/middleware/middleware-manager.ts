@@ -47,6 +47,9 @@ export class MiddleWareManager {
         }
     }
     private async onSingeHook (middleware: IMiddleWare|MiddleWare, name: IMiddleHookNames, ctx: ISenerContext) {
+        // if(middleware.name === 'cors' && name === 'init') {
+        //     console.log('onSingleHook',middleware.init)
+        // }
         if (!middleware[name]) return;
         if (
             (ctx.isOptions && !middleware.acceptOptions) ||

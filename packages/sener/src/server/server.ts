@@ -85,6 +85,7 @@ export class Server {
             // ! 使用 cors 中间件时不会执行到这里
             if (request.method === 'OPTIONS') {
                 context.isOptions = true;
+                // console.log('options', headers['Access-Control-Allow-Origin'])
                 assignContext(context.responseData({ statusCode: 200 }));
             }
 
@@ -92,15 +93,20 @@ export class Server {
                 try {
                     await this.middleware[name](context);
                 } catch (err) {
+                    // console.error('error', err);
                     assignContext(await this.onError(err, name, context));
                 }
             };
+            // console.log('before init', context.isOptions, context.responded, context.returned, context.method, context.headers['Access-Control-Allow-Origin'])
+
             await applyHook('init');
+            // console.log('before enter', context.method, context.headers['Access-Control-Allow-Origin'])
 
             await applyHook('enter');
 
             if (!context.returned) {
                 const { data, statusCode, headers: HEADERS } = context;
+                // console.log('sendData', headers['Access-Control-Allow-Origin'])
                 this.sendData(response, {
                     data,
                     statusCode,
