@@ -17,7 +17,7 @@ export interface IConfigHelper<T = IJson<any>> {
   config: IConfig<T>;
 }
 
-declare module 'sener' {
+declare module 'sener-extend' {
 
   interface IConfigData extends IJson {
 

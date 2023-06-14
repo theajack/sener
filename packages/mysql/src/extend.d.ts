@@ -14,7 +14,7 @@ export interface IMysqlHelper {
   mysqlConn: Connection;
 }
 
-declare module 'sener' {
+declare module 'sener-extend' {
   interface ISenerHelper extends IMysqlHelper {
 
   }

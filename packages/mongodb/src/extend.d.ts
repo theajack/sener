@@ -20,7 +20,7 @@ interface IModelsBase {
   models: IModels;
 }
 
-declare module 'sener' {
+declare module 'sener-extend' {
   interface Model extends IModelsBase {}
   interface ISenerHelper extends IMongoHelper<Model['models']>{}
 }

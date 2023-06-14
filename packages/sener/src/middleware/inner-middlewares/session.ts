@@ -10,7 +10,7 @@ import {
 } from 'sener-types';
 import { CookieClient } from './cookie';
 
-declare module 'sener' {
+declare module 'sener-extend' {
     interface ISenerHelper {
         session: SessionClient;
     }

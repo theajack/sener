@@ -76,7 +76,7 @@ const sener = new Sener({
     ]
 });
 
-declare module 'sener' {
+declare module 'sener-extend' {
     interface IConfigData {
         level: number,
         age: number,

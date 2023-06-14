@@ -37,7 +37,7 @@ export class Env extends MiddleWare {
 
 // data.uid
 
-// declare module 'sener' {
+// declare module 'sener-extend' {
 //     interface ISenerHelper {
 //         env: IEnvMap<typeof env>
 //     }

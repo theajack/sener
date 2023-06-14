@@ -27,7 +27,7 @@ interface IRouterHelper {
     ): IPromiseMayBe<T>;
 }
 
-declare module 'sener' {
+declare module 'sener-extend' {
     interface ISenerHelper extends IRouterHelper {}
 }
 

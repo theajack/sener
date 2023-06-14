@@ -6,7 +6,7 @@
 import { IncomingMessage } from 'http';
 import { MiddleWare, IJson, IResponse, ISenerContext, pickAttrs, isExpired, countExpire, ICookieOptions } from 'sener-types';
 
-declare module 'sener' {
+declare module 'sener-extend' {
     interface ISenerHelper {
         cookie: CookieClient;
     }

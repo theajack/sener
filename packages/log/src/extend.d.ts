@@ -10,7 +10,7 @@ export interface ILogHelper {
   logger: Logger;
 }
 
-declare module 'sener' {
+declare module 'sener-extend' {
   interface ISenerHelper extends ILogHelper {
 
   }

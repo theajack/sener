@@ -10,7 +10,7 @@ export interface IRPCHelper {
   rpc: IJson<Request>;
 }
 
-declare module 'sener' {
+declare module 'sener-extend' {
   interface ISenerHelper extends IRPCHelper {
 
   }
