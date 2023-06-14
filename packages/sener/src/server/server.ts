@@ -9,7 +9,7 @@ import { IMiddleWare, ISenerContext, IOnError, ISenerResponse, IMiddleHookNames,
 import {
     IJson, IServerOptions, IErrorFrom, IResponse
 } from 'sener-types';
-import { ISenerHelper } from 'sener';
+import { ISenerHelper } from 'sener-extend';
 import { createSenerHelper, parseHttpInfo } from './sener-helper';
 
 export class Server {
