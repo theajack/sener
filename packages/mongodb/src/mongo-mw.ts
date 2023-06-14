@@ -30,7 +30,7 @@ export class Mongo<
             col: (name) => this.mongo.col(name)
         };
     }
-    async enter ({ meta, url, method }: ISenerContext) {
+    async init ({ meta, url, method }: ISenerContext) {
         console.log('mongo enter', meta?.db, url, method);
         if (meta?.db !== true) return;
         await this.mongo.connect();

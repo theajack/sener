@@ -52,7 +52,11 @@ export class SessionClient {
     filePath = '';
     Expired = SessionExpired;
     constructor (cookie: CookieClient) {
-        if (!cookie) throw new Error('Session: cookie middleware is required');
+        if (!cookie) {
+            const err = 'Session: cookie middleware is required';
+            console.error(err);
+            throw new Error(err);
+        }
         const KEY = '_SENER_SID';
         let sessionId = cookie.get(KEY);
         // console.log('_SENER_SID =', sessionId);
