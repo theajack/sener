@@ -1,15 +1,15 @@
 {
     "name": "sener-mongodb",
-    "version": "0.0.15",
+    "version": "0.0.16",
     "scripts": {
         "build": "node ../../scripts/build/build.js mongodb"
     },
     "dependencies": {
         "mongodb": "^5.1.0",
-        "sener-types": "^0.0.15"
+        "sener-types": "^0.0.16"
     },
-    "main": "src/index.ts",
-    "typings": "src/index.ts",
+    "main": "dist/sener-mongodb.cjs.js",
+    "typings": "dist/sener-mongodb.d.ts",
     "description": "Easy-to-use And Powerful nodejs http server",
     "author": "tackchen <theajack@qq.com>",
     "repository": "git@github.com:theajack/sener.git",
@@ -17,5 +17,5 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "src/index.ts"
+    "module": "dist/sener-mongodb.esm.js"
 }
