@@ -1,6 +1,6 @@
 {
     "name": "sener",
-    "version": "0.0.15",
+    "version": "0.0.16",
     "description": "Easy-to-use And Powerful nodejs http server",
     "main": "src/index.ts",
     "typings": "src/index.ts",
@@ -11,7 +11,8 @@
     },
     "license": "MIT",
     "dependencies": {
-        "sener-types": "^0.0.15"
+        "sener-types": "^0.0.16",
+        "undefined": "^0.1.0"
     },
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"

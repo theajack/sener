@@ -1,12 +1,12 @@
 {
     "name": "sener-form",
-    "version": "0.0.15",
+    "version": "0.0.16",
     "scripts": {
         "build": "node ../../scripts/build/build.js form"
     },
     "dependencies": {
         "formidable-fix": "^2.1.4",
-        "sener-types": "^0.0.15"
+        "sener-types": "^0.0.16"
     },
     "main": "src/index.ts",
     "typings": "src/index.ts",
