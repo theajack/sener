@@ -7,8 +7,8 @@
     "dependencies": {
         "sener-types": "^0.0.16"
     },
-    "main": "dist/sener-log.cjs.js",
-    "typings": "dist/sener-log.d.ts",
+    "main": "src/index.ts",
+    "typings": "src/index.ts",
     "description": "Easy-to-use And Powerful nodejs http server",
     "author": "tackchen <theajack@qq.com>",
     "repository": "git@github.com:theajack/sener.git",
@@ -16,5 +16,5 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "dist/sener-log.esm.js"
+    "module": "src/index.ts"
 }

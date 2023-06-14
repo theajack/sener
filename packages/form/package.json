@@ -8,8 +8,8 @@
         "formidable-fix": "^2.1.4",
         "sener-types": "^0.0.16"
     },
-    "main": "dist/sener-form.cjs.js",
-    "typings": "dist/sener-form.d.ts",
+    "main": "src/index.ts",
+    "typings": "src/index.ts",
     "description": "Easy-to-use And Powerful nodejs http server",
     "author": "tackchen <theajack@qq.com>",
     "repository": "git@github.com:theajack/sener.git",
@@ -17,5 +17,5 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "dist/sener-form.esm.js"
+    "module": "src/index.ts"
 }

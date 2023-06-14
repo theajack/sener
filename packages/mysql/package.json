@@ -9,8 +9,8 @@
         "mysql": "^2.18.1",
         "sener-types": "^0.0.16"
     },
-    "main": "dist/sener-mysql.cjs.js",
-    "typings": "dist/sener-mysql.d.ts",
+    "main": "src/index.ts",
+    "typings": "src/index.ts",
     "description": "Easy-to-use And Powerful nodejs http server",
     "author": "tackchen <theajack@qq.com>",
     "repository": "git@github.com:theajack/sener.git",
@@ -18,5 +18,5 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "dist/sener-mysql.esm.js"
+    "module": "src/index.ts"
 }
