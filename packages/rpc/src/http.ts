@@ -93,8 +93,9 @@ export function nodeRequest ({
             });
             res.on('end', function () {
                 const result = parseJson(responseString);
+                const fail = !result || (typeof result.code === 'number' && result.code !== 0);
                 resolve({
-                    success: (!!result && result.code === 0),
+                    success: !fail,
                     ...(result || {}),
                 });
             });

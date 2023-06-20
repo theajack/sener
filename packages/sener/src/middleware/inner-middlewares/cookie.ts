@@ -52,6 +52,7 @@ export class CookieClient {
     private _cookie: IJson<ICookieOptions> = {};
     request: IncomingMessage;
     response: IResponse;
+    clientDomain: string;
     private _options: ICookieOptions;
     constructor (
         request: IncomingMessage,
@@ -101,6 +102,7 @@ export class CookieClient {
                 v = { value: v };
             }
             this._cookie[k] = Object.assign({}, this._options, v);
+            // console.log('setcookie', k, this._cookie[k])
         };
         if (typeof key === 'object') {
             for (const k in key) single(k, key[k]);
@@ -142,6 +144,10 @@ export class Cookie extends MiddleWare {
     }
 
     init (ctx: ISenerContext) {
+        if(!this._options.domain){
+            this._options.domain = ctx.clientDomain;
+        }
+        // console.log('this._options.domain=', this._options.domain);
         ctx.cookie = new CookieClient(ctx.request, ctx.response, this._options);
     }
 }

@@ -172,6 +172,18 @@ export function pickAttrs (keys: string[], onvalue: (k: string)=>any) {
     return map;
 }
 
+export function pick<T, K extends keyof T> (data: T, keys: (K)[]): {
+    [prop in K]: T[prop]
+} {
+    const map: any = {};
+    for (const k of keys){
+        if(typeof data[k] !== 'undefined'){
+            map[k] = data[k];
+        }
+    }
+    return map;
+}
+
 export function isExpired (expire?: number) {
     if (!expire) return false;
     return expire < Date.now();

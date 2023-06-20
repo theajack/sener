@@ -79,8 +79,11 @@ export async function parseHttpInfo (request: http.IncomingMessage): Promise<IHt
         request.socket.remoteAddress || // 判断后端的 socket 的 IP
         // @ts-ignore
         request.connection?.socket?.remoteAddress;
+    const result = headers.origin?.match(/https?:\/\/(.*?)(:|$)/);
+    const clientDomain = result ? result[1]:'';
     return {
         requestHeaders: headers,
+        clientDomain,
         method: method as IServeMethod,
         url,
         query,
