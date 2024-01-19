@@ -5,17 +5,38 @@
  */
 
 import { Connection, FieldInfo, QueryOptions } from 'mysql';
+import { SQL } from './sql/sql';
+import { Cond } from './sql/cond';
+import { Table } from './sql/table';
+import { Instanceof } from 'sener-types';
 
-export interface IMysqlHelper {
-  querySql: (sql: string|QueryOptions) => Promise<{
-    results: any;
+export interface ITables {
+  [key: string]: typeof Table<any>;
+}
+
+export interface IMysqlHelper<Tables extends ITables = {}> {
+  sql: <Model extends Record<string, any> = {
+    [prop: string]: string|number|boolean,
+  }>(name: string)=>SQL<Model>,
+  _: typeof Cond,
+  // newTable: <Model extends Record<string, any> = {
+  //   [prop: string]: string|number|boolean,
+  // }>(name: string)=>Table<Model>,
+  table: <T extends keyof (Tables) >(name: T)=> Instanceof<(Tables)[T]>;
+  querySql: <Return=any>(sql: string|SQL|QueryOptions&{
+    sql: string|SQL
+  }) => Promise<{
+    results: Return;
     fields: FieldInfo[];
   }>;
   mysqlConn: Connection;
 }
 
-declare module 'sener-extend' {
-  interface ISenerHelper extends IMysqlHelper {
+interface ITablesBase {
+  tables: ITables;
+}
 
-  }
+declare module 'sener-extend' {
+  interface Table extends ITablesBase {}
+  interface ISenerHelper extends IMysqlHelper<Table['tables']> {}
 }

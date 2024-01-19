@@ -64,6 +64,9 @@ export function createSenerHelper (headers: IJson<string>, mr: (key?: string)=>v
         responseJson: (data, statusCode = 200, header = {}) => (mr(), responseData({ data, statusCode, headers: mergeHeaders(header) })),
         responseText: (msg, statusCode, header = {}) => (mr(), responseText(msg, mergeHeaders(header), statusCode)),
         responseHtml: (html, header = {}) => (mr(), responseHtml(html, mergeHeaders(header))),
+
+        // alias html
+        html: (html, header = {}) => (mr(), responseHtml(html, mergeHeaders(header))),
         responseData: (data: ISenerResponse) => (mr(), responseData({ ...data, headers: mergeHeaders(data.headers) })),
         markReturned: () => {mr('returned');}
     };

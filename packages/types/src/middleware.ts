@@ -20,6 +20,8 @@ export interface IHelperFunc {
   responseJson: (data: IJson, statusCode?: number, header?: IJson<string>) => ISenerResponse; // 构造json响应
   responseText: (text: string, statusCode?: number, header?: IJson<string>) => ISenerResponse; // 构造文本响应
   responseHtml: (html: string, header?: IJson<string>) => ISenerResponse; // 构造html响应
+  // alias
+  html: (html: string, header?: IJson<string>) => ISenerResponse; // 构造html响应
   responseData: (data: Partial<ISenerResponse>) => ISenerResponse; // 构造通用响应
   markReturned: () => void; // 标记为已提前返回响应
 }

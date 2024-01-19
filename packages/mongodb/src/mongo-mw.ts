@@ -31,7 +31,7 @@ export class Mongo<
         };
     }
     async init ({ meta, url, method }: ISenerContext) {
-        console.log('mongo enter', meta?.db, url, method);
+        // console.log('mongo enter', meta?.db, url, method);
         if (meta?.db !== true) return;
         await this.mongo.connect();
         // console.log('mongo connect', method, this.mongo.connected);

@@ -10,3 +10,8 @@ export * from 'mysql';
 import _mysql from 'mysql';
 
 export const mysql = _mysql;
+
+export { Cond, Cond as $ } from './sql/cond';
+
+export { SQL } from './sql/sql';
+export { Table } from './sql/table';

@@ -1,121 +1,124 @@
-lockfileVersion: 5.4
+lockfileVersion: '6.0'
 
-specifiers:
-  formidable-fix: ^2.1.4
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
 dependencies:
-  formidable-fix: registry.npmmirror.com/formidable-fix/2.1.4
+  formidable-fix:
+    specifier: ^2.1.4
+    version: registry.npmmirror.com/formidable-fix@2.1.4
 
 packages:
 
-  registry.npmmirror.com/asap/2.0.6:
+  registry.npmmirror.com/asap@2.0.6:
     resolution: {integrity: sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/asap/-/asap-2.0.6.tgz}
     name: asap
     version: 2.0.6
     dev: false
 
-  registry.npmmirror.com/call-bind/1.0.2:
+  registry.npmmirror.com/call-bind@1.0.2:
     resolution: {integrity: sha512-7O+FbCihrB5WGbFYesctwmTKae6rOiIzmz1icreWJ+0aA7LJfuqhEso2T9ncpcFtzMQtzXf2QGGueWJGTYsqrA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/call-bind/-/call-bind-1.0.2.tgz}
     name: call-bind
     version: 1.0.2
     dependencies:
-      function-bind: registry.npmmirror.com/function-bind/1.1.1
-      get-intrinsic: registry.npmmirror.com/get-intrinsic/1.2.0
+      function-bind: registry.npmmirror.com/function-bind@1.1.1
+      get-intrinsic: registry.npmmirror.com/get-intrinsic@1.2.0
     dev: false
 
-  registry.npmmirror.com/dezalgo/1.0.4:
+  registry.npmmirror.com/dezalgo@1.0.4:
     resolution: {integrity: sha512-rXSP0bf+5n0Qonsb+SVVfNfIsimO4HEtmnIpPHY8Q1UCzKlQrDMfdobr8nJOOsRgWCyMRqeSBQzmWUMq7zvVig==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/dezalgo/-/dezalgo-1.0.4.tgz}
     name: dezalgo
     version: 1.0.4
     dependencies:
-      asap: registry.npmmirror.com/asap/2.0.6
-      wrappy: registry.npmmirror.com/wrappy/1.0.2
+      asap: registry.npmmirror.com/asap@2.0.6
+      wrappy: registry.npmmirror.com/wrappy@1.0.2
     dev: false
 
-  registry.npmmirror.com/formidable-fix/2.1.4:
+  registry.npmmirror.com/formidable-fix@2.1.4:
     resolution: {integrity: sha512-FEjDanledz/0XvLDTYhqD7AnWMsFgoBnRqXf9UD1AcxQNQ+FqmiGJCNoC3bIyM/VjhzKsmUijUbORJ+F7C6ykA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/formidable-fix/-/formidable-fix-2.1.4.tgz}
     name: formidable-fix
     version: 2.1.4
     dependencies:
-      dezalgo: registry.npmmirror.com/dezalgo/1.0.4
-      hexoid: registry.npmmirror.com/hexoid/1.0.0
-      once: registry.npmmirror.com/once/1.4.0
-      qs: registry.npmmirror.com/qs/6.11.0
+      dezalgo: registry.npmmirror.com/dezalgo@1.0.4
+      hexoid: registry.npmmirror.com/hexoid@1.0.0
+      once: registry.npmmirror.com/once@1.4.0
+      qs: registry.npmmirror.com/qs@6.11.0
     dev: false
 
-  registry.npmmirror.com/function-bind/1.1.1:
+  registry.npmmirror.com/function-bind@1.1.1:
     resolution: {integrity: sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/function-bind/-/function-bind-1.1.1.tgz}
     name: function-bind
     version: 1.1.1
     dev: false
 
-  registry.npmmirror.com/get-intrinsic/1.2.0:
+  registry.npmmirror.com/get-intrinsic@1.2.0:
     resolution: {integrity: sha512-L049y6nFOuom5wGyRc3/gdTLO94dySVKRACj1RmJZBQXlbTMhtNIgkWkUHq+jYmZvKf14EW1EoJnnjbmoHij0Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/get-intrinsic/-/get-intrinsic-1.2.0.tgz}
     name: get-intrinsic
     version: 1.2.0
     dependencies:
-      function-bind: registry.npmmirror.com/function-bind/1.1.1
-      has: registry.npmmirror.com/has/1.0.3
-      has-symbols: registry.npmmirror.com/has-symbols/1.0.3
+      function-bind: registry.npmmirror.com/function-bind@1.1.1
+      has: registry.npmmirror.com/has@1.0.3
+      has-symbols: registry.npmmirror.com/has-symbols@1.0.3
     dev: false
 
-  registry.npmmirror.com/has-symbols/1.0.3:
+  registry.npmmirror.com/has-symbols@1.0.3:
     resolution: {integrity: sha512-l3LCuF6MgDNwTDKkdYGEihYjt5pRPbEg46rtlmnSPlUbgmB8LOIrKJbYYFBSbnPaJexMKtiPO8hmeRjRz2Td+A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/has-symbols/-/has-symbols-1.0.3.tgz}
     name: has-symbols
     version: 1.0.3
     engines: {node: '>= 0.4'}
     dev: false
 
-  registry.npmmirror.com/has/1.0.3:
+  registry.npmmirror.com/has@1.0.3:
     resolution: {integrity: sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/has/-/has-1.0.3.tgz}
     name: has
     version: 1.0.3
     engines: {node: '>= 0.4.0'}
     dependencies:
-      function-bind: registry.npmmirror.com/function-bind/1.1.1
+      function-bind: registry.npmmirror.com/function-bind@1.1.1
     dev: false
 
-  registry.npmmirror.com/hexoid/1.0.0:
+  registry.npmmirror.com/hexoid@1.0.0:
     resolution: {integrity: sha512-QFLV0taWQOZtvIRIAdBChesmogZrtuXvVWsFHZTk2SU+anspqZ2vMnoLg7IE1+Uk16N19APic1BuF8bC8c2m5g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/hexoid/-/hexoid-1.0.0.tgz}
     name: hexoid
     version: 1.0.0
     engines: {node: '>=8'}
     dev: false
 
-  registry.npmmirror.com/object-inspect/1.12.3:
+  registry.npmmirror.com/object-inspect@1.12.3:
     resolution: {integrity: sha512-geUvdk7c+eizMNUDkRpW1wJwgfOiOeHbxBR/hLXK1aT6zmVSO0jsQcs7fj6MGw89jC/cjGfLcNOrtMYtGqm81g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/object-inspect/-/object-inspect-1.12.3.tgz}
     name: object-inspect
     version: 1.12.3
     dev: false
 
-  registry.npmmirror.com/once/1.4.0:
+  registry.npmmirror.com/once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/once/-/once-1.4.0.tgz}
     name: once
     version: 1.4.0
     dependencies:
-      wrappy: registry.npmmirror.com/wrappy/1.0.2
+      wrappy: registry.npmmirror.com/wrappy@1.0.2
     dev: false
 
-  registry.npmmirror.com/qs/6.11.0:
+  registry.npmmirror.com/qs@6.11.0:
     resolution: {integrity: sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/qs/-/qs-6.11.0.tgz}
     name: qs
     version: 6.11.0
     engines: {node: '>=0.6'}
     dependencies:
-      side-channel: registry.npmmirror.com/side-channel/1.0.4
+      side-channel: registry.npmmirror.com/side-channel@1.0.4
     dev: false
 
-  registry.npmmirror.com/side-channel/1.0.4:
+  registry.npmmirror.com/side-channel@1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/side-channel/-/side-channel-1.0.4.tgz}
     name: side-channel
     version: 1.0.4
     dependencies:
-      call-bind: registry.npmmirror.com/call-bind/1.0.2
-      get-intrinsic: registry.npmmirror.com/get-intrinsic/1.2.0
-      object-inspect: registry.npmmirror.com/object-inspect/1.12.3
+      call-bind: registry.npmmirror.com/call-bind@1.0.2
+      get-intrinsic: registry.npmmirror.com/get-intrinsic@1.2.0
+      object-inspect: registry.npmmirror.com/object-inspect@1.12.3
     dev: false
 
-  registry.npmmirror.com/wrappy/1.0.2:
+  registry.npmmirror.com/wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/wrappy/-/wrappy-1.0.2.tgz}
     name: wrappy
     version: 1.0.2
