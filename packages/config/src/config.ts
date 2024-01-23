@@ -10,15 +10,16 @@ import fs from 'fs';
 import { IConfig, IConfigChange } from './extend';
 import Event from 'events';
 
-export interface IInitialConfigData {
-    filename: string;
-    data: Record<string, any>;
-}
+// export interface IInitialConfigData {
+//     filename: string;
+//     data: Record<string, any>;
+// }
 export interface IConfigOptions {
     dir?: string,
     format?: boolean,
-    initial?: IInitialConfigData[],
-    onchange?: IConfigChange;
+    // initial?: IInitialConfigData[],
+    initial?: IJson, // 改成json可以进行类型推断
+    onchange?: IConfigChange,
 }
 
 export class ConfigBase<T = IJson<any>> {
@@ -34,7 +35,7 @@ export class ConfigBase<T = IJson<any>> {
     format = false;
 
     constructor ({
-        dir = '', format = true, initial = [ { filename: '_default', data: {} } ], onchange
+        dir = '', format = true, initial = {_default: {}}, onchange
     }: IConfigOptions) {
 
         // @ts-ignore
@@ -54,15 +55,15 @@ export class ConfigBase<T = IJson<any>> {
 
     private fileNameToPath (file: string) {
         // if (typeof file === 'undefined') console.trace(file);
-        return path.join(this.baseDir, file + '.json');
+        const name = file.endsWith('.json') ? file : `${file}.json`
+        return path.join(this.baseDir, name);
     }
 
-    private initFiles (initial: IInitialConfigData[]) {
+    private initFiles (initial: IJson) {
 
-        initial.forEach(({ filename, data }) => {
-
+        for(let filename in initial){
+            const data = initial[filename];
             const json = this.readConfigFile(filename, data);
-
 
             if (!json) {throw new Error(`Invalid JSON File ${filename}`);}
 
@@ -77,6 +78,7 @@ export class ConfigBase<T = IJson<any>> {
                 this.data[key] = json[key];
                 properties[key] = {
                     get: () => {
+                        // console.log(this.data, '-------)')
                         return this.data[key];
                     },
                     set: (v: any) => {
@@ -93,7 +95,7 @@ export class ConfigBase<T = IJson<any>> {
                     this.onNewValue(key, json[key]);
                 }
             });
-        });
+        }
     }
 
     onConfigChange (callback: IConfigChange) {
@@ -184,7 +186,9 @@ function isJsonChanged (old: IJson, newData: IJson): boolean {
 function watchFileChange (filePath: string, change: ()=>void) {
 
     // let last = fs.statSync(filePath).mtime;
-    fs.watch(filePath, () => {
+    fs.watchFile(filePath, {
+        interval: 5000,
+    }, () => {
         // const time = fs.statSync(filePath).mtime;
         // if (last === time) return;
         // last = time;

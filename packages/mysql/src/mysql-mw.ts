@@ -24,18 +24,35 @@ export class Mysql<
 
     tables: {[key in keyof Tables]: Instanceof<Tables[key]>} = {} as any;
     tableModels: Tables = {} as any;
-    constructor (config: ConnectionConfig & {
-        tables?: Tables;
-    }) {
-    // constructor (config: IMysqlConfig<Tables>) {
+
+    private _config: IMysqlConfig<Tables>;
+    constructor (config: IMysqlConfig<Tables>) {
         super();
+        this._config = config;
+        if(config.tables) this.tableModels = config.tables;
         this.connection = mysql.createConnection(config);
+        this._handleDisconnect();
+    }
+
+    private _handleDisconnect(){
+        this.connection.on('error', (err) => {     
+            if (!err.fatal) {       
+                return;     
+            }      
+            if (err.code !== 'PROTOCOL_CONNECTION_LOST') {       
+                throw err;     
+            }      
+            console.log('Re-connecting lost connection: ' + err.stack);      
+            this.connection = mysql.createConnection(this._config);     
+            this._handleDisconnect();     
+            this.connection.connect();   
+        }); 
     }
 
     private _helper: IMysqlHelper<Tables>;
 
-
     table <Key extends keyof Tables> (name: Key): Instanceof<Tables[Key]> {
+        // console.log('table keys = ', Object.keys(this.tables))
         if (!this.tables[name]) {
             // @ts-ignore
             this.tables[name] = new (this.tableModels[name as any] || Table)(name, this);
@@ -60,16 +77,16 @@ export class Mysql<
                         }
                     }
                     return new Promise((resolve, reject) => {
-                        this.connection.connect();
+                        // console.log('connect', sql);
                         this.connection.query(sql, (error, results, fields = []) => {
                             if (error) {
+                                console.log(error);
                                 reject(error);
                                 return;
                             };
                             resolve({ results, fields });
                             // console.log('The solution is: ', results[0].solution);
                         });
-                        this.connection.end();
                     });
                 },
                 _: Cond,

@@ -146,7 +146,7 @@ export function error<T = null> (
     msg = '请求失败', code = -1, data: T = null as any
 ): IRouterReturn {
     return {
-        data: { code, data, msg },
+        data: { code, data, msg, success: false },
     };
 }
 

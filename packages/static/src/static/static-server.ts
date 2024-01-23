@@ -47,18 +47,18 @@ export class StaticServer {
         // resolve() doesn't normalize (to lowercase) drive letters on Windows
         this.root = path.normalize(path.resolve(root || '.'));
         this.options = options || {};
-        this.cache   = 3600;
 
         this.defaultHeaders  = {};
         this.options.headers = this.options.headers || {};
 
         this.options.indexFile = this.options.indexFile || 'index.html';
 
+        this.cache = 3600;
         if ('cache' in this.options) {
             if (typeof(this.options.cache) === 'number') {
                 this.cache = this.options.cache;
             } else if (! this.options.cache) {
-                this.cache = false;
+                this.cache = 0;
             }
         }
 
@@ -70,13 +70,15 @@ export class StaticServer {
 
         this.defaultHeaders['server'] = this.serverInfo;
 
-        if (this.cache !== false) {
-            this.defaultHeaders['cache-control'] = 'max-age=' + this.cache;
-        }
+        // if (this.cache !== false) {
+        //     this.defaultHeaders['cache-control'] = 'max-age=' + this.cache;
+        // }
+        this.defaultHeaders['cache-control'] = 'max-age=' + this.cache;
+
+        console.log('static-cache', this.defaultHeaders['cache-control'])
 
         for (const k in this.defaultHeaders) {
-            this.options.headers[k] = this.options.headers[k] ||
-     this.defaultHeaders[k];
+            this.options.headers[k] = this.options.headers[k] || this.defaultHeaders[k];
         }
     }
     serveDir (pathname: string, req: http.IncomingMessage, res: http.ServerResponse, finish: Finish): void {
@@ -369,7 +371,6 @@ export class StaticServer {
             finish(304, headers);
         } else {
             res.writeHead(status, headers);
-
             this.stream(key, files, length, startByte, res, function (e) {
                 if (e) { return finish(500, {}); }
                 finish(status, headers);

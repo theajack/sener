@@ -35,6 +35,12 @@ type IValidFunc = <
 interface IValidatorHelper {
     vquery: IValidFunc;
     vbody: IValidFunc;
+    validate: <
+        D extends IValidTemplate = IValidTemplate
+    >(data: IJson, template: D) => ({
+        // @ts-ignore
+        [prop in keyof D]: IFormatMap[(D[prop] extends string ? D[prop]: D[prop][0])];
+    });
 }
 
 declare module 'sener-extend' {
@@ -51,14 +57,11 @@ export class Validator extends MiddleWare {
             const value = result[k];
             const type = typeof value;
 
-            if (type === 'undefined') {
-                continue;
-            }
-
             const v = template[k];
             const isArr = v instanceof Array;
             const format: IValidFormat = isArr ? v[0] : v;
             const rule: IValidRule = isArr ? v[1] : 'optional';
+
 
             // console.log(k, format, value, type, parseFloat(value));
             if (format === 'string' ) {
@@ -66,7 +69,7 @@ export class Validator extends MiddleWare {
             } else if (format === 'number') {
                 if (type !== 'number') result[k] = parseFloat(value);
             } else if (format === 'boolean') {
-                if (type !== 'boolean') result[k] = typeof value === 'string' ? (value === 'true') : (!!value);
+                if (type !== 'boolean') result[k] = type === 'string' ? (value === 'true') : (!!value);
             }
             // todo 增加其他 format
 
@@ -74,13 +77,14 @@ export class Validator extends MiddleWare {
                 let error = '';
                 // todo 增加其他 rule
                 if (rule === 'required') {
-                    if (typeof value === 'undefined') error = `Property '${k}' is Reqiored`;
+                    if (type === 'undefined') error = `Property '${k}' is Reqiored`;
                 } else if (typeof rule === 'function') {
                     if (!rule(value, result[k])) error = `Property '${k}' is Invalid`;
                 } else if (rule instanceof RegExp) {
                     if (!rule.test(value.toString())) error = `Property '${k}' is Invalid`;
                 }
                 if (error) {
+                    console.log(`Validator Fail: ${error}`)
                     throw new Error(`Validator Fail: ${error}`);
                 }
             }
@@ -95,9 +99,11 @@ export class Validator extends MiddleWare {
             return this._validate(template, query);
         };
         res.vbody = (template: IValidTemplate) => {
-            console.log('vbody', query, body);
             return this._validate(template, body);
         };
+        res.validate = (data, template: IValidTemplate) =>{
+            return this._validate(template, data);
+        }
         // const data = res.vquery({
         //     user: 'string',
         //     size: [ 'boolean', 'required' ]

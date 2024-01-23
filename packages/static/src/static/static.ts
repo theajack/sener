@@ -5,7 +5,11 @@
  */
 import path from 'path';
 import { IHookReturn, ISenerContext, MiddleWare } from 'sener-types';
-import { StaticServer } from './static-server';
+import { Options, StaticServer } from './static-server';
+
+export interface IStaticOptions extends Options {
+    dir?: string
+}
 
 export class Static extends MiddleWare {
     name = 'static';
@@ -14,14 +18,11 @@ export class Static extends MiddleWare {
 
     static: StaticServer;
 
-    constructor ({
-        dir = './public'
-    }: {
-        dir?: string
-    } = {}) {
+    constructor (options: IStaticOptions = {}) {
         super();
+        const dir = options.dir || './public';
         this.dir = path.resolve(process.cwd(), dir);
-        this.static = new StaticServer(this.dir);
+        this.static = new StaticServer(this.dir, options);
         this.acceptResponded = true;
     }
 

@@ -50,11 +50,12 @@ export class SQL<
         return this;
     }
 
-    orderBy (...args: Key[]) {
+    orderBy<T = Key> (...args: T[]) {
+        // todo orderby 多个key独立排序
         this.sql += ` order by ${args.join(',')} ASC`;
         return this;
     }
-    orderByDesc (...args: Key[]) {
+    orderByDesc<T = Key> (...args: T[]) {
         this.sql += ` order by ${args.join(',')} DESC`;
         return this;
     }
@@ -67,7 +68,7 @@ export class SQL<
     insert (data: Partial<Model>) {
         this.reset();
         const keys = Object.keys(data).join(',');
-        const values = Object.values(data).join(',');
+        const values = Object.values(data).map(item => toSqlStr(item)).join(',');
         this.sql = `insert into ${this.tableName}(${keys}) values(${values});`;
         return this;
     }
@@ -129,7 +130,6 @@ export class SQL<
     }
 
     get v () {
-        console.log(this.sql);
         return this.sql;
     }
 
