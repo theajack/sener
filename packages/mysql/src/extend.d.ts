@@ -14,6 +14,11 @@ export interface ITables {
   [key: string]: typeof Table<any>;
 }
 
+export interface IQuerySqlResult<T=any> {
+  results: T;
+  fields: FieldInfo[];
+}
+
 export interface IMysqlHelper<Tables extends ITables = {}> {
   sql: <Model extends Record<string, any> = {
     [prop: string]: string|number|boolean,
@@ -25,10 +30,7 @@ export interface IMysqlHelper<Tables extends ITables = {}> {
   table: <T extends keyof (Tables) >(name: T)=> Instanceof<(Tables)[T]>;
   querySql: <Return=any>(sql: string|SQL|QueryOptions&{
     sql: string|SQL
-  }) => Promise<{
-    results: Return;
-    fields: FieldInfo[];
-  }>;
+  }) => Promise<IQuerySqlResult<Return>>;
   mysqlConn: Connection;
 }
 

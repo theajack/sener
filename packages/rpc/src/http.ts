@@ -4,16 +4,18 @@
  * @Description: Coding something
  */
 
-import { IJson, IMethod, parseJson } from 'sener-types';
-import { convertData } from './utils';
+import type { IJson, IMethod } from 'sener-types';
+import { parseJson } from 'sener-types';
+import { convertData, windowFetch } from './utils';
 
 let _http: any, _https: any = null;
 
-interface IBaseOptions {
+export interface IBaseOptions {
     url: string,
     method: IMethod, // get方式或post方式
     headers?: IJson,
     body?: any,
+    query?: IJson,
     form?: boolean,
     traceid?: string,
     stringifyBody?: boolean,
@@ -35,7 +37,6 @@ export interface IRPCResponse {
 export function request ({
     url, method, headers = {}, body, query, form, traceid
 }: IHttpRequestOptions) {
-    url = url + (query ? `${convertData(query)}` : '');
 
     if (!form) headers = Object.assign({ 'Content-Type': 'application/json;charset=utf-8' }, headers || {});
 
@@ -50,34 +51,16 @@ export function request ({
     }
 }
 
-async function windowFetch ({
-    url, method, headers, body, form
-}: IBaseOptions): Promise<IRPCResponse> {
-    const options: RequestInit = {
-        method,
-        headers,
-        mode: 'cors',
-        credentials: 'include'
-    };
-    if (method !== 'get' && body) {
-        options.body = form ? body : JSON.stringify(body);
-    }
-    try {
-        const result = await fetch(url, options);
-
-        const json = await result.json();
-        return { success: json.code === 0, ...json };
-    } catch (e) {
-        return { success: false, msg: `fetch失败: ${e.message}` };
-    }
-}
 
 export function nodeRequest ({
-    url, method, headers = {}, body, traceid, stringifyBody = true
+    url, method, headers = {}, body, traceid, stringifyBody = true, query
 }: IBaseOptions): Promise<IRPCResponse> {
+    url = url + (query ? `${convertData(query)}` : '');
     // console.log('----host', host, path, method, headers, https, port, body);
     if (!_http) _http = require('http');
     if (!_https) _https = require('https');
+    // if (!_http) _http = __CLIENT__ ? {}: require('http');
+    // if (!_https) _https = __CLIENT__ ? {}: require('https');
 
     if (traceid) headers['x-trace-id'] = traceid;
     // console.log({ host, path, method, headers, https, port, body });
@@ -125,3 +108,5 @@ export function nodeRequest ({
         req.end();
     });
 }
+
+export type IRequest = typeof request;

@@ -6,13 +6,14 @@
 
 import { IJson, IRouterReturn } from 'sener-types';
 
-export interface IBoolResult {
+export interface IBoolResult<T=any> {
   success: boolean;
-  msg?: string;
+  msg: string;
+  data: T
 }
 
-export type IParsedData = IBoolResult & IJson;
+export type IParsedData<T=any> = IBoolResult<T> & IJson;
 
-export type IParsedReturn = Promise<IParsedData>;
+export type IParsedReturn<T=any> = Promise<IParsedData<T>>;
 
-export type IRequestReturn<T=any> = Promise<IRouterReturn>;
+export type IRequestReturn<T=any> = Promise<IRouterReturn<T>>;

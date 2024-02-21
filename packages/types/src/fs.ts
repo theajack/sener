@@ -4,6 +4,7 @@
  * @Description: Coding something
  */
 import fs from 'fs';
+// const fs = __CLIENT__ ? {}: require('fs');
 
 export function makedir (dirPath: string, chmod = '777') {
 

@@ -77,7 +77,7 @@ export class Validator extends MiddleWare {
                 let error = '';
                 // todo 增加其他 rule
                 if (rule === 'required') {
-                    if (type === 'undefined') error = `Property '${k}' is Reqiored`;
+                    if (type === 'undefined') error = `Property '${k}' is Required`;
                 } else if (typeof rule === 'function') {
                     if (!rule(value, result[k])) error = `Property '${k}' is Invalid`;
                 } else if (rule instanceof RegExp) {

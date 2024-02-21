@@ -30,23 +30,35 @@ export class Mysql<
         super();
         this._config = config;
         if(config.tables) this.tableModels = config.tables;
-        this.connection = mysql.createConnection(config);
-        this._handleDisconnect();
+        this.initConnection();
+        // this._handleDisconnect();
     }
 
-    private _handleDisconnect(){
-        this.connection.on('error', (err) => {     
-            if (!err.fatal) {       
-                return;     
-            }      
-            if (err.code !== 'PROTOCOL_CONNECTION_LOST') {       
-                throw err;     
-            }      
-            console.log('Re-connecting lost connection: ' + err.stack);      
-            this.connection = mysql.createConnection(this._config);     
-            this._handleDisconnect();     
-            this.connection.connect();   
-        }); 
+    private initConnection(){
+        this.connection = mysql.createConnection(this._config);
+        this.connection.connect();
+    }
+
+    // private _handleDisconnect(){
+    //     this.connection.on('error', (err) => {
+    //         this.handlerError(err);
+    //     }); 
+    // }
+
+    private handlerError(err: any){ 
+        // if (!err.fatal) {       
+        //     return;     
+        // }      
+        // if (err.code !== 'PROTOCOL_CONNECTION_LOST') {       
+        //     throw err;     
+        // }      
+        console.log('Re-connecting lost connection: ' + err.stack);       
+        try{
+            this.initConnection(); 
+        }catch(e){
+            console.log('connection error', e);
+            this.handlerError(e);
+        }
     }
 
     private _helper: IMysqlHelper<Tables>;
@@ -77,13 +89,16 @@ export class Mysql<
                         }
                     }
                     return new Promise((resolve, reject) => {
-                        // console.log('connect', sql);
+                        // console.log('query sql', sql);
                         this.connection.query(sql, (error, results, fields = []) => {
                             if (error) {
-                                console.log(error);
-                                reject(error);
+                                console.log('mysql query error', error);
+                                // this.handlerError(err);
+                                resolve({results: null, fields: null} as any);
+                                this.handlerError(error);
                                 return;
                             };
+                            // console.log('query sql success');
                             resolve({ results, fields });
                             // console.log('The solution is: ', results[0].solution);
                         });

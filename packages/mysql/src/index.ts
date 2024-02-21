@@ -15,3 +15,4 @@ export { Cond, Cond as $ } from './sql/cond';
 
 export { SQL } from './sql/sql';
 export { Table } from './sql/table';
+export * from './extend.d';

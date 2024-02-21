@@ -54,7 +54,6 @@ function buildEntry (entry, outfile) {
         // define: {
         //   __COMMIT__: '"dev"',
         //   __VERSION__: `"${pkg.version}"`,
-        //   __DEV__: 'true',
         //   __TEST__: 'false',
         //   __BROWSER__: String(format !== 'cjs' && !pkg.buildOptions?.enableNonBrowserBranches),
         //   __GLOBAL__: String(format === 'global'),

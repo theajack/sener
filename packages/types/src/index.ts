@@ -6,6 +6,7 @@
 import './extend.d';
 export * from './common.d';
 export * from './utils';
+export * from './pure-utils';
 export * from './sener.d';
 export * from './middleware';
 // export * from './enum';

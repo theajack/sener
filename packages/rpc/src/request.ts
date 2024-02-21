@@ -4,149 +4,24 @@
  * @LastEditors: Please set LastEditors
  */
 import {
-    IJson, IMethod,
-    error, success, IRouterReturn
+    BaseRequest, type IRequestConsOptions
+} from './request-base';
+import {
+    error, success
 } from 'sener-types';
-import { IHttpRequestOptions, IRPCResponse, request } from './http';
-import { IParsedData, IRequestReturn } from './type';
-
-interface ICommonRequestOptions {
-    headers?: IJson<string>;
-    traceid?: string;
-}
-
-export interface IRequestOptions extends ICommonRequestOptions {
-    body?: IJson,
-    query?: IJson,
-    url: string,
-    method?: IMethod,
-    data?: IJson,
-    form?: boolean,
-    traceid?: string,
-    base?: string,
-}
-
-export interface IRequestConsOptions extends ICommonRequestOptions {
-    base: string,
-}
-
-export type IRPCRequestInterceptor = (data: IRequestOptions) => void|IRPCResponse;
-
-export type IRPCRequestOnResponse = (data: IRPCResponse) => void|IRPCResponse;
+import { request } from './http';
 
 
-export class Request {
-    base: string;
-    headers: IJson<string> = {};
-    traceid: string = '';
-    tk = '';
-    setToken (tk: string) { this.tk = tk; };
 
-    static Interceptor: IRPCRequestInterceptor;
-    static OnResponse: IRPCRequestOnResponse;
-
-    constructor ({
-        base,
-        headers,
-        traceid,
-    }: IRequestConsOptions) {
-        this.base = base;
-        if (headers) this.headers = headers;
-        if (traceid) this.traceid = traceid;
-    }
-
-    parseResult<T = any> (
-        result: IRouterReturn<T>
-    ): IParsedData {
-        const { data, code, msg, extra } = result.data;
-
-        const spread = !!data && typeof data === 'object' && !(data instanceof Array);
-
-        return {
-            success: code === 0,
-            msg,
-            ...extra,
-            ...spread ? data : { data },
-        };
-    }
-
-    get<T=any> (url: string, query: IJson = {}) {
-        return this.request<T>({
-            url,
-            method: 'get',
-            query
-        });
-    }
-
-    post<T=any> (url: string, body: IJson = {}, form = false) {
-        return this.request<T>({
-            url,
-            method: 'post',
-            body,
-            form,
-        });
-    }
-
-    postForm<T=any> (url: string, body: IJson = {}) {
-        return this.post<T>(url, body, true);
-    }
-
-    async postReturn<T=any> (url: string, body: IJson = {}) {
-        return this.parseResult(await this.post<T>(url, body));
-    }
-    async getReturn<T=any> (url: string, query: IJson = {}) {
-        return this.parseResult(await this.get<T>(url, query));
-    }
-    async requestReturn<T=any> (url: string, data: IJson = {}) {
-        const isPost = url.startsWith('post:');
-        url = url.replace(/^(post|get):/, '');
-        return this.parseResult(
-            await this[isPost ? 'post' : 'get']<T>(url, data)
-        );
-    }
-
-    async request<T> ({
-        url,
-        method = 'get',
-        body,
-        query,
-        headers = {},
-        base = this.base,
-        form,
-    }: IRequestOptions): IRequestReturn<T> {
-        headers = Object.assign({}, this.headers, headers);
-
-        const options: IHttpRequestOptions = {
-            url: base + url,
-            method, // get方式或post方式
-            headers,
-            body,
-            query,
-            form,
-            traceid: this.traceid,
-        };
-
-        let response: IRPCResponse|null = null;
-
-        if (Request.Interceptor) {
-            const result = Request.Interceptor(options);
-            if (result) response = result;
-        }
-
-        if (!response) {
-            response = await request(options);
-            if (Request.OnResponse) {
-                const result = Request.OnResponse(response);
-                if (result) response = result;
-            }
-        }
-
-        const { msg, data, success: suc, code = -1, err = null, extra } = response;
-        // console.warn(`【${url} 请求返回】`, code, data, extra);
-
-        if (!suc) {
-            return error(msg, code, err);
-        }
-        return success(data, msg, extra);
+export class Request extends BaseRequest {
+    constructor(options: Partial<IRequestConsOptions>){
+        super({
+            utils: {
+                success,
+                error,
+                request,
+            },
+            ...options,
+        })
     }
 }

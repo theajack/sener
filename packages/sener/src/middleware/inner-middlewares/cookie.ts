@@ -21,7 +21,7 @@ function concatCookie (json: IJson<ICookieOptions>) {
 }
 
 function cookieToString (key: string, cookie: ICookieOptions) {
-    let str = `${key}=${cookie.value};`;
+    let str = `${key}=${encodeURIComponent(cookie.value)};`;
     for (let k in cookie) {
         if (k === 'value') continue;
         // @ts-ignore
@@ -33,7 +33,7 @@ function cookieToString (key: string, cookie: ICookieOptions) {
         }
         str += `${k}=${value};`;
     }
-    return str;
+    return (str);
 }
 
 function parseCookie (cookie: string) {

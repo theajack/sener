@@ -11,13 +11,18 @@ import {
 
 
 function responseHtml (html: string, headers?: IJson<string>) {
+    const header = Object.assign(
+        { 
+            'Content-Type': 'text/html; charset=utf-8',
+            'Cache-Control': 'no-cache, no-store',
+        },
+        headers,
+    )
+    // console.log('header=', header)
     return responseData({
         data: html,
         statusCode: 200,
-        headers: Object.assign(
-            { 'Content-Type': 'text/html; charset=utf-8' },
-            headers,
-        )
+        headers: header
     });
 }
 
@@ -112,8 +117,10 @@ async function parseBody (request: IncomingMessage) {
             const buffer = Buffer.concat(chunks);
             let body: IJson<string> = {};
 
+            // console.log('request.headers=',request.headers['content-type'])
             if (request.headers['content-type']?.includes('application/json')) {
                 const bodyStr = buffer.toString();
+                // console.log('bodyStr=',bodyStr)
                 // todo 根据 header 判断
                 try {
                     body = JSON.parse(bodyStr);

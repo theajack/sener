@@ -75,7 +75,7 @@ export class StaticServer {
         // }
         this.defaultHeaders['cache-control'] = 'max-age=' + this.cache;
 
-        console.log('static-cache', this.defaultHeaders['cache-control'])
+        // console.log('static-cache', this.defaultHeaders['cache-control'])
 
         for (const k in this.defaultHeaders) {
             this.options.headers[k] = this.options.headers[k] || this.defaultHeaders[k];

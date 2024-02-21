@@ -61,4 +61,8 @@ export interface IRouterData<T=any> {
 
 export type IRouterReturn<T=any> = ISenerResponse<IRouterData<T>>;
 
-export type IRouterReturnPromise<T=any> = Promise<IRouterReturn<T>>
+export type IRouterReturnPromise<T=any> = Promise<IRouterReturn<T>>;
+
+declare global {
+  const __CLIENT__: false;
+}

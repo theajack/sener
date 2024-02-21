@@ -6,15 +6,23 @@
 import {
     MiddleWare, ISenerContext, makedir, IHookReturn,
 } from 'sener-types';
-import formidable, { errors as formidableErrors } from 'formidable-fix';
+import formidable, { type Part, errors as formidableErrors } from 'formidable-fix';
 import path from 'path';
+import type IncomingForm from 'formidable-fix/types/Formidable';
+
+export interface IFormOptions {
+    dir?: string,
+    filename?: (ctx: ISenerContext, name: string, ext: string, part: Part, form: IncomingForm)=>string,
+}
 
 export class Form extends MiddleWare {
     dir: string;
+    filename: IFormOptions['filename'];
 
-    constructor ({ dir = './public/upload' }: {dir?: string} = {}) {
+    constructor ({ dir = './public/upload', filename }: IFormOptions = {}) {
         super();
         this.dir = dir;
+        this.filename = filename;
     }
 
     private getUploadDir (): string {
@@ -33,7 +41,12 @@ export class Form extends MiddleWare {
         if (!requestHeaders['content-type']?.includes('multipart/form-data') || method !== 'POST') return;
         return new Promise(resolve => {
             const dir = this.getUploadDir();
-            const form = formidable({ uploadDir: dir });
+            const form = formidable({ 
+                uploadDir: dir, 
+                filename: this.filename ? (name: string, ext: string, part: Part, form: IncomingForm)=> {
+                    return this.filename!(ctx, name, ext, part, form)
+                }: undefined
+            });
             form.parse(request, (err, formData, files) => {
                 // console.log('Form parsed:', dir, formData, files);
                 if (err) {

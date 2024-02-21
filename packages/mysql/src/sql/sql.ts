@@ -1,4 +1,4 @@
-import { Cond, toSqlStr } from './cond';
+import { Cond, parseCondContent, toSqlStr } from './cond';
 
 /*
  * @Author: chenzhongsheng
@@ -15,7 +15,8 @@ export type ICondition<Model> = ({
 })[];
 
 export interface IWhere<Model> {
-    where?: ICondition<Model>
+    where?: ICondition<Model>;
+    reverse?: boolean;
 }
 
 export class SQL<
@@ -91,15 +92,19 @@ export class SQL<
         return this;
     }
 
-    where (conditions?: ICondition<Model>) {
-        if (!conditions) return this;
+    where (conditions?: ICondition<Model>, reverse = false) {
+        if (!conditions || !conditions.length) return this;
         this.sql += ` where ${conditions.map((cond: any) => {
-            return Object.keys(cond).map(key => {
+            return `(${Object.keys(cond).map(key => {
                 const v = cond[key];
-                // todo 待优化
-                return `${key}${v instanceof Array ? v[0] : Cond.eq(v)[0]}`;
-            }).join(' and ');
-        }).join(' or ')}`;
+                if(v instanceof Array){
+                    // ! array 表示or多个值
+                    return v.map(s=>`${key}${parseCondContent(s)}`).join(' or ');
+                }else{
+                    return `${key}${parseCondContent(v)}`;
+                }
+            }).join(reverse ? ' or ': ' and ')})`;
+        }).join(reverse ? ' and ': ' or ')}`;
         return this;
     }
 

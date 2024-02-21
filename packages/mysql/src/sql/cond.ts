@@ -13,36 +13,63 @@
     LIKE	搜索某种模式
     IN	指定针对某个列的多个可能值
  */
+export const MagicCode = '$%*&^!@+';
+const MN = MagicCode.length;
+
+export function checkMagicCode(v: string){
+    if(v.substring(0, MN) === MagicCode){
+        return [true, v.substring(MN)];
+    }
+    return [false, v];
+}
 
 export function toSqlStr (v: any) {
-    return (typeof v === 'string') ? `'${v}'` : v.toString();
+    if(typeof v === 'string'){
+        const [is, str] = checkMagicCode(v);
+        return is ? str : `'${str}'`;
+    }
+    return v.toString();
 }
+
+
+export function parseCondContent(v: any){
+    if(typeof v === 'string'){
+        const [is, str] = checkMagicCode(v);
+        return is ? str : `='${str}'`;
+    }
+    return `=${v.toString()}`;
+}
+
+function _(v: string){
+    return `${MagicCode}${v}`;
+}
+
 export const Cond = {
     // 用数组区分处理过
     eq (v: any) {
         // ♩
-        return [ `=${toSqlStr(v)}` ];
+        return _(`=${toSqlStr(v)}`);
     },
     notEq (v: any) {
-        return [ `<>${toSqlStr(v)}` ];
+        return _(`<>${toSqlStr(v)}`);
     },
     gt (v: any) {
-        return [ `>${v}` ];
+        return _(`>${v}`);
     },
     lt (v: any) {
-        return [ `<${v}` ];
+        return _(`<${v}`);
     },
     gte (v: any) {
-        return [ `>=${v}` ];
+        return _(`>=${v}`);
     },
     lte (v: any) {
-        return [ `<=${v}` ];
+        return _(`<=${v}`);
     },
     bt (v1: any, v2: any) {
-        return [ `between ${v1} and ${v2}` ];
+        return _(` between ${v1} and ${v2}`);
     },
-    in (...vs: any[]) {
-        return [ `in (${vs.map(v => toSqlStr(v)).join(',')})` ];
+    in (vs: any[]) {
+        return _(` in (${vs.map(v => toSqlStr(v)).join(',')})`);
     },
     /**
 % 表示多个字值，_ 下划线表示一个字符；
@@ -51,12 +78,18 @@ M% : 为能配符，正则表达式，表示的意思为模糊查询信息为 M 
 %M_ : 表示查询以M在倒数第二位的所有内容
      */
     like (v: string) {
-        return `like ${v}`;
+        return _(` like '${v}'`);
     },
     null () {
-        return `is null`;
+        return _(` is null`);
     },
     notNull () {
-        return 'is not null';
+        return _(' is not null');
     }
 };
+
+export const Calc = {
+    add(attr: string, num: number){
+        return _(`${attr}+${num}`)
+    }
+}
