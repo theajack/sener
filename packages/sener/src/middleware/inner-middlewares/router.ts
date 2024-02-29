@@ -6,6 +6,7 @@
 import {
     MiddleWare, IPromiseMayBe, IHookReturn, IJson,
     ISenerContext,
+    ISenerResponse,
 } from 'sener-types';
 
 export type IRouter = IJson<IRouterHandler|IRouterHandlerData>;
@@ -25,6 +26,7 @@ interface IRouterHelper {
     route<T extends IHookReturn = IHookReturn>(
         url: string, data?: Partial<ISenerContext>,
     ): IPromiseMayBe<T>;
+    redirect(url: string): ISenerResponse;
 }
 
 declare module 'sener-extend' {
@@ -103,6 +105,14 @@ export class Router extends MiddleWare {
         let index = 0; // 路由中加入一个自增index，可以用于生成错误码 id等
         ctx.index = () => index++;
         ctx.route = this._createRoute(ctx);
+        ctx.redirect = (url: string) => {
+            return ctx.responseData({
+                statusCode: 302,
+                headers: {
+                    'Location': url
+                }
+            })
+        }
     }
 
     enter (ctx: ISenerContext): IHookReturn {

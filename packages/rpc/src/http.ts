@@ -4,10 +4,15 @@
  * @Description: Coding something
  */
 
-import { IJson, IMethod, parseJson } from 'sener-types';
+import { IJson, IMethod, parseJson} from 'sener-types';
 import { convertData } from './utils';
 
 let _http: any, _https: any = null;
+
+export interface IFetchOptions {
+    credentials?: 'omit'|'same-origin'|'include',
+    mode?: 'cors'|'no-cors'|'same-origin',
+}
 
 interface IBaseOptions {
     url: string,
@@ -17,6 +22,7 @@ interface IBaseOptions {
     form?: boolean,
     traceid?: string,
     stringifyBody?: boolean,
+    fetchOptions?: IFetchOptions,
 }
 
 export interface IHttpRequestOptions extends IBaseOptions {
@@ -33,7 +39,7 @@ export interface IRPCResponse {
 }
 
 export function request ({
-    url, method, headers = {}, body, query, form, traceid
+    url, method, headers = {}, body, query, form, traceid, fetchOptions,
 }: IHttpRequestOptions) {
     url = url + (query ? `${convertData(query)}` : '');
 
@@ -44,20 +50,20 @@ export function request ({
     }
 
     if (typeof window !== 'undefined') {
-        return windowFetch({ url, method, headers, body, form });
+        return windowFetch({ url, method, headers, body, form, fetchOptions });
     } else {
         return nodeRequest({ url, method, headers, body, traceid, stringifyBody: false });
     }
 }
 
 async function windowFetch ({
-    url, method, headers, body, form
+    url, method, headers, body, form, fetchOptions = {}
 }: IBaseOptions): Promise<IRPCResponse> {
     const options: RequestInit = {
         method,
         headers,
-        mode: 'cors',
-        credentials: 'include'
+        mode: fetchOptions.mode || 'cors',
+        credentials: fetchOptions.credentials || 'same-origin',
     };
     if (method !== 'get' && body) {
         options.body = form ? body : JSON.stringify(body);

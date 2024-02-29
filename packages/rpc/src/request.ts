@@ -7,7 +7,7 @@ import {
     IJson, IMethod,
     error, success, IRouterReturn
 } from 'sener-types';
-import { IHttpRequestOptions, IRPCResponse, request } from './http';
+import { IHttpRequestOptions, IRPCResponse, request, IFetchOptions } from './http';
 import { IParsedData, IRequestReturn } from './type';
 
 interface ICommonRequestOptions {
@@ -24,6 +24,7 @@ export interface IRequestOptions extends ICommonRequestOptions {
     form?: boolean,
     traceid?: string,
     base?: string,
+    fetchOptions?: IFetchOptions,
 }
 
 export interface IRequestConsOptions extends ICommonRequestOptions {
@@ -70,38 +71,40 @@ export class Request {
         };
     }
 
-    get<T=any> (url: string, query: IJson = {}) {
+    get<T=any> (url: string, query: IJson = {}, fetchOptions?: IFetchOptions) {
         return this.request<T>({
             url,
             method: 'get',
-            query
+            query,
+            fetchOptions,
         });
     }
 
-    post<T=any> (url: string, body: IJson = {}, form = false) {
+    post<T=any> (url: string, body: IJson = {}, fetchOptions?: IFetchOptions, form = false) {
         return this.request<T>({
             url,
             method: 'post',
             body,
             form,
+            fetchOptions,
         });
     }
 
-    postForm<T=any> (url: string, body: IJson = {}) {
-        return this.post<T>(url, body, true);
+    postForm<T=any> (url: string, body: IJson = {}, fetchOptions?: IFetchOptions) {
+        return this.post<T>(url, body,fetchOptions, true);
     }
 
-    async postReturn<T=any> (url: string, body: IJson = {}) {
-        return this.parseResult(await this.post<T>(url, body));
+    async postReturn<T=any> (url: string, body: IJson = {}, fetchOptions?: IFetchOptions) {
+        return this.parseResult(await this.post<T>(url, body, fetchOptions));
     }
-    async getReturn<T=any> (url: string, query: IJson = {}) {
-        return this.parseResult(await this.get<T>(url, query));
+    async getReturn<T=any> (url: string, query: IJson = {}, fetchOptions?: IFetchOptions) {
+        return this.parseResult(await this.get<T>(url, query, fetchOptions));
     }
-    async requestReturn<T=any> (url: string, data: IJson = {}) {
+    async requestReturn<T=any> (url: string, data: IJson = {}, fetchOptions?: IFetchOptions) {
         const isPost = url.startsWith('post:');
         url = url.replace(/^(post|get):/, '');
         return this.parseResult(
-            await this[isPost ? 'post' : 'get']<T>(url, data)
+            await this[isPost ? 'post' : 'get']<T>(url, data, fetchOptions)
         );
     }
 
@@ -113,6 +116,7 @@ export class Request {
         headers = {},
         base = this.base,
         form,
+        fetchOptions,
     }: IRequestOptions): IRequestReturn<T> {
         headers = Object.assign({}, this.headers, headers);
 
@@ -124,6 +128,7 @@ export class Request {
             query,
             form,
             traceid: this.traceid,
+            fetchOptions,
         };
 
         let response: IRPCResponse|null = null;
