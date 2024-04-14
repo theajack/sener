@@ -15,7 +15,11 @@ declare module 'sener-extend' {
 function concatCookie (json: IJson<ICookieOptions>) {
     const cookie: string[] = [];
     for (const k in json) {
-        cookie.push(cookieToString(k, json[k]));
+        let data = json[k];
+        // let value = (typeof data === 'object' && !!data) ? data.value: data;
+        // if(value !== null){
+        cookie.push(cookieToString(k, data));
+        // }
     }
     return cookie;
 }
@@ -28,7 +32,7 @@ function cookieToString (key: string, cookie: ICookieOptions) {
         let value = cookie[k];
         if (k === 'expire') {
             k = 'expires';
-            const date = value <= 0 ? new Date() : new Date(value);
+            const date = value <= 0 ? new Date(Date.now()-1000) : new Date(value);
             value = date.toUTCString();
         }
         str += `${k}=${value};`;
@@ -96,7 +100,7 @@ export class CookieClient {
         const removeKeys: string[] = [];
         const single = (k: string, v: any|ICookieOptions) => {
             if (v === null) {
-                v = { value: '', expire: -1 };
+                v = { value: null, expire: -1 };
                 removeKeys.push(k);
             } else if (typeof v !== 'object') {
                 v = { value: v };
@@ -105,6 +109,7 @@ export class CookieClient {
             // console.log('setcookie', k, this._cookie[k])
         };
         if (typeof key === 'object') {
+            // console.log('set cookie', key);
             for (const k in key) single(k, key[k]);
         } else if (typeof value === 'undefined') { // string 形式设置多个
             Object.assign(this._cookie, parseCookie(key));
@@ -115,18 +120,20 @@ export class CookieClient {
             }
             single(key, value);
         }
+        // console.log('concatCookie', this._cookie);
         this.response.setHeader('Set-Cookie', concatCookie(this._cookie));
         // console.log('Set-Cookie', concatCookie(this._cookie));
         removeKeys.forEach(k => {delete this._cookie[k];});
     }
 
-    remove (key: string|string[]) {
+    remove (key: string|string[], opt: ICookieOptions = {}) {
+        opt = Object.assign(opt, {expire: -1})
         if (typeof key === 'string') {
-            this.set(key, null);
+            this.set(key, '', opt);
         } else {
-            const map: any = {};
+            const map: Record<string, ICookieValue> = {};
             for (const k of key)
-                map[k] = null;
+                map[k] = Object.assign({value: ''}, opt)
             this.set(map);
         }
     }

@@ -66,8 +66,9 @@ export class Server {
                 statusCode: -1,
                 success: true,
                 responded: false,
-                redirect(url: string, query: IJson){
+                redirect(url: string, query: IJson, headers: any = {}){
                     response.writeHead(301, {
+                        ...headers,
                         'Location': `${url}${concatQuery(query)}`,
                         'Cache-Control': 'no-cache, no-store', // ! 禁止缓存
                     });
@@ -138,7 +139,7 @@ export class Server {
                 response.setHeader(k, headers[k]);
             }
         } catch (e) {
-            console.error('router中如果已经对请求做了返回处理，请返回 {responded: true};', e);
+            console.error('router中如果已经对请求做了返回处理，请返回 {returned: true};', e);
             return;
         }
         // todo 数据类型判断

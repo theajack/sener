@@ -31,7 +31,7 @@ export interface IMiddleWareDataBase extends IHttpInfo, ISenerHelper, IHelperFun
   response: IResponse;
   env: ISenerEnv & IJson;
   responded: boolean;
-  redirect: (url: string, query?: IJson) => void,
+  redirect: (url: string, query?: IJson, header?: IJson) => void,
   isOptions: boolean; // 是否是 options method
   returned: boolean;
 }
