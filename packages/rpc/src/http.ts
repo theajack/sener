@@ -10,6 +10,10 @@ import { convertData, windowFetch } from './utils';
 
 let _http: any, _https: any = null;
 
+export interface IFetchOptions {
+    credentials?: 'omit'|'same-origin'|'include',
+    mode?: 'cors'|'no-cors'|'same-origin',
+}
 export interface IBaseOptions {
     url: string,
     method: IMethod, // get方式或post方式
@@ -19,6 +23,7 @@ export interface IBaseOptions {
     form?: boolean,
     traceid?: string,
     stringifyBody?: boolean,
+    fetchOptions?: IFetchOptions,
 }
 
 export interface IHttpRequestOptions extends IBaseOptions {
@@ -35,7 +40,7 @@ export interface IRPCResponse {
 }
 
 export function request ({
-    url, method, headers = {}, body, query, form, traceid
+    url, method, headers = {}, body, query, form, traceid, fetchOptions,
 }: IHttpRequestOptions) {
 
     if (!form) headers = Object.assign({ 'Content-Type': 'application/json;charset=utf-8' }, headers || {});
@@ -45,7 +50,7 @@ export function request ({
     }
 
     if (typeof window !== 'undefined') {
-        return windowFetch({ url, method, headers, body, form });
+        return windowFetch({ url, method, headers, body, form, fetchOptions });
     } else {
         return nodeRequest({ url, method, headers, body, traceid, stringifyBody: false });
     }

@@ -6,8 +6,8 @@
 import {
     MiddleWare, IPromiseMayBe, IHookReturn, IJson,
     ISenerContext,
-    IMethod,
     IServeMethod,
+    ISenerResponse,
 } from 'sener-types';
 
 export type IRouter = IJson<IRouterHandler|IRouterHandlerData>;
@@ -31,6 +31,7 @@ interface IRouterHelper {
         url: string, data?: Partial<ISenerContext>,
     ): IPromiseMayBe<T>;
     params: IJson; // 路由参数 todo 类型
+    redirect(url: string): ISenerResponse;
 }
 
 declare module 'sener-extend' {
@@ -189,6 +190,15 @@ export class Router extends MiddleWare {
 
         ctx.params = route?.reg ? this._extractFuzzyParam(ctx.url, route as any): {};
         // console.log('ctx.url=',ctx.url)
+
+        ctx.redirect = (url: string) => {
+            return ctx.responseData({
+                statusCode: 302,
+                headers: {
+                    'Location': url
+                }
+            })
+        }
     }
 
     private _extractFuzzyParam(url: string, route: Required<IRouterHandlerData>): IJson{

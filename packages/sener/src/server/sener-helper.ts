@@ -115,17 +115,21 @@ async function parseBody (request: IncomingMessage) {
             chunks.push(chunk);
         }).on('end', () => {
             const buffer = Buffer.concat(chunks);
-            let body: IJson<string> = {};
+            let body: IJson<any> = {};
+            const bodyStr = buffer.toString();
 
             // console.log('request.headers=',request.headers['content-type'])
             if (request.headers['content-type']?.includes('application/json')) {
-                const bodyStr = buffer.toString();
-                // console.log('bodyStr=',bodyStr)
                 // todo 根据 header 判断
                 try {
                     body = JSON.parse(bodyStr);
                 } catch (e) {
                     body = parseParam(bodyStr);
+                }
+            }else{
+                body = {
+                    content: bodyStr,
+                    json: parseParam(bodyStr),
                 }
             }
             resolve({
