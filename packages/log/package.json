@@ -1,11 +1,11 @@
 {
     "name": "sener-log",
-    "version": "0.0.16",
+    "version": "0.0.17",
     "scripts": {
         "build": "node ../../scripts/build/build.js log"
     },
     "dependencies": {
-        "sener-types": "^0.0.16"
+        "sener-types": "^0.0.17"
     },
     "main": "dist/sener-log.cjs.js",
     "typings": "dist/sener-log.d.ts",
