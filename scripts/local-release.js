@@ -18,6 +18,11 @@ function main () {
     // execSync('npm run build');
     console.log('Build Docs ...');
     execSync('npm run build:docs');
+
+
+    execSync('git add .');
+    execSync(`git commit -m "feat: Version ${version} Build"`);
+
     console.log('Publish ...');
     execSync('npx lerna publish from-package --yes');
 }
