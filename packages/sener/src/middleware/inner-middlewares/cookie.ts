@@ -15,7 +15,7 @@ declare module 'sener-extend' {
 function concatCookie (json: IJson<ICookieOptions>) {
     const cookie: string[] = [];
     for (const k in json) {
-        let data = json[k];
+        const data = json[k];
         // let value = (typeof data === 'object' && !!data) ? data.value: data;
         // if(value !== null){
         cookie.push(cookieToString(k, data));
@@ -32,7 +32,7 @@ function cookieToString (key: string, cookie: ICookieOptions) {
         let value = cookie[k];
         if (k === 'expire') {
             k = 'expires';
-            const date = value <= 0 ? new Date(Date.now()-1000) : new Date(value);
+            const date = value <= 0 ? new Date(Date.now() - 1000) : new Date(value);
             value = date.toUTCString();
         }
         str += `${k}=${value};`;
@@ -127,13 +127,13 @@ export class CookieClient {
     }
 
     remove (key: string|string[], opt: ICookieOptions = {}) {
-        opt = Object.assign(opt, {expire: -1})
+        opt = Object.assign(opt, { expire: -1 });
         if (typeof key === 'string') {
             this.set(key, '', opt);
         } else {
             const map: Record<string, ICookieValue> = {};
             for (const k of key)
-                map[k] = Object.assign({value: ''}, opt)
+                map[k] = Object.assign({ value: '' }, opt);
             this.set(map);
         }
     }
@@ -151,7 +151,7 @@ export class Cookie extends MiddleWare {
     }
 
     init (ctx: ISenerContext) {
-        if(!this._options.domain){
+        if (!this._options.domain) {
             this._options.domain = ctx.clientDomain;
         }
         // console.log('this._options.domain=', this._options.domain);

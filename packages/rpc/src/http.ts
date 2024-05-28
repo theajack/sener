@@ -50,9 +50,9 @@ export function request ({
     }
 
     if (typeof window !== 'undefined') {
-        return windowFetch({ url, method, headers, body, form, fetchOptions });
+        return windowFetch({ url, method, query, headers, body, form, fetchOptions });
     } else {
-        return nodeRequest({ url, method, headers, body, traceid, stringifyBody: false });
+        return nodeRequest({ url, method, headers, query, body, traceid, stringifyBody: false });
     }
 }
 

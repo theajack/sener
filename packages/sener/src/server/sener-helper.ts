@@ -12,12 +12,12 @@ import {
 
 function responseHtml (html: string, headers?: IJson<string>) {
     const header = Object.assign(
-        { 
+        {
             'Content-Type': 'text/html; charset=utf-8',
             'Cache-Control': 'no-cache, no-store',
         },
         headers,
-    )
+    );
     // console.log('header=', header)
     return responseData({
         data: html,
@@ -88,7 +88,7 @@ export async function parseHttpInfo (request: http.IncomingMessage): Promise<IHt
         // @ts-ignore
         request.connection?.socket?.remoteAddress;
     const result = headers.origin?.match(/https?:\/\/(.*?)(:|$)/);
-    const clientDomain = result ? result[1]:'';
+    const clientDomain = result ? result[1] : '';
     return {
         requestHeaders: headers,
         clientDomain,
@@ -126,11 +126,11 @@ async function parseBody (request: IncomingMessage) {
                 } catch (e) {
                     body = parseParam(bodyStr);
                 }
-            }else{
+            } else {
                 body = {
                     content: bodyStr,
                     json: parseParam(bodyStr),
-                }
+                };
             }
             resolve({
                 body,

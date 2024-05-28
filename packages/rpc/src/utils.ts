@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 import type { IJson } from 'sener-types';
-import type {IBaseOptions, IRPCResponse} from './http';
+import type { IBaseOptions, IRPCResponse } from './http';
 
 export function convertData (data: IJson, isSearch = true) {
     let res = '';
@@ -36,9 +36,9 @@ export async function windowFetch ({
         options.body = form ? body : JSON.stringify(body);
     }
     // @ts-ignore
-    if(!form && !options.headers['content-type']){
+    if (!form && !options.headers['content-type']) {
         // @ts-ignore
-        options.headers['content-type'] = 'application/json'
+        options.headers['content-type'] = 'application/json';
     }
     try {
         // console.log('windowFetch=', options)

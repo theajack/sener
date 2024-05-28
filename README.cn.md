@@ -365,8 +365,7 @@ options
 ```ts
 new Config({
   dir: '', // 用于保存配置文件的目录。默认值为“”
-  file: 'default', // 配置文件的文件名。默认值为“默认值”
-  // file: ['c1', 'c2'],  // 传入数组表示使用了多个配置文件
+  initial: {}, // 初始化配置文件列表，key表示文件名(不需要带.json后缀)，值表示配置内容。默认值为 {_default: {}}
   format: false, // 是否格式化 JSON 文件。默认值：开发环境为假，生产环境为真
 })
 ```
@@ -438,6 +437,8 @@ new Sener({
 ```
 
 详情请参考 [mongodb](https://www.npmjs.com/package/mongodb)
+
+#### 3.9.1 封装
 
 ### 3.10 rpc middleware
 

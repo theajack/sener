@@ -33,7 +33,8 @@ class Test2Middle extends MiddleWare {
         res.config.$onChange;
         res.config.age;
 
-        res.logger();
+
+        res.logger.log('111');
     }
 }
 
@@ -44,17 +45,14 @@ function delay (time = 1000) {
 }
 
 const config = new Config({
-    initial: [ {
-        filename: 'json',
-        data: {
+    initial: {
+        json: {
             level: 1,
-        }
-    }, {
-        filename: 'user',
-        data: {
+        },
+        user: {
             age: 12
-        }
-    } ],
+        },
+    },
     onchange: (({ key, value, prev }) => {
         console.log('onConfigChange', key, value, prev);
     })

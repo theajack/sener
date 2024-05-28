@@ -16,31 +16,31 @@
 export const MagicCode = '$%*&^!@+';
 const MN = MagicCode.length;
 
-export function checkMagicCode(v: string){
-    if(v.substring(0, MN) === MagicCode){
-        return [true, v.substring(MN)];
+export function checkMagicCode (v: string) {
+    if (v.substring(0, MN) === MagicCode) {
+        return [ true, v.substring(MN) ];
     }
-    return [false, v];
+    return [ false, v ];
 }
 
 export function toSqlStr (v: any) {
-    if(typeof v === 'string'){
-        const [is, str] = checkMagicCode(v);
+    if (typeof v === 'string') {
+        const [ is, str ] = checkMagicCode(v);
         return is ? str : `'${str}'`;
     }
     return v.toString();
 }
 
 
-export function parseCondContent(v: any){
-    if(typeof v === 'string'){
-        const [is, str] = checkMagicCode(v);
+export function parseCondContent (v: any) {
+    if (typeof v === 'string') {
+        const [ is, str ] = checkMagicCode(v);
         return is ? str : `='${str}'`;
     }
     return `=${v.toString()}`;
 }
 
-function _(v: string){
+function _ (v: string) {
     return `${MagicCode}${v}`;
 }
 
@@ -89,7 +89,7 @@ M% : 为能配符，正则表达式，表示的意思为模糊查询信息为 M 
 };
 
 export const Calc = {
-    add(attr: string, num: number){
-        return _(`${attr}+${num}`)
+    add (attr: string, num: number) {
+        return _(`${attr}+${num}`);
     }
-}
+};

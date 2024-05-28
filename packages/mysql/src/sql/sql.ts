@@ -1,4 +1,4 @@
-import { Cond, parseCondContent, toSqlStr } from './cond';
+import { parseCondContent, toSqlStr } from './cond';
 
 /*
  * @Author: chenzhongsheng
@@ -97,14 +97,14 @@ export class SQL<
         this.sql += ` where ${conditions.map((cond: any) => {
             return `(${Object.keys(cond).map(key => {
                 const v = cond[key];
-                if(v instanceof Array){
+                if (v instanceof Array) {
                     // ! array 表示or多个值
-                    return v.map(s=>`${key}${parseCondContent(s)}`).join(' or ');
-                }else{
+                    return v.map(s => `${key}${parseCondContent(s)}`).join(' or ');
+                } else {
                     return `${key}${parseCondContent(v)}`;
                 }
-            }).join(reverse ? ' or ': ' and ')})`;
-        }).join(reverse ? ' and ': ' or ')}`;
+            }).join(reverse ? ' or ' : ' and ')})`;
+        }).join(reverse ? ' and ' : ' or ')}`;
         return this;
     }
 

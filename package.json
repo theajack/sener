@@ -6,7 +6,7 @@
     "repository": "git@github.com:theajack/sener.git",
     "author": "tackchen <theajack@qq.com>",
     "scripts": {
-        "lint": "eslint packages --ext ts",
+        "lint": "eslint --fix packages --ext ts",
         "_dev": "node scripts/dev.js \"${npm_config_sample}\"",
         "_serve": "npx nodemon scripts/dev/bundles/${npm_config_sample}.bundle.js",
         "devbase": "run-p _serve _dev",

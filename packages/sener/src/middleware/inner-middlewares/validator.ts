@@ -84,7 +84,7 @@ export class Validator extends MiddleWare {
                     if (!rule.test(value.toString())) error = `Property '${k}' is Invalid`;
                 }
                 if (error) {
-                    console.log(`Validator Fail: ${error}`)
+                    console.log(`Validator Fail: ${error}`);
                     throw new Error(`Validator Fail: ${error}`);
                 }
             }
@@ -101,9 +101,9 @@ export class Validator extends MiddleWare {
         res.vbody = (template: IValidTemplate) => {
             return this._validate(template, body);
         };
-        res.validate = (data, template: IValidTemplate) =>{
+        res.validate = (data, template: IValidTemplate) => {
             return this._validate(template, data);
-        }
+        };
         // const data = res.vquery({
         //     user: 'string',
         //     size: [ 'boolean', 'required' ]

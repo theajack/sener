@@ -24,7 +24,7 @@ export class Table<
         return (await this.filter(...conds))[0] || null;
     }
 
-    async exist(...conds: ICondition<Model>): Promise<boolean> {
+    async exist (...conds: ICondition<Model>): Promise<boolean> {
         return !!(await this.find(...conds));
     }
 
@@ -45,14 +45,14 @@ export class Table<
     } = {}): Promise<Model[]> {
         this.sql.select(...this.allKeys);
         this.sql.where(data.where, data.reverse);
-        if(data.orderBy){
-            const {keys, desc} = data.orderBy;
-            desc ? this.sql.orderByDesc(...keys): this.sql.orderBy(...keys);
+        if (data.orderBy) {
+            const { keys, desc } = data.orderBy;
+            desc ? this.sql.orderByDesc(...keys) : this.sql.orderBy(...keys);
         }
         this.sql.page(data);
         // @ts-ignore
         // console.log('comment page: where sql str=', this.sql.sql)
-        const { results, fields } = await this.helper.querySql<Model[]>(this.sql);
+        const { results } = await this.helper.querySql<Model[]>(this.sql);
         // console.log('comment page done')
         return results || [];
     }
@@ -64,16 +64,16 @@ export class Table<
         return results[0]['count(*)'] as number;
     }
 
-    async update(data: Partial<Model>, conds: ICondition<Model>, reverse = false){
-        const { results, fields } = await this.helper.querySql(
+    async update (data: Partial<Model>, conds: ICondition<Model>, reverse = false) {
+        const { results } = await this.helper.querySql(
             this.sql.update(data).where(conds, reverse)
         );
         // console.log('update results, fields', results, fields, this.sql.sql)
         return results;
     }
 
-    async add(data: Partial<Model>) {
-        const { results, fields } = await this.helper.querySql(
+    async add (data: Partial<Model>) {
+        const { results } = await this.helper.querySql(
             this.sql.insert(data)
         );
         // console.log('add results, fields', results, fields, this.sql.sql)
@@ -83,7 +83,7 @@ export class Table<
         };
     }
 
-    exec<T = any>(sql: SQL): Promise<IQuerySqlResult> {
+    exec<T = any> (sql: SQL): Promise<IQuerySqlResult> {
         return this.helper.querySql<T>(sql);
     }
 }

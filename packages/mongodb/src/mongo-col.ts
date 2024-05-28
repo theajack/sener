@@ -54,7 +54,7 @@ export class MongoCol<T extends any = IJson> {
         return this.col.find(filter).toArray() as any;
     }
 
-    async findOne(filter: IJson = {}): Promise<T> {
+    async findOne (filter: IJson = {}): Promise<T> {
         return (await this.find(filter))[0];
     }
 

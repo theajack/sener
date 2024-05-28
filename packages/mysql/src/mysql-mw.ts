@@ -29,12 +29,12 @@ export class Mysql<
     constructor (config: IMysqlConfig<Tables>) {
         super();
         this._config = config;
-        if(config.tables) this.tableModels = config.tables;
+        if (config.tables) this.tableModels = config.tables;
         this.initConnection();
         // this._handleDisconnect();
     }
 
-    private initConnection(){
+    private initConnection () {
         this.connection = mysql.createConnection(this._config);
         this.connection.connect();
     }
@@ -42,20 +42,20 @@ export class Mysql<
     // private _handleDisconnect(){
     //     this.connection.on('error', (err) => {
     //         this.handlerError(err);
-    //     }); 
+    //     });
     // }
 
-    private handlerError(err: any){ 
-        // if (!err.fatal) {       
-        //     return;     
-        // }      
-        // if (err.code !== 'PROTOCOL_CONNECTION_LOST') {       
-        //     throw err;     
-        // }      
-        console.log('Re-connecting lost connection: ' + err.stack);       
-        try{
-            this.initConnection(); 
-        }catch(e){
+    private handlerError (err: any) {
+        // if (!err.fatal) {
+        //     return;
+        // }
+        // if (err.code !== 'PROTOCOL_CONNECTION_LOST') {
+        //     throw err;
+        // }
+        console.log('Re-connecting lost connection: ' + err.stack);
+        try {
+            this.initConnection();
+        } catch (e) {
             console.log('connection error', e);
             this.handlerError(e);
         }
@@ -88,13 +88,13 @@ export class Mysql<
                             sql = target;
                         }
                     }
-                    return new Promise((resolve, reject) => {
+                    return new Promise((resolve) => {
                         // console.log('query sql', sql);
                         this.connection.query(sql, (error, results, fields = []) => {
                             if (error) {
                                 console.log('mysql query error', error);
                                 // this.handlerError(err);
-                                resolve({results: null, fields: null} as any);
+                                resolve({ results: null, fields: null } as any);
                                 this.handlerError(error);
                                 return;
                             };

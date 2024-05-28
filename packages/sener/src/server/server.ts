@@ -66,7 +66,7 @@ export class Server {
                 statusCode: -1,
                 success: true,
                 responded: false,
-                redirect(url: string, query: IJson, headers: any = {}){
+                redirect (url: string, query: IJson, headers: any = {}) {
                     response.writeHead(301, {
                         ...headers,
                         'Location': `${url}${concatQuery(query)}`,
