@@ -403,6 +403,9 @@ new Sener({
 
 详情请参考 [mysql](https://www.npmjs.com/package/mysql)
 
+### 3.8.1 封装
+
+SQL中间件封装了对表的基本操作，使得开发者可以使用API便捷的操作数据表，详情请[参考文档](https://theajack.github.io/sener-docs/doc/mysql.html)
 
 ### 3.9 mongodb
 
@@ -439,6 +442,8 @@ new Sener({
 详情请参考 [mongodb](https://www.npmjs.com/package/mongodb)
 
 #### 3.9.1 封装
+
+mongodb中间件封装了对col的基本操作，使得开发者可以使用API便捷的操作数据表，详情请[参考文档](https://theajack.github.io/sener-docs/doc/mongodb.html)
 
 ### 3.10 rpc middleware
 

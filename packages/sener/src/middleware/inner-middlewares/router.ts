@@ -8,6 +8,7 @@ import {
     ISenerContext,
     IServeMethod,
     ISenerResponse,
+    concatQuery,
 } from 'sener-types';
 
 export type IRouter = IJson<IRouterHandler|IRouterHandlerData>;
@@ -191,13 +192,13 @@ export class Router extends MiddleWare {
         ctx.params = route?.reg ? this._extractFuzzyParam(ctx.url, route as any) : {};
         // console.log('ctx.url=',ctx.url)
 
-        ctx.redirect = (url: string) => {
-            return ctx.responseData({
-                statusCode: 302,
-                headers: {
-                    'Location': url
-                }
+        ctx.redirect = (url: string, query: IJson = {}, headers: IJson = {}) => {
+            ctx.response.writeHead(302, {
+                ...headers,
+                'Location': `${url}${concatQuery(query)}`,
+                'Cache-Control': 'no-cache, no-store', // ! 禁止缓存
             });
+            ctx.response.end();
         };
     }
 

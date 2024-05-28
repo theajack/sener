@@ -88,6 +88,9 @@ export const router = new Router({
         // console.log(body, requestHeaders, url);
         return addReply({ body, write });
     },
+    '/test-redirect': ({ redirect }) => {
+        redirect('/aa', { a: 1 });
+    },
 
     'get:/aa': ({ read }) => {
 

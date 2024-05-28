@@ -5,7 +5,7 @@
  */
 import http from 'http';
 import { MiddleWareManager } from '../middleware/middleware-manager';
-import { IMiddleWare, ISenerContext, IOnError, ISenerResponse, IMiddleHookNames, MiddleWare, concatQuery } from 'sener-types';
+import { IMiddleWare, ISenerContext, IOnError, ISenerResponse, IMiddleHookNames, MiddleWare } from 'sener-types';
 import {
     IJson, IServerOptions, IErrorFrom, IResponse
 } from 'sener-types';
@@ -66,14 +66,6 @@ export class Server {
                 statusCode: -1,
                 success: true,
                 responded: false,
-                redirect (url: string, query: IJson, headers: any = {}) {
-                    response.writeHead(301, {
-                        ...headers,
-                        'Location': `${url}${concatQuery(query)}`,
-                        'Cache-Control': 'no-cache, no-store', // ! 禁止缓存
-                    });
-                    response.end();
-                },
                 returned: false,
                 isOptions: false,
                 ...httpInfo,

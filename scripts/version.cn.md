@@ -4,6 +4,22 @@
  * @Description: Coding something
 -->
 
+## 0.0.17
+
+1. 路由支持复用前缀
+2. 路由支持模糊查询
+3. cookie支持默clientDomain
+4. mongodb中间件 封装 col基本操作
+5. SQL中间件 封装表和sql语句基本操作
+6. 优化body解析
+7. 其他优化和bugfix
+
+
+## 0.0.16 
+
+1. fix module extend
+
+
 ## 0.0.15
 
 1. 新增cookie、session、env、ip-monitor、validator中间件
