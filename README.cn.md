@@ -136,7 +136,6 @@ const router = new Router({
     },
 });
 new Sener({
-  // router 要位于中间件的第一个
   middlewares: [router], 
 });
 ```

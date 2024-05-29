@@ -133,5 +133,11 @@ export const router = new Router({
         console.log(config.age);
         config.age ++;
         return { data: { level: config.level, age: config.age } };
+    },
+    '/sql': ({ sql, _ }) => {
+        const sqlStr = sql('user').select().where([
+            { age: _.gt(18) }
+        ]);
+        return { data: { sqlStr } };
     }
 });

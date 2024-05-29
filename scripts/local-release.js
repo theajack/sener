@@ -4,6 +4,8 @@
  * @Description: Coding something
  */
 const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
 
 function main () {
@@ -16,15 +18,23 @@ function main () {
     execSync(`npx lerna version ${version} --no-git-tag-version --force-publish --yes`);
     // console.log('Build ...');
     // execSync('npm run build');
-    console.log('Build Docs ...');
-    execSync('npm run build:docs');
-
-
-    execSync('git add .');
-    execSync(`git commit -m "feat: Version ${version} Build"`);
+    // console.log('Build Docs ...');
+    // execSync('npm run build:docs');
 
     console.log('Publish ...');
-    execSync('npx lerna publish from-package --yes');
+
+    // execSync('cd ./packages/types && npm publish');
+
+    const list = fs.readdirSync(path.resolve(__dirname, '../packages'));
+
+    for (const name of list) {
+        if (name === 'types') {
+            continue;
+        }
+        console.log(`Publish ${name}`);
+        execSync(`cd ${path.resolve(__dirname, `../packages/${name}`)} && npm publish`);
+
+    }
 }
 
 main();

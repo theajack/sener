@@ -7,7 +7,6 @@ import {
     MiddleWare, IPromiseMayBe, IHookReturn, IJson,
     ISenerContext,
     IServeMethod,
-    ISenerResponse,
     concatQuery,
 } from 'sener-types';
 
@@ -32,7 +31,7 @@ interface IRouterHelper {
         url: string, data?: Partial<ISenerContext>,
     ): IPromiseMayBe<T>;
     params: IJson; // 路由参数 todo 类型
-    redirect(url: string): ISenerResponse;
+    redirect: (url: string, query?: IJson, header?: IJson) => void,
 }
 
 declare module 'sener-extend' {
