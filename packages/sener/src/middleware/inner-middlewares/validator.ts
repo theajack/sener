@@ -63,13 +63,15 @@ export class Validator extends MiddleWare {
             const rule: IValidRule = isArr ? v[1] : 'optional';
 
 
-            // console.log(k, format, value, type, parseFloat(value));
-            if (format === 'string' ) {
-                if (type !== 'string') result[k] = value.toString();
-            } else if (format === 'number') {
-                if (type !== 'number') result[k] = parseFloat(value);
-            } else if (format === 'boolean') {
-                if (type !== 'boolean') result[k] = type === 'string' ? (value === 'true') : (!!value);
+            if(type !== 'undefined' && value !== null){
+                // console.log(k, format, value, type, parseFloat(value));
+                if (format === 'string' ) {
+                    if (type !== 'string') result[k] = value.toString();
+                } else if (format === 'number') {
+                    if (type !== 'number') result[k] = parseFloat(value);
+                } else if (format === 'boolean') {
+                    if (type !== 'boolean') result[k] = type === 'string' ? (value === 'true') : (!!value);
+                }
             }
             // todo 增加其他 format
 

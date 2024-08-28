@@ -20,10 +20,8 @@ export interface IWhere<Model> {
 }
 
 export class SQL<
-    Model extends Record<string, any> = {
-        [prop: string]: string|number|boolean,
-    },
-    Key = keyof Model,
+    Model extends Record<string, any> = Record<string, any>,
+    Key = (keyof Model),
 > {
     private tableName: string;
 
@@ -38,10 +36,11 @@ export class SQL<
         this.sql = '';
     }
 
-    select (...args: Key[]) {
+
+    select (...args: (Key|1)[]) {
         return this._select(!args.length ? '*' : args.join(','));
     }
-    selectDistinct (...args: Key[]) {
+    selectDistinct (...args: (Key|1)[]) {
         return this._select(`distinct ${args.join(',')}`);
     }
 
@@ -78,7 +77,9 @@ export class SQL<
     SET column1 = value1, column2 = value2, ...
     WHERE condition;
     */
-    update (data: Partial<Model>) {
+    update (data: {
+        [prop in keyof Model]?: Model[prop]|string
+    }) {
         let str = '';
         for (const key in data) {
             str += `,${key}=${toSqlStr(data[key])}`;
@@ -114,7 +115,7 @@ export class SQL<
     }
 
     count () {
-        this._select('count(*)');
+        this._select('count(1)');
         return this;
     }
     sum (name: Key) {
@@ -142,7 +143,15 @@ export class SQL<
         index = 1,
         size = 10,
     }: ISQLPage = {}) {
-        this.sql += ` LIMIT ${size} OFFSET ${index - 1}`;
+        return this.limit(size).offset((index - 1) * 10)
+    }
+
+    limit(v: number){
+        this.sql += ` LIMIT ${v}`;
+        return this;
+    }
+    offset(v: number){
+        this.sql += ` OFFSET ${v}`;
         return this;
     }
 }

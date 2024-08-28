@@ -86,6 +86,9 @@ const createBaseConfig = ({
                 'process.env.NODE_ENV': '"production"',
                 'process.env.VERSION': `"${pkg.version}"`,
                 '__CLIENT__': 'false',
+                '__DEV__': 'false',
+                '__USE_PROD__': 'false',
+
             }),
             ...plugins,
         ],

@@ -85,7 +85,7 @@ M% : 为能配符，正则表达式，表示的意思为模糊查询信息为 M 
     },
     notNull () {
         return _(' is not null');
-    }
+    },
 };
 
 export const Calc = {

@@ -24,6 +24,7 @@ export interface IBaseOptions {
     traceid?: string,
     stringifyBody?: boolean,
     fetchOptions?: IFetchOptions,
+    isSuccess?: (data: any) => boolean,
 }
 
 export interface IHttpRequestOptions extends IBaseOptions {
@@ -40,7 +41,9 @@ export interface IRPCResponse {
 }
 
 export function request ({
-    url, method, headers = {}, body, query, form, traceid, fetchOptions,
+    url, method, headers = {}, body, query, form, traceid, fetchOptions, 
+    stringifyBody = true,
+    isSuccess = (data) => data?.code === 0,
 }: IHttpRequestOptions) {
 
     if (!form) headers = Object.assign({ 'Content-Type': 'application/json;charset=utf-8' }, headers || {});
@@ -50,17 +53,19 @@ export function request ({
     }
 
     if (typeof window !== 'undefined') {
-        return windowFetch({ url, method, headers, body, form, fetchOptions });
+        return windowFetch({ url, method, headers, body, form, fetchOptions, isSuccess });
     } else {
-        return nodeRequest({ url, method, headers, body, traceid, stringifyBody: false });
+        return nodeRequest({ url, method, headers, body, traceid, stringifyBody, isSuccess });
     }
 }
 
 
 export function nodeRequest ({
-    url, method, headers = {}, body, traceid, stringifyBody = true, query
+    url, method, headers = {}, body, traceid, stringifyBody = true, query,
+    isSuccess = (data) => data?.code === 0,
 }: IBaseOptions): Promise<IRPCResponse> {
     url = url + (query ? `${convertData(query)}` : '');
+    console.log(url);
     // console.log('----host', host, path, method, headers, https, port, body);
     if (!_http) _http = require('http');
     if (!_https) _https = require('https');
@@ -80,11 +85,19 @@ export function nodeRequest ({
                 responseString += data;
             });
             res.on('end', function () {
-                const result = parseJson(responseString);
-                const fail = !result || (typeof result.code === 'number' && result.code !== 0);
+                let result = parseJson(responseString);
+                let success = true;
+                let $json = false;
+                if(result){
+                    success = isSuccess(result);
+                    $json = true;
+                } else {
+                    result = { content: responseString }
+                }
                 resolve({
-                    success: !fail,
-                    ...(result || {}),
+                    success,
+                    $json,
+                    ...result,
                 });
             });
 

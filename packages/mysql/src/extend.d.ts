@@ -28,7 +28,7 @@ export interface IMysqlHelper<Tables extends ITables = {}> {
   //   [prop: string]: string|number|boolean,
   // }>(name: string)=>Table<Model>,
   table: <T extends keyof (Tables) >(name: T)=> Instanceof<(Tables)[T]>;
-  querySql: <Return=any>(sql: string|SQL|QueryOptions&{
+  querySql: <Return=any>(sql: string|SQL<any, any>|QueryOptions&{
     sql: string|SQL
   }) => Promise<IQuerySqlResult<Return>>;
   mysqlConn: Connection;

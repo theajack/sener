@@ -19,7 +19,7 @@ export type IRouterHandler = (
 export interface IRouterHandlerData {
     handler: IRouterHandler;
     meta?: IJson;
-    alias?: [string];
+    alias?: string[];
     reg?: RegExp;
     paramMap?: IJson<string>;
 }
@@ -86,7 +86,7 @@ export function createRoute(arg1: string|IRouter, arg2?: IRouter): IRouter {
         route[newKey] = v;
         if(typeof v === 'object' && v.alias){
             for(let name in v.alias){
-                route[transformKey(name)]  = v;
+                route[transformKey(name)] = v;
             }
             delete v.alias;
         }
