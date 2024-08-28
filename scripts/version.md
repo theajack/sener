@@ -3,6 +3,20 @@
  * @Date: 2023-02-22 09:49:26
  * @Description: Coding something
 -->
+## 0.0.17
+
+1. Routes support multiplexing of prefixes
+2. Routes support fuzzy queries
+3. The cookie supports the default clientDomain
+4. MongoDB Middleware Encapsulates COL basic operations
+5. SQL middleware encapsulates basic operations on tables and SQL statements
+6. Optimize body parsing
+7. Other optimizations and bugfixes
+
+## 0.0.16 
+
+1. fix module extend
+
 ## 0.0.15
 
 1. 新增cookie、session、env、ip-monitor、validator中间件

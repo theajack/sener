@@ -12,9 +12,8 @@ import {
 import { request } from './http';
 
 
-
 export class Request extends BaseRequest {
-    constructor(options: Partial<IRequestConsOptions>){
+    constructor (options: Partial<IRequestConsOptions>) {
         super({
             utils: {
                 success,
@@ -22,6 +21,6 @@ export class Request extends BaseRequest {
                 request,
             },
             ...options,
-        })
+        });
     }
 }

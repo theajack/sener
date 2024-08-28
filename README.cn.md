@@ -136,7 +136,6 @@ const router = new Router({
     },
 });
 new Sener({
-  // router 要位于中间件的第一个
   middlewares: [router], 
 });
 ```
@@ -365,8 +364,7 @@ options
 ```ts
 new Config({
   dir: '', // 用于保存配置文件的目录。默认值为“”
-  file: 'default', // 配置文件的文件名。默认值为“默认值”
-  // file: ['c1', 'c2'],  // 传入数组表示使用了多个配置文件
+  initial: {}, // 初始化配置文件列表，key表示文件名(不需要带.json后缀)，值表示配置内容。默认值为 {_default: {}}
   format: false, // 是否格式化 JSON 文件。默认值：开发环境为假，生产环境为真
 })
 ```
@@ -404,6 +402,9 @@ new Sener({
 
 详情请参考 [mysql](https://www.npmjs.com/package/mysql)
 
+### 3.8.1 封装
+
+SQL中间件封装了对表的基本操作，使得开发者可以使用API便捷的操作数据表，详情请[参考文档](https://theajack.github.io/sener-docs/doc/mysql.html)
 
 ### 3.9 mongodb
 
@@ -438,6 +439,10 @@ new Sener({
 ```
 
 详情请参考 [mongodb](https://www.npmjs.com/package/mongodb)
+
+#### 3.9.1 封装
+
+mongodb中间件封装了对col的基本操作，使得开发者可以使用API便捷的操作数据表，详情请[参考文档](https://theajack.github.io/sener-docs/doc/mongodb.html)
 
 ### 3.10 rpc middleware
 

@@ -88,6 +88,9 @@ export const router = new Router({
         // console.log(body, requestHeaders, url);
         return addReply({ body, write });
     },
+    '/test-redirect': ({ redirect }) => {
+        redirect('/aa', { a: 1 });
+    },
 
     'get:/aa': ({ read }) => {
 
@@ -130,5 +133,11 @@ export const router = new Router({
         console.log(config.age);
         config.age ++;
         return { data: { level: config.level, age: config.age } };
+    },
+    '/sql': ({ sql, _ }) => {
+        const sqlStr = sql('user').select().where([
+            { age: _.gt(18) }
+        ]);
+        return { data: { sqlStr } };
     }
 });

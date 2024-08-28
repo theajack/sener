@@ -35,7 +35,7 @@ export class ConfigBase<T = IJson<any>> {
     format = false;
 
     constructor ({
-        dir = '', format = true, initial = {_default: {}}, onchange
+        dir = '', format = true, initial = { _default: {} }, onchange
     }: IConfigOptions) {
 
         // @ts-ignore
@@ -55,20 +55,19 @@ export class ConfigBase<T = IJson<any>> {
 
     private fileNameToPath (file: string) {
         // if (typeof file === 'undefined') console.trace(file);
-        const name = file.endsWith('.json') ? file : `${file}.json`
+        const name = file.endsWith('.json') ? file : `${file}.json`;
         return path.join(this.baseDir, name);
     }
 
     private initFiles (initial: IJson) {
 
-        for(let filename in initial){
+        for (const filename in initial) {
             const data = initial[filename];
             const json = this.readConfigFile(filename, data);
 
             if (!json) {throw new Error(`Invalid JSON File ${filename}`);}
 
             const keys = Object.keys(json);
-
             const properties: IJson = {};
             for (const key of keys) {
                 if (key in this.data) {

@@ -1,13 +1,13 @@
 {
     "name": "sener-mysql",
-    "version": "0.0.16",
+    "version": "0.0.17",
     "scripts": {
         "build": "node ../../scripts/build/build.js mysql"
     },
     "dependencies": {
         "@types/mysql": "^2.15.21",
         "mysql": "^2.18.1",
-        "sener-types": "^0.0.16"
+        "sener-types": "^0.0.17"
     },
     "main": "src/index.ts",
     "typings": "src/index.ts",
@@ -18,5 +18,6 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "src/index.ts"
+    "module": "src/index.ts",
+    "gitHead": "a14d7c6a65b187280b573a94da0d87932a884eb2"
 }

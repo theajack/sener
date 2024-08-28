@@ -1,5 +1,5 @@
-import type {IJson} from "./common";
-import type {IRouterReturn} from "./sener";
+import type { IJson } from './common';
+import type { IRouterReturn } from './sener';
 
 export function parseUrlSearch (url = '') {
     url = decodeURIComponent(url);
@@ -13,11 +13,11 @@ export function parseUrlSearch (url = '') {
     };
 }
 
-export function concatQuery(query?: IJson){
-    if(!query) return '';
+export function concatQuery (query?: IJson) {
+    if (!query) return '';
     const keys = Object.keys(query);
-    if(!keys.length) return '';
-    return `?${keys.map(k=>`${k}=${query[k]}`).join('&')}`
+    if (!keys.length) return '';
+    return `?${keys.map(k => `${k}=${query[k]}`).join('&')}`;
 }
 
 export function praseUrl (originUrl = '') {
@@ -146,8 +146,8 @@ export function pick<T, K extends keyof T> (data: T, keys: (K)[]): {
     [prop in K]: T[prop]
 } {
     const map: any = {};
-    for (const k of keys){
-        if(typeof data[k] !== 'undefined'){
+    for (const k of keys) {
+        if (typeof data[k] !== 'undefined') {
             map[k] = data[k];
         }
     }

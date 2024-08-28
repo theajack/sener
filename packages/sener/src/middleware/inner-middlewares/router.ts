@@ -7,7 +7,7 @@ import {
     MiddleWare, IPromiseMayBe, IHookReturn, IJson,
     ISenerContext,
     IServeMethod,
-    ISenerResponse,
+    concatQuery,
 } from 'sener-types';
 
 export type IRouter = IJson<IRouterHandler|IRouterHandlerData>;
@@ -31,7 +31,7 @@ interface IRouterHelper {
         url: string, data?: Partial<ISenerContext>,
     ): IPromiseMayBe<T>;
     params: IJson; // 路由参数 todo 类型
-    redirect(url: string): ISenerResponse;
+    redirect: (url: string, query?: IJson, header?: IJson) => void,
 }
 
 declare module 'sener-extend' {
@@ -40,31 +40,31 @@ declare module 'sener-extend' {
 
 const REG = /^(post:|get:|put:|delete:|#)/;
 
-function parseFuzzyRouteUrl(url: string): Pick<IRouterHandlerData, 'reg'|'paramMap'> {
+function parseFuzzyRouteUrl (url: string): Pick<IRouterHandlerData, 'reg'|'paramMap'> {
 
-    let arr = url.split('/');
-    let paramMap: IJson<string> = {}
-    for(let i=0;i < arr.length; i++){
+    const arr = url.split('/');
+    const paramMap: IJson<string> = {};
+    for (let i = 0; i < arr.length; i++) {
         const item = arr[i];
-        if(item[0] !== ':') continue;
-        let res = item.match(/^:(.*?)(\((.*?)\))?$/i);
+        if (item[0] !== ':') continue;
+        const res = item.match(/^:(.*?)(\((.*?)\))?$/i);
         // console.log('res1=', res)
-        if(!res) throw new Error(`错误的路由表达式: ${url}`)
+        if (!res) throw new Error(`错误的路由表达式: ${url}`);
         const name = res[1];
-        const reg = res[3] || '(.*?)'
+        const reg = res[3] || '(.*?)';
         paramMap[i] = name;
         arr[i] = reg;
     }
     return {
         reg: new RegExp(arr.join('/')),
         paramMap,
-    }
+    };
 }
 export function createRoute(base: string, route: IRouter): IRouter;
 export function createRoute(route: IRouter): IRouter;
-export function createRoute(arg1: string|IRouter, arg2?: IRouter): IRouter {
+export function createRoute (arg1: string|IRouter, arg2?: IRouter): IRouter {
 
-    if(!arg2) return arg1 as IRouter;
+    if (!arg2) return arg1 as IRouter;
 
     const route = arg2 as IRouter;
     const base = arg1 as string;
@@ -72,13 +72,13 @@ export function createRoute(arg1: string|IRouter, arg2?: IRouter): IRouter {
     const keys = Object.keys(route);
 
     const transformKey = (key: string) => {
-        return key.replace(REG, (head)=>{
+        return key.replace(REG, (head) => {
             // console.log('router=',head);
-            return `${head}${base}`
+            return `${head}${base}`;
         });
-    }
+    };
     const REG = /^(\[.*?\])?(post:|get:|put:|delete:|#)?/;
-    for(let key of keys){
+    for (const key of keys) {
         const newKey = transformKey(key);
         const v = route[key];
         // console.log('new key = ', newKey)
@@ -118,8 +118,8 @@ export class Router extends MiddleWare {
                         meta: meta
                     };
                 } else {
-                    if(value.alias){
-                        for(let name of value.alias){
+                    if (value.alias) {
+                        for (const name of value.alias) {
                             this.addToRouter(this.fillUrl(name), value);
                         }
                         delete value.alias;
@@ -134,16 +134,16 @@ export class Router extends MiddleWare {
         // console.log('fuzzyRouters =',this.fuzzyRouters);
         // console.log(this.routers, this._privateRouters);
         // console.log('fuzzyRouters =',this.fuzzyRouters);
-        
+
     }
 
-    private addToRouter(key: string, router: IRouterHandlerData){
+    private addToRouter (key: string, router: IRouterHandlerData) {
 
         // 模糊匹配的
-        if(key.includes('/:')) {
+        if (key.includes('/:')) {
             Object.assign(router, parseFuzzyRouteUrl(key));
             this.fuzzyRouters[key] = router;
-        }else{
+        } else {
             this._getMap(key)[key] = router;
         }
     }
@@ -188,36 +188,36 @@ export class Router extends MiddleWare {
         ctx.index = () => index++;
         ctx.route = this._createRoute(ctx);
 
-        ctx.params = route?.reg ? this._extractFuzzyParam(ctx.url, route as any): {};
+        ctx.params = route?.reg ? this._extractFuzzyParam(ctx.url, route as any) : {};
         // console.log('ctx.url=',ctx.url)
 
-        ctx.redirect = (url: string) => {
-            return ctx.responseData({
-                statusCode: 302,
-                headers: {
-                    'Location': url
-                }
-            })
-        }
+        ctx.redirect = (url: string, query: IJson = {}, headers: IJson = {}) => {
+            ctx.response.writeHead(302, {
+                ...headers,
+                'Location': `${url}${concatQuery(query)}`,
+                'Cache-Control': 'no-cache, no-store', // ! 禁止缓存
+            });
+            ctx.response.end();
+        };
     }
 
-    private _extractFuzzyParam(url: string, route: Required<IRouterHandlerData>): IJson{
+    private _extractFuzzyParam (url: string, route: Required<IRouterHandlerData>): IJson {
         const arr = url.split('/');
 
         const map = route.paramMap;
 
-        let param: IJson = {}
-        for(let i in map){
+        const param: IJson = {};
+        for (const i in map) {
             const name = map[i];
-            let v = arr[i as any];
+            const v = arr[i as any];
             // : 字符串
             // :# 数字
             // :! 布尔
-            if(name[0] === '#'){
+            if (name[0] === '#') {
                 param[name.substring(1)] = parseFloat(v);
-            }else if(name[0] === '!'){
+            } else if (name[0] === '!') {
                 param[name.substring(1)] = v === 'true' || v === '1';
-            }else{
+            } else {
                 param[name] = v;
             }
         }
@@ -233,8 +233,8 @@ export class Router extends MiddleWare {
         }
     }
 
-    private routeTo404(ctx: ISenerContext){
-        if(this.getRouteByUrl('/404')){
+    private routeTo404 (ctx: ISenerContext) {
+        if (this.getRouteByUrl('/404')) {
             return ctx.route('/404');
         }
         return ctx.response404(`Page not found: ${ctx.url}`);
@@ -244,18 +244,18 @@ export class Router extends MiddleWare {
         const { url, method } = ctx;
         return this.getRouteByUrl(url, method);
     }
-    private getRouteByUrl(url: string, method: IServeMethod = 'GET'){
+    private getRouteByUrl (url: string, method: IServeMethod = 'GET') {
         const key = this.buildRouteKey(url, method);
         return this.findRouteByKey(key);
     }
-    private findRouteByKey(key: string): IRouterHandlerData|null{
+    private findRouteByKey (key: string): IRouterHandlerData|null {
         // console.log('-----', key)
-        let res = this.routers[key]; // 如果在普通router内
-        if(res) return res;
+        const res = this.routers[key]; // 如果在普通router内
+        if (res) return res;
         // 模糊匹配
-        for(let k in this.fuzzyRouters) {
-            let router = this.fuzzyRouters[k];
-            if(router.reg?.test(key)){
+        for (const k in this.fuzzyRouters) {
+            const router = this.fuzzyRouters[k];
+            if (router.reg?.test(key)) {
                 return router;
             }
         }

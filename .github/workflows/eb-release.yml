@@ -36,7 +36,10 @@ jobs:
         run: npm install -g pnpm@7.9.3
 
       - name: pnpm Install
-        run: pnpm i --no-frozen-lockfile
+        run: |
+          npm cache clean --force
+          npm config set strict-ssl false
+          pnpm i --no-frozen-lockfile
 
       - name: Version
         id: version

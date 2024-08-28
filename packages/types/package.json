@@ -1,6 +1,6 @@
 {
     "name": "sener-types",
-    "version": "0.0.16",
+    "version": "0.0.17",
     "description": "Easy-to-use And Powerful nodejs http server",
     "main": "src/index.ts",
     "typings": "src/index.ts",
@@ -13,5 +13,6 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "src/index.ts"
+    "module": "src/index.ts",
+    "gitHead": "a14d7c6a65b187280b573a94da0d87932a884eb2"
 }

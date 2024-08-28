@@ -41,11 +41,11 @@ export class Form extends MiddleWare {
         if (!requestHeaders['content-type']?.includes('multipart/form-data') || method !== 'POST') return;
         return new Promise(resolve => {
             const dir = this.getUploadDir();
-            const form = formidable({ 
-                uploadDir: dir, 
-                filename: this.filename ? (name: string, ext: string, part: Part, form: IncomingForm)=> {
-                    return this.filename!(ctx, name, ext, part, form)
-                }: undefined
+            const form = formidable({
+                uploadDir: dir,
+                filename: this.filename ? (name: string, ext: string, part: Part, form: IncomingForm) => {
+                    return this.filename!(ctx, name, ext, part, form);
+                } : undefined
             });
             form.parse(request, (err, formData, files) => {
                 // console.log('Form parsed:', dir, formData, files);

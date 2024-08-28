@@ -27,7 +27,7 @@ export interface IRequestOptions extends ICommonRequestOptions {
 }
 
 export interface IRequestUtils {
-    error: IErrorGen, 
+    error: IErrorGen,
     success: ISuccessGen,
     request: IRequest,
 }
@@ -135,9 +135,9 @@ export class BaseRequest {
         showLoading,
     }: IRequestOptions): IRequestReturn<T> {
 
-        console.log('request11', body,query,method)
+        // console.log('request11', body, query, method);
 
-        const close = showLoading ? this.loading?.() : ()=>{};
+        const close = showLoading ? this.loading?.() : () => {};
 
         headers = Object.assign({}, this.headers, headers);
 
