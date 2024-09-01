@@ -30,7 +30,8 @@ export async function windowFetch ({
         method,
         headers,
         mode: 'cors',
-        credentials: 'include'
+        // credentials: 'include',
+        credentials: 'same-origin',
     };
     if (method !== 'get' && body) {
         options.body = form ? body : JSON.stringify(body);

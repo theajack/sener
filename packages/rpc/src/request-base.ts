@@ -35,7 +35,7 @@ export interface IRequestUtils {
 export interface IRequestConsOptions extends ICommonRequestOptions {
     base?: string,
     utils: IRequestUtils,
-    loading?: ()=>(()=>{}),
+    loading?: ()=>(()=>void),
 }
 
 export type IRPCRequestInterceptor = (data: IRequestOptions) => void|IRPCResponse;
@@ -46,11 +46,11 @@ export type IRPCRequestOnResponse = (data: IRPCResponse) => void|IRPCResponse;
 export class BaseRequest {
     base: string;
     headers: IJson<string> = {};
-    traceid: string = '';
+    traceid = '';
     tk = '';
-    setToken (tk: string) { this.tk = tk; };
+    setToken (tk: string) { this.tk = tk; }
 
-    loading?: ()=>(()=>{});
+    loading?: ()=>(()=>void);
 
     static Interceptor: IRPCRequestInterceptor;
     static OnResponse: IRPCRequestOnResponse;

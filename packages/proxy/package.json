@@ -1,0 +1,23 @@
+{
+    "name": "sener-proxy",
+    "version": "0.0.17",
+    "scripts": {
+        "build": "node ../../scripts/build/build.js mysql"
+    },
+    "dependencies": {
+        "@types/http-proxy": "^1.17.15",
+        "http-proxy": "^1.18.1",
+        "sener-types": "^0.0.17"
+    },
+    "main": "src/index.ts",
+    "typings": "src/index.ts",
+    "description": "Easy-to-use And Powerful nodejs http server",
+    "author": "tackchen <theajack@qq.com>",
+    "repository": "git@github.com:theajack/sener.git",
+    "license": "MIT",
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/"
+    },
+    "module": "src/index.ts",
+    "gitHead": "a14d7c6a65b187280b573a94da0d87932a884eb2"
+}

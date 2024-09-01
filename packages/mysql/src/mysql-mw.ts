@@ -97,7 +97,7 @@ export class Mysql<
                                 resolve({ results: null, fields: null } as any);
                                 this.handlerError(error);
                                 return;
-                            };
+                            }
                             // console.log('query sql success');
                             resolve({ results, fields });
                             // console.log('The solution is: ', results[0].solution);

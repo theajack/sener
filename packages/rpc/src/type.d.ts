@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { IJson, IRouterReturn } from 'sener-types';
+import type { IRouterReturn } from 'sener-types';
 
 export interface IBoolResult<T=any> {
   success: boolean;
@@ -12,7 +12,9 @@ export interface IBoolResult<T=any> {
   data: T
 }
 
-export type IParsedData<T=any> = IBoolResult<T> & IJson;
+export type IParsedData<T=any> = IBoolResult<T> & {
+  [prop: string]: any;
+};
 
 export type IParsedReturn<T=any> = Promise<IParsedData<T>>;
 

@@ -1,0 +1,83 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@types/http-proxy':
+    specifier: ^1.17.15
+    version: registry.npmmirror.com/@types/http-proxy@1.17.15
+  http-proxy:
+    specifier: ^1.18.1
+    version: registry.npmmirror.com/http-proxy@1.18.1
+  sener-types:
+    specifier: ^0.0.17
+    version: registry.npmmirror.com/sener-types@0.0.17
+
+packages:
+
+  registry.npmmirror.com/@types/http-proxy@1.17.15:
+    resolution: {integrity: sha512-25g5atgiVNTIv0LBDTg1H74Hvayx0ajtJPLLcYE3whFv75J0pWNtOBzaXJQgDTmrX1bx5U9YC2w/n65BN1HwRQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/http-proxy/-/http-proxy-1.17.15.tgz}
+    name: '@types/http-proxy'
+    version: 1.17.15
+    dependencies:
+      '@types/node': registry.npmmirror.com/@types/node@22.5.1
+    dev: false
+
+  registry.npmmirror.com/@types/node@22.5.1:
+    resolution: {integrity: sha512-KkHsxej0j9IW1KKOOAA/XBA0z08UFSrRQHErzEfA3Vgq57eXIMYboIlHJuYIfd+lwCQjtKqUu3UnmKbtUc9yRw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/node/-/node-22.5.1.tgz}
+    name: '@types/node'
+    version: 22.5.1
+    dependencies:
+      undici-types: registry.npmmirror.com/undici-types@6.19.8
+    dev: false
+
+  registry.npmmirror.com/eventemitter3@4.0.7:
+    resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/eventemitter3/-/eventemitter3-4.0.7.tgz}
+    name: eventemitter3
+    version: 4.0.7
+    dev: false
+
+  registry.npmmirror.com/follow-redirects@1.15.6:
+    resolution: {integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/follow-redirects/-/follow-redirects-1.15.6.tgz}
+    name: follow-redirects
+    version: 1.15.6
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: false
+
+  registry.npmmirror.com/http-proxy@1.18.1:
+    resolution: {integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/http-proxy/-/http-proxy-1.18.1.tgz}
+    name: http-proxy
+    version: 1.18.1
+    engines: {node: '>=8.0.0'}
+    dependencies:
+      eventemitter3: registry.npmmirror.com/eventemitter3@4.0.7
+      follow-redirects: registry.npmmirror.com/follow-redirects@1.15.6
+      requires-port: registry.npmmirror.com/requires-port@1.0.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
+  registry.npmmirror.com/requires-port@1.0.0:
+    resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/requires-port/-/requires-port-1.0.0.tgz}
+    name: requires-port
+    version: 1.0.0
+    dev: false
+
+  registry.npmmirror.com/sener-types@0.0.17:
+    resolution: {integrity: sha512-4TlnrH7J2KFZrAytlbX7LpRgWIdKHqhKXssp+pEcYIHCYCHWOQVz50sCutjY3NTGoeVTDaLl3S5in20RG1rAdg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/sener-types/-/sener-types-0.0.17.tgz}
+    name: sener-types
+    version: 0.0.17
+    dev: false
+
+  registry.npmmirror.com/undici-types@6.19.8:
+    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/undici-types/-/undici-types-6.19.8.tgz}
+    name: undici-types
+    version: 6.19.8
+    dev: false

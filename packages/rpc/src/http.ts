@@ -41,7 +41,7 @@ export interface IRPCResponse {
 }
 
 export function request ({
-    url, method, headers = {}, body, query, form, traceid, fetchOptions, 
+    url, method, headers = {}, body, query, form, traceid, fetchOptions,
     stringifyBody = true,
     isSuccess = (data) => data?.code === 0,
 }: IHttpRequestOptions) {
@@ -53,9 +53,9 @@ export function request ({
     }
 
     if (typeof window !== 'undefined') {
-        return windowFetch({ url, method, headers, body, form, fetchOptions, isSuccess });
+        return windowFetch({ url, method, headers, body, query, form, fetchOptions, isSuccess });
     } else {
-        return nodeRequest({ url, method, headers, body, traceid, stringifyBody, isSuccess });
+        return nodeRequest({ url, method, headers, body, query, traceid, stringifyBody, isSuccess });
     }
 }
 
@@ -88,11 +88,11 @@ export function nodeRequest ({
                 let result = parseJson(responseString);
                 let success = true;
                 let $json = false;
-                if(result){
+                if (result) {
                     success = isSuccess(result);
                     $json = true;
                 } else {
-                    result = { content: responseString }
+                    result = { content: responseString };
                 }
                 resolve({
                     success,
