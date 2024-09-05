@@ -51,12 +51,12 @@ function parseFuzzyRouteUrl (url: string): Pick<IRouterHandlerData, 'reg'|'param
         // console.log('res1=', res)
         if (!res) throw new Error(`错误的路由表达式: ${url}`);
         const name = res[1];
-        const reg = res[3] || '(.*?)';
+        const reg = res[3] || '([\\w\\$@#+=%&]*)';
         paramMap[i] = name;
         arr[i] = reg;
     }
     return {
-        reg: new RegExp(arr.join('/')),
+        reg: new RegExp(`^${arr.join('/')}$`),
         paramMap,
     };
 }
@@ -143,6 +143,7 @@ export class Router extends MiddleWare {
         if (key.includes('/:')) {
             Object.assign(router, parseFuzzyRouteUrl(key));
             this.fuzzyRouters[key] = router;
+            // console.log('add fuzzy route', router);
         } else {
             this._getMap(key)[key] = router;
         }

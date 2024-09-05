@@ -8,6 +8,13 @@ import { ICondition, ISQLPage, IWhere, SQL } from './sql';
 import { Mysql } from 'src/mysql-mw';
 import { QueryOptions } from 'mysql';
 
+export type ITablePageOptions<T> = ISQLPage & IWhere<T> & {
+    orderBy?: {
+        keys: (keyof T)[],
+        desc?: boolean,
+    }
+};
+
 export class Table<
     Model extends Record<string, any> = Record<string, any>,
     Key = keyof Model,
@@ -55,24 +62,34 @@ export class Table<
         return results || [];
     }
 
-    // 从1开始
-    async page (data: ISQLPage & IWhere<Model> & {
-        orderBy?: {
-            keys: (keyof Model)[],
-            desc?: boolean,
-        }
-    } = {}): Promise<Model[]> {
+    private _configPage(data: ITablePageOptions<Model> = {}){
         this.sql.select(...this.selectKeys).where(data.where, data.reverse);
         if(data.orderBy){
             const {keys, desc} = data.orderBy;
             desc ? this.sql.orderByDesc(...keys): this.sql.orderBy(...keys);
         }
         this.sql.page(data);
-        // @ts-ignore
-        // console.log('comment page: where sql str=', this.sql.sql)
-        const { results, fields } = await this.querySql<Model[]>(this.sql);
-        // console.log('comment page done')
+    }
+
+    async page (data?: ITablePageOptions<Model>): Promise<Model[]> {
+        this._configPage(data);
+        const { results, fields } = await this.querySql<Model[]>(this.sql)
         return results || [];
+    }
+
+    // 从1开始
+    async pageTotal (data: ITablePageOptions<Model> = {}): Promise<{list: Model[], total: number}> {
+        this._configPage(data);
+        const [{ results, fields }, count] = await Promise.all([
+            this.querySql<Model[]>(this.sql),
+            this.count(data.where, data.reverse)
+        ]);
+        // console.log('comment page done', results.length, count);
+
+        return {
+            list: results || [],
+            total: count,
+        };
     }
 
     async count (where?: ICondition<Model>, reverse = false) {
@@ -92,10 +109,23 @@ export class Table<
         return results;
     }
 
-    async add(data: Partial<Model>) {
+    async delete(conds: ICondition<Model>, reverse = false){
         const { results, fields } = await this.querySql(
+            this.sql.delete().where(conds, reverse)
+        )
+        // console.log('delete results, fields', results, fields, this.sql.v)
+        return results;
+    }
+
+    async add(data: Partial<Model>) {
+        const { results, fields, msg } = await this.querySql(
             this.sql.insert(data)
         );
+
+        if(!results){
+            throw new Error(msg);
+        }
+
         // console.log('add results, fields', results, fields, this.sql.sql)
         return results as {
             affectedRows: number,

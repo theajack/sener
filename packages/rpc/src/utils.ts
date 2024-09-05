@@ -17,6 +17,7 @@ export function convertData (data: IJson, isSearch = true) {
             res += (`${key}=${encodeURIComponent(v)}&`);
         }
     }
+    if(res.length === 0) return '';
     res = `${isSearch ? '?' : ''}${res.substring(0, res.length - 1)}`;
     return res;
 }
@@ -30,8 +31,9 @@ export async function windowFetch ({
         method,
         headers,
         mode: 'cors',
-        // credentials: 'include',
-        credentials: 'same-origin',
+        // ! 跨域支持
+        credentials: 'include',
+        // credentials: 'same-origin',
     };
     if (method !== 'get' && body) {
         options.body = form ? body : JSON.stringify(body);
@@ -47,7 +49,7 @@ export async function windowFetch ({
 
         const json = await result.json();
         return { success: json.code === 0, ...json };
-    } catch (e) {
+    } catch (e: any) {
         return { success: false, msg: `fetch失败: ${e.message}` };
     }
 }

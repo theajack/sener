@@ -94,7 +94,7 @@ export class Mysql<
                             if (error) {
                                 console.log('mysql query error', error);
                                 // this.handlerError(err);
-                                resolve({ results: null, fields: null } as any);
+                                resolve({ results: null, fields: null, msg: error.toString() } as any);
                                 this.handlerError(error);
                                 return;
                             }

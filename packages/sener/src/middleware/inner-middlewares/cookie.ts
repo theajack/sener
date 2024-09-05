@@ -44,7 +44,7 @@ function parseCookie (cookie: string) {
     const json: IJson = {};
     const result = cookie.matchAll(/(?<=(^| ))(.*?)=(.*?)(?=(;|$))/g);
     for (const item of result) {
-        json[item[2]] = item[3];
+        json[item[2]] = decodeURIComponent(item[3]);
     }
     return json;
 }
@@ -76,7 +76,7 @@ export class CookieClient {
         const single = (k: string) => {
             const result = cookie.match(new RegExp(`(?<=(^| ))${k}=(.*?)(?=(;|$))`));
             if (!result) return '';
-            return result[2];
+            return decodeURIComponent(result[2]);
         };
         return isArr ? pickAttrs(key, single) : single(key);
     }
@@ -135,6 +135,7 @@ export class CookieClient {
             for (const k of key)
                 map[k] = Object.assign({ value: '' }, opt);
             this.set(map);
+            // console.log('remove cookie', map)
         }
     }
 

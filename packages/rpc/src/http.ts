@@ -64,7 +64,7 @@ export function nodeRequest ({
     url, method, headers = {}, body, traceid, stringifyBody = true, query,
     isSuccess = (data) => data?.code === 0,
 }: IBaseOptions): Promise<IRPCResponse> {
-    url = url + (query ? `${convertData(query)}` : '');
+    url = url + ((query) ? `${convertData(query)}` : '');
     console.log(url);
     // console.log('----host', host, path, method, headers, https, port, body);
     if (!_http) _http = require('http');

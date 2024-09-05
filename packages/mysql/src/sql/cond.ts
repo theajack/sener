@@ -77,8 +77,8 @@ M% : 为能配符，正则表达式，表示的意思为模糊查询信息为 M 
 %M% : 表示查询包含M的所有内容。
 %M_ : 表示查询以M在倒数第二位的所有内容
      */
-    like (v: string) {
-        return _(` like '${v}'`);
+    like (v: string, padding = true) {
+        return _(` like '${padding ? `%${v}%`: v}'`);
     },
     null () {
         return _(` is null`);

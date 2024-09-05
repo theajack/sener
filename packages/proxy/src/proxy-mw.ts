@@ -20,14 +20,17 @@ export class Proxy extends MiddleWare {
     constructor (option?: IProxyMiddleConfig) {
         super();
         this._options = option;
-        this.proxy = createProxyServer();
+        this.proxy = createProxyServer({});
     }
 
     init (ctx: ISenerContext): IHookReturn {
 
+
         ctx.proxy = (config: IProxyConfig) => {
             this.proxy.web(ctx.request, ctx.response, config);
+
             ctx.responded = true;
+            ctx.markReturned();
         };
     }
 

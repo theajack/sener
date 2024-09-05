@@ -38,38 +38,50 @@ export class SQL<
 
 
     select (...args: (Key|1)[]) {
-        return this._select(!args.length ? '*' : args.join(','));
+        return this._select(!args.length ? '*' : this._joinKeys(args));
     }
     selectDistinct (...args: (Key|1)[]) {
-        return this._select(`distinct ${args.join(',')}`);
+        return this._select(`distinct ${this._joinKeys(args)}`);
+    }
+
+    private _keyReg = /^[a-zA-Z][a-zA-Z_0-9]*$/
+    private _joinKeys(args: any[]){
+        let s = '';
+        for(let v of args){
+            s += `,${(this._key(v))}`;
+        }
+        return s.substring(1);
+    }
+    private _key(v: any){
+        return this._keyReg.test(v) ? `\`${v}\``: v;
     }
 
     private _select (str: string) {
         this.reset();
-        this.sql = `select ${str} from ${this.tableName}`;
+        this.sql = `select ${str} from ${this._key(this.tableName)}`;
         return this;
     }
 
     orderBy<T = Key> (...args: T[]) {
         // todo orderby 多个key独立排序
-        this.sql += ` order by ${args.join(',')} ASC`;
+        this.sql += ` order by ${this._joinKeys(args)} ASC`;
         return this;
     }
     orderByDesc<T = Key> (...args: T[]) {
-        this.sql += ` order by ${args.join(',')} DESC`;
+        this.sql += ` order by ${this._joinKeys(args)} DESC`;
         return this;
     }
 
     groupBy (name: Key) {
-        this.sql += ` group by ${name}`;
+        this.sql += ` group by ${this._key(name)}`;
         return this;
     }
 
     insert (data: Partial<Model>) {
         this.reset();
-        const keys = Object.keys(data).join(',');
+        const keys = this._joinKeys(Object.keys(data));
         const values = Object.values(data).map(item => toSqlStr(item)).join(',');
-        this.sql = `insert into ${this.tableName}(${keys}) values(${values});`;
+        this.sql = `insert into ${this._key(this.tableName)}(${keys}) values(${values});`;
         return this;
     }
     /**
@@ -84,33 +96,40 @@ export class SQL<
         for (const key in data) {
             str += `,${key}=${toSqlStr(data[key])}`;
         }
-        this.sql = `UPDATE ${this.tableName} SET ${str.substring(1)}`;
+        this.sql = `UPDATE ${this._key(this.tableName)} SET ${str.substring(1)}`;
         return this;
     }
 
     delete () {
-        this.sql = `delete from ${this.tableName} `;
+        this.sql = `delete from ${this._key(this.tableName)} `;
         return this;
     }
 
+    // ! reverse true 表示 内层json表or，外层数组表 and
     where (conditions?: ICondition<Model>, reverse = false) {
         if (!conditions || !conditions.length) return this;
-        this.sql += ` where ${conditions.map((cond: any) => {
+
+        console.log('where', conditions)
+        const whereInner = conditions.map((cond: any) => {
             return `(${Object.keys(cond).map(key => {
                 const v = cond[key];
                 if (v instanceof Array) {
                     // ! array 表示or多个值
-                    return v.map(s => `${key}${parseCondContent(s)}`).join(' or ');
+                    return v.map(s => `${this._key(key)}${parseCondContent(s)}`).join(' or ');
                 } else {
-                    return `${key}${parseCondContent(v)}`;
+                    return `${this._key(key)}${parseCondContent(v)}`;
                 }
             }).join(reverse ? ' or ' : ' and ')})`;
-        }).join(reverse ? ' and ' : ' or ')}`;
+        }).join(reverse ? ' and ' : ' or ');
+
+        if(whereInner.length <= 2) return this;
+
+        this.sql += ` where ${whereInner}`;
         return this;
     }
 
     deleteAll () {
-        this.sql = `truncate table ${this.tableName}`;
+        this.sql = `truncate table ${this._key(this.tableName)}`;
         return this;
     }
 
@@ -139,6 +158,12 @@ export class SQL<
         return this.sql;
     }
 
+    toString(){
+        let v = this.sql;
+        this.reset();
+        return v;
+    }
+
     page ({
         index = 1,
         size = 10,
@@ -151,6 +176,7 @@ export class SQL<
         return this;
     }
     offset(v: number){
+        if(v <= 0) return this;
         this.sql += ` OFFSET ${v}`;
         return this;
     }

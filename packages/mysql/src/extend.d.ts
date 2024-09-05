@@ -17,6 +17,7 @@ export interface ITables {
 export interface IQuerySqlResult<T=any> {
   results: T;
   fields: FieldInfo[];
+  msg?: string,
 }
 
 export interface IMysqlHelper<Tables extends ITables = {}> {
