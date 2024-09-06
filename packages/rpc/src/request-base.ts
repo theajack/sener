@@ -141,8 +141,10 @@ export class BaseRequest {
 
         headers = Object.assign({}, this.headers, headers);
 
+        let requestUrl = (/^https?:\/\//.test(url)) ? url: `${base}${url}`;
+
         const options: IHttpRequestOptions = {
-            url: base + url,
+            url: requestUrl,
             method, // get方式或post方式
             headers,
             body,

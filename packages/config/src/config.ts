@@ -112,7 +112,7 @@ export class ConfigBase<T = IJson<any>> {
 
     writeConfig (key: string, v: any) {
         const changed = this.onNewValue(key, v);
-        // console.log('writeConfigChanged', changed);
+        // console.log('writeConfigChanged', changed, key, v);
         if (changed) {
             // console.log('this.fileMap = ', this.isSingle, this.fileMap);
             const file = this.fileMap[key];
@@ -158,6 +158,7 @@ function isValueChanged (ov: any, nv: any) {
     }
 
     if (nv && ntype === 'object') {
+        // console.log('json', ov, nv);
         if (isJsonChanged(ov, nv)) {
             return true;
         }
@@ -168,6 +169,11 @@ function isValueChanged (ov: any, nv: any) {
 }
 
 function isJsonChanged (old: IJson, newData: IJson): boolean {
+
+    if(Object.keys(old).length !== Object.keys(newData).length) {
+        return true;
+    }
+
     for (const key in old) {
         const nv = newData[key];
         const ov = old[key];

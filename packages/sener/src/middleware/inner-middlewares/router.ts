@@ -55,6 +55,7 @@ function parseFuzzyRouteUrl (url: string): Pick<IRouterHandlerData, 'reg'|'param
         paramMap[i] = name;
         arr[i] = reg;
     }
+    // console.log('paramMap', url, arr, paramMap, new RegExp(`^${arr.join('/')}$`));
     return {
         reg: new RegExp(`^${arr.join('/')}$`),
         paramMap,
@@ -227,6 +228,7 @@ export class Router extends MiddleWare {
 
     enter (ctx: ISenerContext): IHookReturn {
         const route = this.getRoute(ctx);
+        // console.log('aaaaaaaa',  route)
         if (!route) {
             return this.routeTo404(ctx);
         } else {

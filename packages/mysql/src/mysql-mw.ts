@@ -31,7 +31,7 @@ export class Mysql<
         this._config = config;
         if (config.tables) this.tableModels = config.tables;
         this.initConnection();
-        // this._handleDisconnect();
+        this._handleDisconnect();
     }
 
     private initConnection () {
@@ -39,11 +39,11 @@ export class Mysql<
         this.connection.connect();
     }
 
-    // private _handleDisconnect(){
-    //     this.connection.on('error', (err) => {
-    //         this.handlerError(err);
-    //     });
-    // }
+    private _handleDisconnect(){
+        this.connection.on('error', (err) => {
+            this.handlerError(err);
+        });
+    }
 
     private handlerError (err: any) {
         // if (!err.fatal) {
@@ -88,14 +88,14 @@ export class Mysql<
                             sql = target;
                         }
                     }
-                    return new Promise((resolve) => {
+                    return new Promise((resolve, reject) => {
                         // console.log('query sql', sql);
                         this.connection.query(sql, (error, results, fields = []) => {
                             if (error) {
                                 console.log('mysql query error', error);
+                                reject(`SqlError: ${error.code}`)
                                 // this.handlerError(err);
-                                resolve({ results: null, fields: null, msg: error.toString() } as any);
-                                this.handlerError(error);
+                                // resolve({ results: null, fields: null, msg: error.toString() } as any);
                                 return;
                             }
                             // console.log('query sql success');

@@ -94,7 +94,7 @@ export class SQL<
     }) {
         let str = '';
         for (const key in data) {
-            str += `,${key}=${toSqlStr(data[key])}`;
+            str += `,${this._key(key)}=${toSqlStr(data[key])}`;
         }
         this.sql = `UPDATE ${this._key(this.tableName)} SET ${str.substring(1)}`;
         return this;
@@ -109,7 +109,7 @@ export class SQL<
     where (conditions?: ICondition<Model>, reverse = false) {
         if (!conditions || !conditions.length) return this;
 
-        console.log('where', conditions)
+        // console.log('where', conditions)
         const whereInner = conditions.map((cond: any) => {
             return `(${Object.keys(cond).map(key => {
                 const v = cond[key];

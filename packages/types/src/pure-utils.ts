@@ -142,14 +142,19 @@ export function pickAttrs (keys: string[], onvalue: (k: string)=>any) {
     return map;
 }
 
-export function pick<T, K extends keyof T> (data: T, keys: (K)[]): {
-    [prop in K]: T[prop]
-} {
+export function pick<T, K extends (keyof T)[]> (data: T, keys: K): Pick<T, K[number]> {
     const map: any = {};
     for (const k of keys) {
         if (typeof data[k] !== 'undefined') {
             map[k] = data[k];
         }
+    }
+    return map;
+}
+export function omit<T, K extends (keyof T)[]>(data: T, keys: K): Omit<T, K[number]> {
+    const map: any = {...data};
+    for (const k of keys) {
+        delete map[k];
     }
     return map;
 }
