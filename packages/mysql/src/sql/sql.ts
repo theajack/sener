@@ -1,4 +1,4 @@
-import { parseCondContent, toSqlStr } from './cond';
+import { parseCondContent, toSqlStr, wrapKey } from './cond';
 
 /*
  * @Author: chenzhongsheng
@@ -44,7 +44,6 @@ export class SQL<
         return this._select(`distinct ${this._joinKeys(args)}`);
     }
 
-    private _keyReg = /^[a-zA-Z][a-zA-Z_0-9]*$/
     private _joinKeys(args: any[]){
         let s = '';
         for(let v of args){
@@ -52,9 +51,7 @@ export class SQL<
         }
         return s.substring(1);
     }
-    private _key(v: any){
-        return this._keyReg.test(v) ? `\`${v}\``: v;
-    }
+    private _key = wrapKey;
 
     private _select (str: string) {
         this.reset();

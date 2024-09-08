@@ -93,6 +93,9 @@ export class Mysql<
                         this.connection.query(sql, (error, results, fields = []) => {
                             if (error) {
                                 console.log('mysql query error', error);
+                                if(error.code === 'ETIMEDOUT'){
+                                    this.handlerError(error);
+                                }
                                 reject(`SqlError: ${error.code}`)
                                 // this.handlerError(err);
                                 // resolve({ results: null, fields: null, msg: error.toString() } as any);
