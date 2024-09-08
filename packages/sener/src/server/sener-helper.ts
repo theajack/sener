@@ -73,7 +73,7 @@ export function createSenerHelper (headers: IJson<string>, mr: (key?: string)=>v
         // alias html
         html: (html, header = {}) => (mr(), responseHtml(html, mergeHeaders(header))),
         responseData: (data: ISenerResponse) => (mr(), responseData({ ...data, headers: mergeHeaders(data.headers) })),
-        markReturned: () => {mr('returned');}
+        markSended: () => {mr('sended');}
     };
     return sendHelper;
 }

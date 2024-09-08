@@ -18,10 +18,13 @@ export class Mongo<
 > extends MiddleWare {
     mongo: MongoProxy<Models>;
 
+    // 需要关闭连接 所以不能被拦截
+    acceptResponded = true;
+    acceptSended = true;
+
     constructor (options: IMongoProxyOptions<Models>) {
         super();
         this.mongo = new MongoProxy<Models>(options);
-        this.acceptResponded = this.acceptReturned = true;
     }
 
     helper (): IMongoHelper<Models> {

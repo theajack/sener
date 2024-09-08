@@ -29,7 +29,7 @@ export class Static extends MiddleWare {
     enter (ctx: ISenerContext): IHookReturn {
         return new Promise(resolve => {
             this.static.serve(ctx.request, ctx.response).once('success', () => {
-                ctx.markReturned();
+                ctx.markSended();
                 resolve(void 0);
             }).on('error', data => {
                 if (data.status === 404) {

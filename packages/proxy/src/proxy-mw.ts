@@ -30,7 +30,7 @@ export class Proxy extends MiddleWare {
             this.proxy.web(ctx.request, ctx.response, config);
 
             ctx.responded = true;
-            ctx.markReturned();
+            ctx.markSended();
         };
     }
 

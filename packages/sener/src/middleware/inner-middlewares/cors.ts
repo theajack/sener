@@ -55,6 +55,7 @@ export class Cors extends MiddleWare {
     headers: IHeaderKey;
     acceptOptions = true;
     acceptResponded = true;
+    acceptSended = true;
 
     constructor (options: ICorsOptions = {}) {
         super();

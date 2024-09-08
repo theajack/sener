@@ -23,7 +23,7 @@ export interface IHelperFunc {
   // alias
   html: (html: string, header?: IJson<string>) => ISenerResponse; // 构造html响应
   responseData: (data: Partial<ISenerResponse>) => ISenerResponse; // 构造通用响应
-  markReturned: () => void; // 标记为已提前返回响应
+  markSended: () => void; // 标记为已提前返回响应
 }
 
 export interface IMiddleWareDataBase extends IHttpInfo, ISenerHelper, IHelperFunc {
@@ -33,7 +33,7 @@ export interface IMiddleWareDataBase extends IHttpInfo, ISenerHelper, IHelperFun
   responded: boolean;
   redirect: (url: string, query?: IJson, header?: IJson) => void,
   isOptions: boolean; // 是否是 options method
-  returned: boolean;
+  sended: boolean;
 }
 export type IHookReturn = Partial<ISenerContext>|void;
 
@@ -64,7 +64,7 @@ export interface IMiddleWare {
   name?: string;
   acceptOptions?: boolean;
   acceptResponded?: boolean;
-  acceptReturned?: boolean;
+  acceptSended?: boolean;
   // enter?: IMiddleWareHook;
   init?: IMiddleWareHook;
   enter?: IMiddleWareHook;
@@ -77,7 +77,7 @@ export class MiddleWare implements IMiddleWare {
     name: string = '';
     acceptOptions: boolean = false;
     acceptResponded: boolean = false;
-    acceptReturned: boolean = false;
+    acceptSended: boolean = false;
     // // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-empty-function
     // enter (ctx: ISenerContext): IPromiseMayBe<IHookReturn> {};
 

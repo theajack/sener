@@ -195,11 +195,13 @@ export class Router extends MiddleWare {
 
         ctx.redirect = (url: string, query: IJson = {}, headers: IJson = {}) => {
             ctx.response.writeHead(302, {
+                ...ctx.headers,
                 ...headers,
                 'Location': `${url}${concatQuery(query)}`,
                 'Cache-Control': 'no-cache, no-store', // ! 禁止缓存
             });
             ctx.response.end();
+            // ctx.markResponded();
         };
     }
 

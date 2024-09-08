@@ -66,7 +66,7 @@ export class Server {
                 statusCode: -1,
                 success: true,
                 responded: false,
-                returned: false,
+                sended: false,
                 isOptions: false,
                 ...httpInfo,
                 ...this.helper,
@@ -77,7 +77,7 @@ export class Server {
                     Object.assign(context, ctx);
             };
 
-            assignContext(createSenerHelper(headers, (key: 'responded'|'returned' = 'responded') => {
+            assignContext(createSenerHelper(headers, (key: 'responded'|'sended' = 'responded') => {
                 context[key] = true;
             }));
 
@@ -97,13 +97,14 @@ export class Server {
                     assignContext(await this.onError(err, name, context));
                 }
             };
-            // console.log('before init', context.isOptions, context.responded, context.returned, context.method, context.headers['Access-Control-Allow-Origin'])
+            // console.log('before init', context.isOptions, context.responded, context.sended, context.method, context.headers['Access-Control-Allow-Origin'])
 
             await applyHook('init');
             // console.log('before enter', context.method, context.headers['Access-Control-Allow-Origin'])
             await applyHook('enter');
+            // console.log('after enter', context.responded, context.method, context.headers['Access-Control-Allow-Origin'])
 
-            if (!context.returned) {
+            if (!context.sended) {
                 const { data, statusCode, headers: HEADERS } = context;
                 // console.log('sendData', headers['Access-Control-Allow-Origin'])
                 this.sendData(response, {
@@ -126,12 +127,13 @@ export class Server {
         // console.log('sendData', data, headers);
         if (statusCode === -1) statusCode = 200;
         if (!headers['Content-Type']) headers['Content-Type'] = 'application/json;charset=UTF-8';
+        // console.log('sendData', headers);
         try {
             for (const k in headers) {
                 response.setHeader(k, headers[k]);
             }
         } catch (e) {
-            console.error('router中如果已经对请求做了返回处理，请返回 {returned: true};', e);
+            console.error('router中如果已经对请求做了返回处理，请返回 {sended: true};', e);
             return;
         }
         // todo 数据类型判断

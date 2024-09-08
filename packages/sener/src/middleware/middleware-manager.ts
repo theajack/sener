@@ -53,12 +53,20 @@ export class MiddleWareManager {
         if (!middleware[name]) return;
         if (
             (ctx.isOptions && !middleware.acceptOptions) ||
+            // 已经对Response提前处理
             (ctx.responded && !middleware.acceptResponded) ||
-            (ctx.returned && !middleware.acceptReturned)
+            // 对返回数据已经处理 不接受后续mw的数据
+            (ctx.sended && !middleware.acceptSended)
         ) return;
         // @ts-ignore
         const result = await middleware[name](ctx);
         if (result && typeof result === 'object' && ctx !== result) {
+
+            // header 需要保留ctx中的数据
+            if(result.headers && ctx.headers){
+                result.headers = Object.assign(ctx.headers, result.headers)
+            }
+
             Object.assign(ctx, result);
         }
     }
