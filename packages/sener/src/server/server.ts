@@ -89,6 +89,8 @@ export class Server {
                 assignContext(context.responseData({ statusCode: 200 }));
             }
 
+            // console.log('router', request.url, request.method)
+
             const applyHook = async (name: IMiddleHookNames) => {
                 try {
                     await this.middleware[name](context);

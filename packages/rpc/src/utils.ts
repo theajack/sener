@@ -44,7 +44,7 @@ export async function windowFetch ({
         options.headers['content-type'] = 'application/json';
     }
     try {
-        // console.log('windowFetch=', options)
+        // console.trace('windowFetch=', options)
         const result = await fetch(url, options);
 
         const json = await result.json();

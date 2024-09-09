@@ -25,7 +25,7 @@ export class SQL<
 > {
     private tableName: string;
 
-    private sql: string;
+    private sql: string = '';
 
     constructor (tableName: string) {
         this.tableName = tableName;

@@ -76,16 +76,19 @@ export function nodeRequest ({
     // console.log({ host, path, method, headers, https, port, body });
     return new Promise((resolve) => {
         const target = (url.startsWith('https://') ? _https : _http);
+        // console.log('request start', method, headers);
         const req = target.request(url, {
             method, headers,
         }, function (res: any) {
             res.setEncoding('utf-8');
             let responseString = '';
             res.on('data', function (data: any) {
+                // console.log('request data', data);
                 responseString += data;
             });
             res.on('end', function () {
                 let result = parseJson(responseString);
+                // console.log('request end', responseString);
                 let success = true;
                 let $json = false;
                 if (result) {
