@@ -15,6 +15,7 @@ import { Static } from 'packages/static';
 import { router } from './router';
 import { Log } from 'packages/log/src';
 import { Config } from 'packages/config/src';
+import { Proxy } from 'packages/proxy/src';
 // console.log('--------', Router);
 
 const testMiddleware: IMiddleWare = {
@@ -71,6 +72,19 @@ const sener = new Sener({
         testMiddleware,
         // new Test2Middle(),
         new Json(),
+        new Proxy({
+            // '^/proxy/.*': {
+            //     target: 'http://127.0.0.1:3000/',
+            //     pathRewrite: url => {
+            //         console.log('pathRewrite', url);
+            //         return url.replace('/proxy/', '/');
+            //     }
+            // }
+
+            // '.*': {
+            //     target: 'http://127.0.0.1:3000/',
+            // }
+        }),
     ]
 });
 

@@ -85,8 +85,8 @@ export function createRoute (arg1: string|IRouter, arg2?: IRouter): IRouter {
         // console.log('new key = ', newKey)
         // ! 针对 router 别名做的处理
         route[newKey] = v;
-        if(typeof v === 'object' && v.alias){
-            for(let name in v.alias){
+        if (typeof v === 'object' && v.alias) {
+            for (const name in v.alias) {
                 route[transformKey(name)] = v;
             }
             delete v.alias;
@@ -232,6 +232,10 @@ export class Router extends MiddleWare {
         const route = this.getRoute(ctx);
         // console.log('aaaaaaaa',  route)
         if (!route) {
+            if (ctx._checkProxy?.(ctx)) {
+                return;
+            }
+            // console.log('routeTo404', ctx.url);
             return this.routeTo404(ctx);
         } else {
             return route.handler!(ctx);
