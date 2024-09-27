@@ -12,23 +12,36 @@ import type IncomingForm from 'formidable-fix/types/Formidable';
 
 export interface IFormOptions {
     dir?: string,
+    subDir?: string|((ctx: ISenerContext)=>(string|undefined)),
     filename?: (ctx: ISenerContext, name: string, ext: string, part: Part, form: IncomingForm)=>string,
 }
 
 export class Form extends MiddleWare {
     dir: string;
     filename: IFormOptions['filename'];
+    subDir: IFormOptions['subDir'];
 
-    constructor ({ dir = './public/upload', filename }: IFormOptions = {}) {
+    constructor ({ dir = './public/upload', subDir, filename }: IFormOptions = {}) {
         super();
         this.dir = dir;
+        this.subDir = subDir;
         this.filename = filename;
     }
 
-    private getUploadDir (): string {
-        const date = new Date();
-        const m = date.getMonth() + 1;
-        const str = `${date.getFullYear()}_${m < 10 ? '0' : ''}${m}`;
+    private getUploadDir (ctx: ISenerContext): string {
+
+        let str: any = null;
+
+        const sub = this.subDir;
+
+        if(typeof sub !== 'undefined'){
+            str = typeof sub === 'string' ? sub: sub(ctx);
+        }
+        if(typeof str !== 'string'){
+            const date = new Date();
+            const m = date.getMonth() + 1;
+            str = `${date.getFullYear()}_${m < 10 ? '0' : ''}${m}`;
+        }
         const dir = path.resolve(process.cwd(), this.dir, str);
         makedir(dir);
         return dir;
@@ -40,7 +53,7 @@ export class Form extends MiddleWare {
 
         if (!requestHeaders['content-type']?.includes('multipart/form-data') || method !== 'POST') return;
         return new Promise(resolve => {
-            const dir = this.getUploadDir();
+            const dir = this.getUploadDir(ctx);
             const form = formidable({
                 uploadDir: dir,
                 filename: this.filename ? (name: string, ext: string, part: Part, form: IncomingForm) => {

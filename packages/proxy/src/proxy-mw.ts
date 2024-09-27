@@ -36,6 +36,7 @@ export class Proxy extends MiddleWare {
             if (config.pathRewrite) {
                 const rewrite = config.pathRewrite;
                 ctx.request.url = rewrite(ctx.request.url!);
+                // console.log('ctx.request.url', ctx.request.url)
                 delete config.pathRewrite;
             }
 
@@ -55,15 +56,17 @@ export class Proxy extends MiddleWare {
         if (!map) return false;
 
         const url = ctx.url;
+        // console.log(`checkProxy, url=${url}`, map);
 
         if (map[url]) {
-            // console.log(`proxy 命中 ${url}`);
+            // console.log(`checkProxy 命中1, url=${url}`);
             ctx.proxy(map[url]);
             return true;
         }
 
         for (const key in map) {
             if (url.match(new RegExp(key))) {
+                // console.log(`checkProxy 命中2, key=${key}`);
                 ctx.proxy(map[key]);
                 return true;
             }
