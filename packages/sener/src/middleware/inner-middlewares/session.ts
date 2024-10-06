@@ -10,6 +10,8 @@ import {
 } from 'sener-types';
 import { CookieClient } from './cookie';
 
+const DefaultStoreDays = 2;
+
 declare module 'sener-extend' {
     interface ISenerHelper {
         session: SessionClient;
@@ -28,15 +30,18 @@ interface ISessionClientOptions {
     storeDays?: number;
 }
 
+
 export class SessionClient {
     static baseDir = '';
     static idGenerator = generateSessionId;
     static _timer: any = null;
-    static init ({ idGenerator, storeDays = 2 }: ISessionClientOptions) {
+    static init ({ idGenerator, storeDays = DefaultStoreDays }: ISessionClientOptions) {
         if (idGenerator) SessionClient.idGenerator = idGenerator;
         SessionClient.baseDir = buildSenerDir('session');
         makedir(SessionClient.baseDir);
-        if (SessionClient._timer) {
+        if (!SessionClient._timer) {
+            // ! 每天清除一次session
+            // ! session最长存储时间默认为2天
             SessionClient._timer = setInterval(() => {
                 removeDir(path.resolve(
                     SessionClient.baseDir,
@@ -49,9 +54,8 @@ export class SessionClient {
         }
     }
     sessionId = '';
-    filePath = '';
     Expired = SessionExpired;
-    constructor (cookie: CookieClient) {
+    constructor (cookie: CookieClient, storeDays = DefaultStoreDays) {
         if (!cookie) {
             const err = 'Session: cookie middleware is required';
             console.error(err);
@@ -63,12 +67,20 @@ export class SessionClient {
         if (!sessionId) {
             sessionId = SessionClient.idGenerator();
             // console.log('SET _SENER_SID =', sessionId);
-            cookie.set(KEY, sessionId, { expire: cookie.expire('1d'), path: '/' });
+            cookie.set(KEY, sessionId, { expire: cookie.expire(`${storeDays}d`), path: '/' });
         }
         this.sessionId = sessionId;
-        this.filePath = path.resolve(SessionClient.baseDir, `./${dateToString({ type: 'date' })}/${sessionId}`);
-        makeFileDir(this.filePath);
     }
+
+    private _filePath = '';
+    get filePath(){
+        if(!this._filePath){
+            this._filePath = path.resolve(SessionClient.baseDir, `./${dateToString({ type: 'date' })}/${this.sessionId}`);
+            makeFileDir(this._filePath);
+        }
+        return this._filePath;
+    }
+
     get(key: string): any;
     get<T extends string[]>(key: T): {[prop in keyof T]: any};
     get (key: string|string[]): any {
@@ -125,11 +137,14 @@ function generateSessionId (): string {
 
 export class Session extends MiddleWare {
     session: SessionClient;
+
+    options: ISessionClientOptions;
     constructor (options: ISessionClientOptions = {}) {
         super();
+        this.options = options;
         SessionClient.init(options);
     }
     init (ctx: ISenerContext) {
-        ctx.session = new SessionClient(ctx.cookie);
+        ctx.session = new SessionClient(ctx.cookie, this.options.storeDays);
     }
 }
