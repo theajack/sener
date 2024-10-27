@@ -43,13 +43,14 @@ export class SessionClient {
             // ! 每天清除一次session
             // ! session最长存储时间默认为2天
             SessionClient._timer = setInterval(() => {
-                removeDir(path.resolve(
+                const dirPath = path.resolve(
                     SessionClient.baseDir,
                     dateToString({
                         date: new Date(now() - strToTime(`${storeDays}d`)),
                         type: 'date'
                     })
-                ));
+                );
+                removeDir(dirPath, true);
             }, strToTime('1d'));
         }
     }
