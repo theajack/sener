@@ -3,10 +3,11 @@
  * @Date: 2023-02-20 17:23:29
  * @Description: Coding something
  */
-import {
-    MiddleWare, IPromiseMayBe, IHookReturn, IJson,
+import type { IPromiseMayBe, IHookReturn, IJson,
     ISenerContext,
-    IServeMethod,
+    IServeMethod } from 'sener-types';
+import {
+    MiddleWare,
     concatQuery,
 } from 'sener-types';
 

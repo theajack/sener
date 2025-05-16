@@ -4,17 +4,18 @@
  * @Description: Coding something
  */
 
-import path from 'path';
-import { homedir } from 'os';
-import crypto from 'crypto';
-
-// const path = __CLIENT__ ? {} : require('path');
-// const homedir = __CLIENT__ ? {} :require('os').homedir;
-// const crypto = __CLIENT__ ? {} : require('crypto')
+// todo 为了兼容web-rpc引用
+const path = isBrowser() ? {} : require('path');
+const homedir = isBrowser() ? {} : require('os').homedir;
+const crypto = isBrowser() ? {} : require('crypto');
 
 export const IS_DEV = process.env.NODE_ENV === 'development';
 
 let SENER_BASE_DIR = '';
+
+export function isBrowser () {
+    return typeof window !== 'undefined' && typeof window?.localStorage !== 'undefined';
+}
 
 export function senerBaseDir (): string;
 export function senerBaseDir (v: string): void;
@@ -39,6 +40,9 @@ export function buildSenerDir (name: string, sub = '') {
     return base;
 }
 export function md5 (text: string) {
+    if (isBrowser()) {
+        return 'NOT SUPPORTED IN BROWSER';
+    }
     const hash = crypto.createHash('md5');
     hash.update(text);
     return hash.digest('hex');

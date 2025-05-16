@@ -3,9 +3,9 @@
  * @Date: 2023-02-21 09:28:20
  * @Description: Coding something
  */
-import { IncomingHttpHeaders } from 'http';
-import { IMiddleHookNames, IMiddleWare, ISenerContext, ISenerResponse, MiddleWare } from './middleware';
-import { IServeMethod, IJson, IPromiseMayBe } from './common';
+import type { IncomingHttpHeaders } from 'http';
+import type { IMiddleHookNames, IMiddleWare, ISenerContext, ISenerResponse, MiddleWare } from './middleware';
+import type { IServeMethod, IJson, IPromiseMayBe } from './common';
 
 export type ICookieSameSite = 'Lax' | 'Strict' | 'None';
 

@@ -8,8 +8,8 @@
         "mime": "^3.0.0",
         "sener-types": "^0.0.17"
     },
-    "main": "src/index.ts",
-    "typings": "src/index.ts",
+    "main": "dist/sener-static.cjs.js",
+    "typings": "dist/sener-static.d.ts",
     "description": "Easy-to-use And Powerful nodejs http server",
     "author": "tackchen <theajack@qq.com>",
     "version": "0.0.17",
@@ -18,6 +18,6 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "src/index.ts",
+    "module": "dist/sener-static.esm.js",
     "gitHead": "a14d7c6a65b187280b573a94da0d87932a884eb2"
 }

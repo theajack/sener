@@ -3,17 +3,19 @@
  * @Date: 2023-04-15 15:19:24
  * @Description: Coding something
  */
-import fs from 'fs';
-// const fs = __CLIENT__ ? {}: require('fs');
+
+import { isBrowser } from './utils';
+
+// import fs from 'fs';
+const fs = isBrowser() ? {} : require('fs');
 
 export function makedir (dirPath: string, chmod = '777') {
-
-    dirPath = '/' + dirPath.split('/').filter(n => !!n).join('/');
-
+    const isWindows = dirPath.includes('\\');
+    const split = isWindows ? '\\' : '/';
+    dirPath = (isWindows ? '' : '/') + dirPath.split(split).filter(n => !!n).join(split);
     const next = () => {
-        dirPath = dirPath.substring(0, dirPath.lastIndexOf('/'));
+        dirPath = dirPath.substring(0, dirPath.lastIndexOf(split));
     };
-
     const pathArr: string[] = [];
     while (dirPath && !fs.existsSync(dirPath)) {
         pathArr.unshift(dirPath);
@@ -24,11 +26,11 @@ export function makedir (dirPath: string, chmod = '777') {
     }
 }
 
-export function writeFile (filePath: string, content: string, options: fs.WriteFileOptions = 'utf-8') {
+export function writeFile (filePath: string, content: string, options: any = 'utf-8') {
     makeFileDir(filePath);
     pureWriteFile(filePath, content, options);
 }
-export function pureWriteFile (filePath: string, content: string, options: fs.WriteFileOptions = 'utf-8') {
+export function pureWriteFile (filePath: string, content: string, options: any = 'utf-8') {
     fs.writeFileSync(filePath, content, options);
 }
 

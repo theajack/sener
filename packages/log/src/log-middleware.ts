@@ -4,9 +4,11 @@
  * @Description: Coding something
  */
 
-import { ISenerContext, MiddleWare } from 'sener-types';
-import { ILoggerOptions, Logger } from './logger';
-import { IBaseInfo } from './type';
+import type { ISenerContext } from 'sener-types';
+import { MiddleWare } from 'sener-types';
+import type { ILoggerOptions } from './logger';
+import { Logger } from './logger';
+import type { IBaseInfo } from './type';
 
 export class Log extends MiddleWare {
     loggerOptions: ILoggerOptions;

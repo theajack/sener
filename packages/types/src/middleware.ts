@@ -4,12 +4,12 @@
  * @Description: Coding something
  */
 
-import {
+import type {
     IPromiseMayBe, IJson
 } from './common';
-import { IHttpInfo } from './sener.d';
-import { ServerResponse, IncomingMessage } from 'http';
-import { ISenerHelper, ISenerEnv } from 'sener-extend';
+import type { IHttpInfo } from './sener.d';
+import type { ServerResponse, IncomingMessage } from 'http';
+import type { ISenerHelper, ISenerEnv } from 'sener-extend';
 
 export type IResponse = ServerResponse & {
   req: IncomingMessage;

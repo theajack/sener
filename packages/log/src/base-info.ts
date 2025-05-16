@@ -4,8 +4,9 @@
  * @Description: Coding something
  */
 
-import { dateToString, IJson, uuid } from 'sener-types';
-import {
+import type { IJson } from 'sener-types';
+import { dateToString, uuid } from 'sener-types';
+import type {
     IBaseInfo, ILogDBData, IMessageData
 } from './type';
 

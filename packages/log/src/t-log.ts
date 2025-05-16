@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { TLogType } from './type.d';
+import type { TLogType } from './type.d';
 
 
 const HEADER = '[TCLogger]:';

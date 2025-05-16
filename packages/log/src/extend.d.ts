@@ -4,7 +4,7 @@
  * @Description: Coding something
  */
 
-import { Logger } from './logger';
+import type { Logger } from './logger';
 
 export interface ILogHelper {
   logger: Logger;

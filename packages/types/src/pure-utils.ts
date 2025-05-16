@@ -152,7 +152,7 @@ export function pick<T, K extends (keyof T)[]> (data: T, keys: K): Pick<T, K[num
     return map;
 }
 export function omit<T, K extends (keyof T)[]>(data: T, keys: K): Omit<T, K[number]> {
-    const map: any = {...data};
+    const map: any = { ...data };
     for (const k of keys) {
         delete map[k];
     }

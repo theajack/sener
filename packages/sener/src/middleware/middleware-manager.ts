@@ -3,7 +3,7 @@
  * @Date: 2023-02-20 16:23:58
  * @Description: Coding something
  */
-import {
+import type {
     ISenerContext,
     IMiddleWare,
     IMiddleHookNames,
@@ -63,8 +63,8 @@ export class MiddleWareManager {
         if (result && typeof result === 'object' && ctx !== result) {
 
             // header 需要保留ctx中的数据
-            if(result.headers && ctx.headers){
-                result.headers = Object.assign(ctx.headers, result.headers)
+            if (result.headers && ctx.headers) {
+                result.headers = Object.assign(ctx.headers, result.headers);
             }
 
             Object.assign(ctx, result);

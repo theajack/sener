@@ -3,9 +3,11 @@
  * @Date: 2023-05-19 08:43:22
  * @Description: Coding something
  */
-import http, { IncomingMessage } from 'http';
-import { IHelperFunc, parseParam, praseUrl, ISenerResponse } from 'sener-types';
-import {
+import type { IncomingMessage } from 'http';
+import type http from 'http';
+import type { IHelperFunc, ISenerResponse } from 'sener-types';
+import { parseParam, praseUrl } from 'sener-types';
+import type {
     IJson, IServeMethod, IHttpInfo,
 } from 'sener-types';
 

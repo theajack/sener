@@ -4,7 +4,8 @@
  * @Description: Coding something
  */
 
-import { MiddleWare, IJson, ISenerContext } from 'sener-types';
+import type { IJson, ISenerContext } from 'sener-types';
+import { MiddleWare } from 'sener-types';
 // import { IRouter } from './router';
 
 export type IEnvOptions = IJson<((ctx: ISenerContext)=>any)>;

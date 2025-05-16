@@ -5,7 +5,7 @@ import url from 'url';
 import path from 'path';
 import MIME from 'mime';
 import { mstat } from './util';
-import { IJson } from 'sener-types';
+import type { IJson } from 'sener-types';
 
 export const mime = MIME;
 

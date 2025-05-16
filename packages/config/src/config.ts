@@ -4,10 +4,11 @@
  * @Description: Coding something
  */
 
-import { buildSenerDir, deepAssign, formatJson, IJson, makedir, parseJson } from 'sener-types';
+import type { IJson } from 'sener-types';
+import { buildSenerDir, deepAssign, formatJson, makedir, parseJson } from 'sener-types';
 import path from 'path';
 import fs from 'fs';
-import { IConfig, IConfigChange } from './extend';
+import type { IConfig, IConfigChange } from './extend';
 import Event from 'events';
 
 // export interface IInitialConfigData {
@@ -170,7 +171,7 @@ function isValueChanged (ov: any, nv: any) {
 
 function isJsonChanged (old: IJson, newData: IJson): boolean {
 
-    if(Object.keys(old).length !== Object.keys(newData).length) {
+    if (Object.keys(old).length !== Object.keys(newData).length) {
         return true;
     }
 

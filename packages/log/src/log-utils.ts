@@ -3,8 +3,8 @@
  * @Date: 2023-03-04 21:35:30
  * @Description: Coding something
  */
-import { IJson } from 'sener-types';
-import { ILogDBData } from './type';
+import type { IJson } from 'sener-types';
+import type { ILogDBData } from './type';
 
 function toLogString (value: any): string {
     if (typeof value === 'object') {

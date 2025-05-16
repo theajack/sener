@@ -3,8 +3,10 @@
  * @Date: 2023-03-06 21:23:36
  * @Description: Coding something
  */
-import { IHookReturn, IJson, ISenerContext, MiddleWare } from 'sener-types';
-import { createProxyServer, ServerOptions } from 'http-proxy';
+import type { IHookReturn, IJson, ISenerContext } from 'sener-types';
+import { MiddleWare } from 'sener-types';
+import type { ServerOptions } from 'http-proxy';
+import { createProxyServer } from 'http-proxy';
 
 export type IProxyConfig = ServerOptions & {
     pathRewrite?: (v: string) => string,

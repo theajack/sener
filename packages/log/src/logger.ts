@@ -5,11 +5,11 @@
  */
 
 import { BaseInfo } from './base-info';
-import { IBaseInfo, IMessageData, TLogType } from './type';
+import type { IBaseInfo, IMessageData, TLogType } from './type';
 import { Saver } from './saver';
 import { dataToLogString } from './log-utils';
 import { TLog } from './t-log';
-import { IJson } from 'sener-types';
+import type { IJson } from 'sener-types';
 
 export interface ILoggerOptions {
     dir?: string;

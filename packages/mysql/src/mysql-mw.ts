@@ -3,9 +3,11 @@
  * @Date: 2023-03-06 21:23:36
  * @Description: Coding something
  */
-import { IJson, Instanceof, MiddleWare } from 'sener-types';
-import mysql, { Connection, ConnectionConfig } from 'mysql';
-import { IMysqlHelper, ITables } from './extend';
+import type { IJson, Instanceof } from 'sener-types';
+import { MiddleWare } from 'sener-types';
+import type { Connection, ConnectionConfig } from 'mysql';
+import mysql from 'mysql';
+import type { IMysqlHelper, ITables } from './extend';
 import { Cond } from './sql/cond';
 import { SQL } from './sql/sql';
 import { Table } from './sql/table';
@@ -39,7 +41,7 @@ export class Mysql<
         this.connection.connect();
     }
 
-    private _handleDisconnect(){
+    private _handleDisconnect () {
         this.connection.on('error', (err) => {
             this.handlerError(err);
         });
@@ -93,10 +95,10 @@ export class Mysql<
                         this.connection.query(sql, (error, results, fields = []) => {
                             if (error) {
                                 console.log('mysql query error', error);
-                                if(error.code === 'ETIMEDOUT'){
+                                if (error.code === 'ETIMEDOUT') {
                                     this.handlerError(error);
                                 }
-                                reject(`SqlError: ${error.code}`)
+                                reject(`SqlError: ${error.code}`);
                                 // this.handlerError(err);
                                 // resolve({ results: null, fields: null, msg: error.toString() } as any);
                                 return;

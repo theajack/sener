@@ -5,7 +5,7 @@
  * @Description: Coding something
  */
 
-import { IJson } from 'sener-types';
+import type { IJson } from 'sener-types';
 
 export type TLogType = 'error' | 'log' | 'warn' | 'info';
 

@@ -11,3 +11,4 @@ bundles
 ignore
 *.ignore.ts
 public/upload
+test.js

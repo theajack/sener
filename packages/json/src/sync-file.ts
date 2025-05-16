@@ -5,7 +5,7 @@
  */
 import { now, makedir } from 'sener-types';
 import fs from 'fs';
-import { IJson } from 'sener-types';
+import type { IJson } from 'sener-types';
 
 export interface IFileTemplate<T=any> {
     key: string,

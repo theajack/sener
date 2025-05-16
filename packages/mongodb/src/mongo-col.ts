@@ -4,8 +4,8 @@
  * @Description: Coding something
  */
 
-import { Collection } from 'mongodb';
-import { IJson } from 'sener-types';
+import type { Collection } from 'mongodb';
+import type { IJson } from 'sener-types';
 import type { MongoProxy } from './mongo-proxy';
 
 export class MongoCol<T extends any = IJson> {

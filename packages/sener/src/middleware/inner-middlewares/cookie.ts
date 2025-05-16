@@ -3,8 +3,9 @@
  * @Date: 2023-02-20 17:23:29
  * @Description: Coding something
  */
-import { IncomingMessage } from 'http';
-import { MiddleWare, IJson, IResponse, ISenerContext, pickAttrs, isExpired, countExpire, ICookieOptions } from 'sener-types';
+import type { IncomingMessage } from 'http';
+import type { IJson, IResponse, ISenerContext, ICookieOptions } from 'sener-types';
+import { MiddleWare, pickAttrs, isExpired, countExpire } from 'sener-types';
 
 declare module 'sener-extend' {
     interface ISenerHelper {

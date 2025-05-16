@@ -62,5 +62,6 @@ module.exports = {
         'no-irregular-whitespace': 2, // 不规则的空白不允许
         'no-trailing-spaces': 2, // 一行结束后面有空格就发出警告
         '@typescript-eslint/no-empty-function': 1,
+        '@typescript-eslint/consistent-type-imports': 'error'
     }
 };

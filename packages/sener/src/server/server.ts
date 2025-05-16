@@ -5,11 +5,11 @@
  */
 import http from 'http';
 import { MiddleWareManager } from '../middleware/middleware-manager';
-import { IMiddleWare, ISenerContext, IOnError, ISenerResponse, IMiddleHookNames, MiddleWare } from 'sener-types';
-import {
+import type { IMiddleWare, ISenerContext, IOnError, ISenerResponse, IMiddleHookNames, MiddleWare } from 'sener-types';
+import type {
     IJson, IServerOptions, IErrorFrom, IResponse
 } from 'sener-types';
-import { ISenerHelper } from 'sener-extend';
+import type { ISenerHelper } from 'sener-extend';
 import { createSenerHelper, parseHttpInfo } from './sener-helper';
 
 export class Server {

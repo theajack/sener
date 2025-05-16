@@ -3,8 +3,9 @@
  * @Date: 2023-02-18 16:58:15
  * @Description: Coding something
  */
-import { IJson } from 'sener-types';
-import { SyncFile, IFileTemplate } from './sync-file';
+import type { IJson } from 'sener-types';
+import type { IFileTemplate } from './sync-file';
+import { SyncFile } from './sync-file';
 
 export interface IOprateReturn<Model=any> {
     data: Model[]

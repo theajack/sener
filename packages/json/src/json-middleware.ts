@@ -5,7 +5,7 @@
  */
 
 import { IS_DEV, MiddleWare } from 'sener-types';
-import { IJsonHelper } from './extend.d';
+import type { IJsonHelper } from './extend.d';
 import { JsonManager } from './json-manage';
 export class Json extends MiddleWare {
     json: JsonManager;

@@ -3,8 +3,9 @@
  * @Date: 2023-02-20 17:23:29
  * @Description: Coding something
  */
+import type { ISenerContext, IHookReturn } from 'sener-types';
 import {
-    MiddleWare, ISenerContext, makedir, IHookReturn,
+    MiddleWare, makedir
 } from 'sener-types';
 import formidable, { type Part, errors as formidableErrors } from 'formidable-fix';
 import path from 'path';

@@ -44,9 +44,9 @@ export class SQL<
         return this._select(`distinct ${this._joinKeys(args)}`);
     }
 
-    private _joinKeys(args: any[]){
+    private _joinKeys (args: any[]) {
         let s = '';
-        for(let v of args){
+        for (const v of args) {
             s += `,${(this._key(v))}`;
         }
         return s.substring(1);
@@ -119,7 +119,7 @@ export class SQL<
             }).join(reverse ? ' or ' : ' and ')})`;
         }).join(reverse ? ' and ' : ' or ');
 
-        if(whereInner.length <= 2) return this;
+        if (whereInner.length <= 2) return this;
 
         this.sql += ` where ${whereInner}`;
         return this;
@@ -155,8 +155,8 @@ export class SQL<
         return this.sql;
     }
 
-    toString(){
-        let v = this.sql;
+    toString () {
+        const v = this.sql;
         this.reset();
         return v;
     }
@@ -165,15 +165,15 @@ export class SQL<
         index = 1,
         size = 10,
     }: ISQLPage = {}) {
-        return this.limit(size).offset((index - 1) * 10)
+        return this.limit(size).offset((index - 1) * 10);
     }
 
-    limit(v: number){
+    limit (v: number) {
         this.sql += ` LIMIT ${v}`;
         return this;
     }
-    offset(v: number){
-        if(v <= 0) return this;
+    offset (v: number) {
+        if (v <= 0) return this;
         this.sql += ` OFFSET ${v}`;
         return this;
     }

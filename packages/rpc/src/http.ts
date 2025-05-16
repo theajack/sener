@@ -5,7 +5,7 @@
  */
 
 import type { IJson, IMethod } from 'sener-types';
-import { parseJson } from 'sener-types';
+import { isBrowser, parseJson } from 'sener-types';
 import { convertData, windowFetch } from './utils';
 
 let _http: any, _https: any = null;
@@ -52,7 +52,7 @@ export function request ({
         if (typeof body[k] === 'undefined') delete body[k];
     }
 
-    if (typeof window !== 'undefined') {
+    if (isBrowser()) {
         return windowFetch({ url, method, headers, body, query, form, fetchOptions, isSuccess });
     } else {
         return nodeRequest({ url, method, headers, body, query, traceid, stringifyBody, isSuccess });

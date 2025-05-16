@@ -3,8 +3,8 @@
  * @Date: 2023-02-21 22:08:31
  * @Description: Coding something
  */
-import { IJson } from 'sener-types';
-import { File, IOprateReturn } from './file';
+import type { IJson } from 'sener-types';
+import type { File, IOprateReturn } from './file';
 
 export interface IJsonHelper {
   file: <Model=any>(key: string) => File<Model>;

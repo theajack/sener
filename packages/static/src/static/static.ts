@@ -4,8 +4,10 @@
  * @Description: Coding something
  */
 import path from 'path';
-import { IHookReturn, ISenerContext, MiddleWare } from 'sener-types';
-import { Options, StaticServer } from './static-server';
+import type { IHookReturn, ISenerContext } from 'sener-types';
+import { MiddleWare } from 'sener-types';
+import type { Options } from './static-server';
+import { StaticServer } from './static-server';
 
 export interface IStaticOptions extends Options {
     dir?: string

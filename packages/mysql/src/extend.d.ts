@@ -4,11 +4,11 @@
  * @Description: Coding something
  */
 
-import { Connection, FieldInfo, QueryOptions } from 'mysql';
-import { SQL } from './sql/sql';
-import { Cond } from './sql/cond';
-import { Table } from './sql/table';
-import { Instanceof } from 'sener-types';
+import type { Connection, FieldInfo, QueryOptions } from 'mysql';
+import type { SQL } from './sql/sql';
+import type { Cond } from './sql/cond';
+import type { Table } from './sql/table';
+import type { Instanceof } from 'sener-types';
 
 export interface ITables {
   [key: string]: typeof Table<any>;

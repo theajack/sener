@@ -4,11 +4,12 @@
  * @Description: Coding something
  */
 import path from 'path';
+import type {  ISenerContext } from 'sener-types';
 import {
-    MiddleWare,  ISenerContext, buildSenerDir, makedir, uuid, md5, pickAttrs, isExpired, countExpire,
+    MiddleWare, buildSenerDir, makedir, uuid, md5, pickAttrs, isExpired, countExpire,
     strToTime, dateToString, removeDir, now, pureWriteFile, readFile, makeFileDir,
 } from 'sener-types';
-import { CookieClient } from './cookie';
+import type { CookieClient } from './cookie';
 
 declare module 'sener-extend' {
     interface ISenerHelper {

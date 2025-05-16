@@ -3,8 +3,9 @@
  * @Date: 2023-02-20 17:23:29
  * @Description: Coding something
  */
+import type { ISenerContext, IJson } from 'sener-types';
 import {
-    MiddleWare, ISenerContext, IJson,
+    MiddleWare
 } from 'sener-types';
 
 // todo 增加内置正则和过滤器
@@ -63,7 +64,7 @@ export class Validator extends MiddleWare {
             const rule: IValidRule = isArr ? v[1] : 'optional';
 
 
-            if(type !== 'undefined' && value !== null){
+            if (type !== 'undefined' && value !== null) {
                 // console.log(k, format, value, type, parseFloat(value));
                 if (format === 'string' ) {
                     if (type !== 'string') result[k] = value.toString();

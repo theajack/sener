@@ -3,14 +3,16 @@
  * @Date: 2023-03-06 21:23:36
  * @Description: Coding something
  */
-import {
+import type {
     IJson,
-    ISenerContext,
+    ISenerContext } from 'sener-types';
+import {
     MiddleWare
 } from 'sener-types';
-import { IModels, IMongoHelper } from './extend.d';
-import { IMongoProxyOptions, MongoProxy } from './mongo-proxy';
-import { MongoCol } from './mongo-col';
+import type { IModels, IMongoHelper } from './extend.d';
+import type { IMongoProxyOptions } from './mongo-proxy';
+import { MongoProxy } from './mongo-proxy';
+import type { MongoCol } from './mongo-col';
 
 export class Mongo<
     T = IJson<MongoCol>,

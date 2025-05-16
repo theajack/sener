@@ -4,7 +4,8 @@
  * @Description: Coding something
  */
 
-import { IJson, MiddleWare, ISenerContext } from 'sener-types';
+import type { IJson, ISenerContext } from 'sener-types';
+import { MiddleWare } from 'sener-types';
 import { Request } from './request';
 
 type IOptions = IJson<string> | ((traceid:string) => IJson<Request|any>);

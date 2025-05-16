@@ -17,7 +17,7 @@ export function convertData (data: IJson, isSearch = true) {
             res += (`${key}=${encodeURIComponent(v)}&`);
         }
     }
-    if(res.length === 0) return '';
+    if (res.length === 0) return '';
     res = `${isSearch ? '?' : ''}${res.substring(0, res.length - 1)}`;
     return res;
 }

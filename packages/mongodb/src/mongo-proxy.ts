@@ -3,9 +3,10 @@
  * @Date: 2023-04-11 23:49:46
  * @Description: Coding something
  */
-import { MongoClient, MongoClientOptions, Db } from 'mongodb';
-import { Instanceof } from 'sener-types';
-import { IModels } from './extend';
+import type { MongoClientOptions, Db } from 'mongodb';
+import { MongoClient } from 'mongodb';
+import type { Instanceof } from 'sener-types';
+import type { IModels } from './extend';
 import { MongoCol } from './mongo-col';
 
 export interface IMongoProxyOptions<Models> {

@@ -78,7 +78,7 @@ M% : 为能配符，正则表达式，表示的意思为模糊查询信息为 M 
 %M_ : 表示查询以M在倒数第二位的所有内容
      */
     like (v: string, padding = true) {
-        return _(` like '${padding ? `%${v}%`: v}'`);
+        return _(` like '${padding ? `%${v}%` : v}'`);
     },
     null () {
         return _(` is null`);
@@ -90,17 +90,17 @@ M% : 为能配符，正则表达式，表示的意思为模糊查询信息为 M 
 
 export const Calc = {
     add (attr: string, num: number) {
-        if(num < 0){
-            return this.reduce(attr, -num)
+        if (num < 0) {
+            return this.reduce(attr, -num);
         }
         return _(`${attr}+${num}`);
     },
-    reduce(attr: string, num: number) {
+    reduce (attr: string, num: number) {
         return _(`${wrapKey(attr)}-${num}`);
     }
 };
 
 const _keyReg = /^[a-zA-Z][a-zA-Z_0-9]*$/;
-export function wrapKey(v: any){
-    return _keyReg.test(v) ? `\`${v}\``: v;
+export function wrapKey (v: any) {
+    return _keyReg.test(v) ? `\`${v}\`` : v;
 }

@@ -5,9 +5,10 @@
  */
 
 import { MiddleWare } from 'sener-types';
-import { ConfigBase, IConfigOptions } from './config';
-import { IConfigChange, IConfigHelper } from './extend';
-import { IConfigData } from 'sener-extend';
+import type { IConfigOptions } from './config';
+import { ConfigBase } from './config';
+import type { IConfigChange, IConfigHelper } from './extend';
+import type { IConfigData } from 'sener-extend';
 
 export class Config<T = IConfigData> extends MiddleWare {
 

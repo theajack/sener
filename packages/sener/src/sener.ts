@@ -3,7 +3,8 @@
  * @Date: 2023-02-18 15:28:21
  * @Description: Coding something
  */
-import { IMiddleWare, ISenerOptions, MiddleWare, senerBaseDir } from 'sener-types';
+import type { IMiddleWare, ISenerOptions, MiddleWare } from 'sener-types';
+import { senerBaseDir } from 'sener-types';
 import { Server } from './server/server';
 
 
