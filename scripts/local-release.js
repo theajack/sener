@@ -28,7 +28,7 @@ function main () {
     const list = fs.readdirSync(path.resolve(__dirname, '../packages'));
 
     for (const name of list) {
-        if (name === 'types') {
+        if (name === '.DS_Store') {
             continue;
         }
         console.log(`Publish ${name}`);

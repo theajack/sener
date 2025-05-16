@@ -1,11 +1,11 @@
 {
     "name": "sener-config",
-    "version": "0.0.17",
+    "version": "0.0.18",
     "scripts": {
         "build": "node ../../scripts/build/build.js config"
     },
     "dependencies": {
-        "sener-types": "^0.0.17"
+        "sener-types": "^0.0.18"
     },
     "main": "src/index.ts",
     "typings": "src/index.ts",

@@ -12,7 +12,7 @@
         "devbase": "run-p _serve _dev",
         "dev": "npm run devbase --sample=sener",
         "build": "npm run init:dev && lerna run build && node scripts/build/mod-package.js",
-        "release": "node ./scripts/push-release.js",
+        "release": "node ./scripts/local-release.js",
         "info": "node ./scripts/info.js",
         "boot": "lerna bootstrap",
         "create": "node scripts/create-rep.js",
