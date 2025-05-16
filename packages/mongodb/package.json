@@ -8,8 +8,8 @@
         "mongodb": "^5.1.0",
         "sener-types": "^0.0.17"
     },
-    "main": "dist/sener-mongodb.cjs.js",
-    "typings": "dist/sener-mongodb.d.ts",
+    "main": "src/index.ts",
+    "typings": "src/index.ts",
     "description": "Easy-to-use And Powerful nodejs http server",
     "author": "tackchen <theajack@qq.com>",
     "repository": "git@github.com:theajack/sener.git",
@@ -17,6 +17,6 @@
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "dist/sener-mongodb.esm.js",
+    "module": "src/index.ts",
     "gitHead": "a14d7c6a65b187280b573a94da0d87932a884eb2"
 }
