@@ -49,8 +49,8 @@ export function readFile (filePath: string) {
     return fs.readFileSync(filePath, 'utf-8');
 }
 
-export function removeDir (dirPath: string) {
+export function removeDir (dirPath: string, recursive = false) {
     if (fs.existsSync(dirPath)) {
-        fs.rmdirSync(dirPath);
+        fs.rmdirSync(dirPath, recursive ? { recursive: true }: {});
     }
 }

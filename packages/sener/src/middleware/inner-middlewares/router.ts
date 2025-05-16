@@ -163,7 +163,7 @@ export class Router extends MiddleWare {
 
         for (const item of arr) {
             const key = item[1];
-            let value: any = item[2];
+            let value: any = item[3];
             if (typeof value === 'undefined') {
                 value = true;
             }
