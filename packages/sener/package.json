@@ -1,9 +1,9 @@
 {
     "name": "sener",
-    "version": "0.0.18",
+    "version": "0.0.20",
     "description": "Easy-to-use And Powerful nodejs http server",
-    "main": "src/index.ts",
-    "typings": "src/index.ts",
+    "main": "dist/sener.cjs.js",
+    "typings": "dist/sener.d.ts",
     "repository": "git@github.com:theajack/sener.git",
     "author": "tackchen <theajack@qq.com>",
     "scripts": {
@@ -11,12 +11,12 @@
     },
     "license": "MIT",
     "dependencies": {
-        "sener-types": "^0.0.18",
+        "sener-types": "^0.0.20",
         "undefined": "^0.1.0"
     },
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
-    "module": "src/index.ts",
+    "module": "dist/sener.esm.js",
     "gitHead": "a14d7c6a65b187280b573a94da0d87932a884eb2"
 }

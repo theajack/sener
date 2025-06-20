@@ -7,6 +7,8 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
+// npm run build
+// npm run release 0.0.19
 
 function main () {
 

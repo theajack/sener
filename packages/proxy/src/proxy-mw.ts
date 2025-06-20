@@ -10,6 +10,7 @@ import { createProxyServer } from 'http-proxy';
 
 export type IProxyConfig = ServerOptions & {
     pathRewrite?: (v: string) => string,
+    skipProxy?: boolean,
 };
 
 export type IProxyMiddleConfig = IJson<IProxyConfig>;
@@ -35,17 +36,24 @@ export class Proxy extends MiddleWare {
 
         ctx.proxy = (config: IProxyConfig) => {
 
+            if (config.skipProxy) {
+                return false;
+            }
+
             if (config.pathRewrite) {
                 const rewrite = config.pathRewrite;
+                console.log('proxy-debugger', ctx.request.url);
                 ctx.request.url = rewrite(ctx.request.url!);
+                console.log('proxy-debugger', ctx.request.url);
                 // console.log('ctx.request.url', ctx.request.url)
-                delete config.pathRewrite;
+                // delete config.pathRewrite;
             }
 
             this.proxy.web(ctx.request, ctx.response, config);
 
             ctx.responded = true;
             ctx.markSended();
+            return true;
         };
 
         ctx._checkProxy = () => {
@@ -62,15 +70,13 @@ export class Proxy extends MiddleWare {
 
         if (map[url]) {
             // console.log(`checkProxy 命中1, url=${url}`);
-            ctx.proxy(map[url]);
-            return true;
+            return ctx.proxy(map[url]);
         }
 
         for (const key in map) {
             if (url.match(new RegExp(key))) {
                 // console.log(`checkProxy 命中2, key=${key}`);
-                ctx.proxy(map[key]);
-                return true;
+                return ctx.proxy(map[key]);
             }
         }
         return false;

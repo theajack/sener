@@ -139,5 +139,8 @@ export const router = new Router({
             { age: _.gt(18) }
         ]);
         return { data: { sqlStr } };
+    },
+    '/aaa': () => {
+        return { data: { test: 1 } };
     }
 });

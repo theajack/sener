@@ -5,9 +5,10 @@
  */
 
 
-import {
-    IMiddleWare, MiddleWare, Sener,
-    ISenerContext,
+import type {
+    IMiddleWare,
+    ISenerContext } from 'packages/sener';
+import { MiddleWare, Sener,
     Cors,
 } from 'packages/sener';
 import { Json } from 'packages/json';
@@ -63,6 +64,7 @@ config.data.$onChange;
 config.data.age;
 
 const sener = new Sener({
+    port: 9030,
     middlewares: [
         new Cors(),
         new Log(),
